@@ -1,7 +1,21 @@
-﻿namespace Authentication.Web.Pages
+﻿using Authentification.Web.Model;
+using Authentification.Web.Service;
+
+namespace Authentication.Web.Pages
 {
     public partial class Authentification
     {
-        public int MyProperty = 101;
+        public Authentification()
+        {
+            
+        }
+        
+        LoginModel loginRequest = new LoginModel();
+
+        
+        public async Task LogIn()
+        {
+            var Response = await service.LoginAsync(loginRequest);
+        }
     }
 }
