@@ -1,5 +1,7 @@
 ﻿using Authentification.Web.Model;
 using Authentification.Web.Service;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using System;
 
 namespace Authentication.Web.Pages
 {
@@ -16,6 +18,8 @@ namespace Authentication.Web.Pages
         public async Task LogIn()
         {
             var Response = await service.LoginAsync(loginRequest);
+            Console.WriteLine(Response);
+
         }
     }
 }
