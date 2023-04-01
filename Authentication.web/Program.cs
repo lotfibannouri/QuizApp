@@ -1,5 +1,4 @@
-using Authentication.Web.Client;
-using Authentication.Web.Client.Service;
+using Authentication.web;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
@@ -9,14 +8,4 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
-
-builder.Services.AddHttpClient<IAuthentificationService, AuthentificationService>(client =>
-{
-#if (DEBUG)
-    client.BaseAddress = new Uri("https://localhost:7297");
-#else
-	client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
-#endif
-
-});
 await builder.Build().RunAsync();

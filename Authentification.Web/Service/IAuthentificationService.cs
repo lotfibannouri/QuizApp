@@ -1,6 +1,6 @@
-﻿using Authentification.Web.Model;
+﻿using Authentication.Web.Client.Model;
 
-namespace Authentification.Web.Service
+namespace Authentication.Web.Client.Service
 {
     public interface IAuthentificationService
     {

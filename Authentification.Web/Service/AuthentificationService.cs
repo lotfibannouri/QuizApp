@@ -1,7 +1,7 @@
-﻿using Authentification.Web.Model;
+﻿using Authentication.Web.Client.Model;
 using System.Net.Http.Json;
 
-namespace Authentification.Web.Service
+namespace Authentication.Web.Client.Service
 {
     public class AuthentificationService : IAuthentificationService
     {

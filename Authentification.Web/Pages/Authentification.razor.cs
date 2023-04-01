@@ -1,9 +1,9 @@
-﻿using Authentification.Web.Model;
-using Authentification.Web.Service;
+﻿using Authentication.Web.Client.Model;
+using Authentication.Web.Client.Service;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System;
 
-namespace Authentication.Web.Pages
+namespace Authentication.Web.Client.Pages
 {
     public partial class Authentification
     {
