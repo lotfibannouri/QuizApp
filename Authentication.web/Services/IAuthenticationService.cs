@@ -1,8 +1,8 @@
-﻿using Authentication.Web.Client.Model;
+﻿using Authentication.web.Model;
 
-namespace Authentication.Web.Client.Service
+namespace Authentication.web.Services
 {
-    public interface IAuthentificationService
+    public interface IAuthenticationService
     {
         Task<HttpResponseMessage> SignUpAsync(SignUpModel model);
         Task<HttpResponseMessage> LoginAsync(LoginModel model);

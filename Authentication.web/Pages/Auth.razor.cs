@@ -1,4 +1,6 @@
-﻿namespace Authentication.web.Pages
+﻿using Authentication.web.Model;
+
+namespace Authentication.web.Pages
 {
     public partial class Auth
     {

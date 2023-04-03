@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Authentication.Web.Client.Model
+namespace Authentication.web.Model
 {
     public class SignUpModel
     {
+
         [Required]
         public string nom { get; set; }
         [Required]
