@@ -33,7 +33,7 @@ namespace authentification_Api.Controllers
         public async Task<IActionResult> SignUp([FromBody]SignUpModel model)
         {
             var result = await _compteRepository.SignUpAsync(model);
-            if (result.Succeeded)
+            if (result.status)
                 return Ok(result);
             else
                 return BadRequest(result);

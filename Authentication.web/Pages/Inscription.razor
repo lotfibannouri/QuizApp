@@ -1,5 +1,7 @@
 ﻿@using System.ComponentModel.DataAnnotations
+@using Authentication.web.Services;
 @page "/Inscription"
+@inject ICompteService service
 <EditForm Model="@model" OnValidSubmit="OnValidSubmit">
     <DataAnnotationsValidator />
     <MudGrid>
@@ -12,9 +14,9 @@
                                   @bind-Value="model.prenom" For="@(() => model.prenom)" />
                     <MudTextField Label="Email" Class="mt-3"
                                   @bind-Value="model.login" For="@(() => model.login)" />
-                    <MudTextField Label="Adresse" Variant="Variant.Text"  Lines="2"
+                    <MudTextField Label="Choose your adresse" Variant="Variant.Text"  Lines="2"
                                   @bind-Value="model.adresse" For="@(() => model.adresse)" />
-                    <MudTextField Label="Password" HelperText="Choose adresse" Class="mt-3"
+                    <MudTextField Label="Password" HelperText="choose password" Class="mt-3"
                                   @bind-Value="model.password" For="@(() => model.password)" InputType="InputType.Password" />
                    
                 </MudCardContent>

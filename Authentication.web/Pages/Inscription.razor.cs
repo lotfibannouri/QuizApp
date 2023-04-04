@@ -10,10 +10,13 @@ namespace Authentication.web.Pages
 
 
 
-        private void OnValidSubmit()
+        private async void OnValidSubmit()
         {
             success = true;
             StateHasChanged();
+            var Response = await service.SignUpAsync(model);
+            Console.WriteLine(Response);
+
         }
     }
 }

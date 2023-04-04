@@ -22,9 +22,10 @@ namespace Authentication.web.Services
             throw new NotImplementedException();
         }
 
-        public Task<HttpResponseMessage> SignUpAsync(SignUpModel model)
+        public async Task<HttpResponseMessage> SignUpAsync(SignUpModel model)
         {
-            throw new NotImplementedException();
+            var response = await _httpClient.PostAsJsonAsync("/api/Compte/signUp", model);
+            return response;
         }
     }
 }

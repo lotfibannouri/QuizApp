@@ -5,7 +5,7 @@ namespace authentification_Api.Repository
 {
     public interface ICompteRepository
     {
-        Task<IdentityResult> SignUpAsync(SignUpModel model);
+        Task<Response> SignUpAsync(SignUpModel model);
         Task<Response> LoginAsync(LoginModel model);
         Task<Response> logoutAsync();
     }

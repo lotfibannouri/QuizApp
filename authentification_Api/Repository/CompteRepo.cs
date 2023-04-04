@@ -74,17 +74,31 @@ namespace authentification_Api.Repository
             }
         }
 
-        public async Task<IdentityResult> SignUpAsync(SignUpModel model)
+        public async Task<Response> SignUpAsync(SignUpModel model)
         {
             var user = new User()
             {
                 nom = model.nom,
                 prenom = model.prenom,
                 Email = model.login,
+                adresse = model.adresse,
                 UserName = model.prenom+"."+model.nom,
 
             };
-            return await _userManager.CreateAsync(user, model.password);
+            var result = await _userManager.CreateAsync(user, model.password);
+            if(result.Succeeded)
+            {
+                _response.status = true;
+                _response.content = "inscription avec succées";
+                return _response;
+
+            }
+            else
+            {
+                _response.status = false;
+                _response.content = "erreur d'inscription";
+                return _response;
+            }
         }
 
     }
