@@ -2,7 +2,7 @@
 
 namespace Authentication.web.Services
 {
-    public interface IAuthenticationService
+    public interface ICompteService
     {
         Task<HttpResponseMessage> SignUpAsync(SignUpModel model);
         Task<HttpResponseMessage> LoginAsync(LoginModel model);

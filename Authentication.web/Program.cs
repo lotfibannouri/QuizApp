@@ -11,7 +11,7 @@ builder.Services.AddMudServices();
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
-builder.Services.AddHttpClient <IAuthenticationService, AuthenticationService>(client =>
+builder.Services.AddHttpClient <ICompteService, CompteService>(client =>
 {
 #if (DEBUG)
     client.BaseAddress = new Uri("https://localhost:7297");

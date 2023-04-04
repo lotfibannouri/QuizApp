@@ -1,5 +1,47 @@
-﻿<h3>Inscription</h3>
-
-@code {
-
-}
+﻿@using System.ComponentModel.DataAnnotations
+@page "/Inscription"
+<EditForm Model="@model" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    <MudGrid>
+        <MudItem xs="12" sm="7">
+            <MudCard>
+                <MudCardContent>
+                    <MudTextField Label="First name" HelperText="Max. 8 characters"
+                                  @bind-Value="model.nom" For="@(() => model.nom)" />
+                    <MudTextField Label="Last name" HelperText="Max. 8 characters"
+                                  @bind-Value="model.prenom" For="@(() => model.prenom)" />
+                    <MudTextField Label="Email" Class="mt-3"
+                                  @bind-Value="model.login" For="@(() => model.login)" />
+                    <MudTextField Label="Adresse" Variant="Variant.Text"  Lines="2"
+                                  @bind-Value="model.adresse" For="@(() => model.adresse)" />
+                    <MudTextField Label="Password" HelperText="Choose adresse" Class="mt-3"
+                                  @bind-Value="model.password" For="@(() => model.password)" InputType="InputType.Password" />
+                   
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Register</MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+        <MudItem xs="12" sm="5">
+            <MudPaper Class="pa-4 mud-height-full">
+                <MudText Typo="Typo.subtitle2">Validation Summary</MudText>
+                @if (success)
+                {
+                    <MudText Color="Color.Success">Success</MudText>
+                }
+                else
+                {
+                    <MudText Color="@Color.Error">
+                        <ValidationSummary />
+                    </MudText>
+                }
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12">
+            <MudText Typo="Typo.body2" Align="Align.Center">
+                Fill out the form correctly to see the success message.
+            </MudText>
+        </MudItem>
+    </MudGrid>
+</EditForm>

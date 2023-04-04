@@ -3,10 +3,10 @@ using System.Net.Http.Json;
 
 namespace Authentication.web.Services
 {
-    public class AuthenticationService : IAuthenticationService
+    public class CompteService : ICompteService
     {
         private readonly HttpClient _httpClient;
-        public AuthenticationService(HttpClient httpClient)
+        public CompteService(HttpClient httpClient)
         {
             _httpClient = httpClient;
 
