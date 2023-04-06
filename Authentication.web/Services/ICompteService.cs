@@ -5,7 +5,7 @@ namespace Authentication.web.Services
     public interface ICompteService
     {
         Task<HttpResponseMessage> SignUpAsync(SignUpModel model);
-        Task<HttpResponseMessage> LoginAsync(LoginModel model);
+        Task<Response> LoginAsync(LoginModel model);
         Task<HttpResponseMessage> logoutAsync();
     }
 }

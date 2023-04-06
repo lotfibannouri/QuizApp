@@ -1,7 +1,35 @@
 ﻿@page "/Main"
+@using System.IdentityModel.Tokens.Jwt;
+@using Authentication.web.Enum;
 @using MainPrincipal_Layout 
+@using System.Security.Claims;
 @layout PrincipalMainLayout
-
+@inject NavigationManager NavigationManager
 @code {
+    private string token;
+    private string Role;
+    protected override void OnInitialized()
+    {
+        var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+        var queryParams = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
+        token = queryParams["value"];
+        Role = GetUserRoleFromToken(token);
+    }
+
+    public string GetUserRoleFromToken(string tokenstring)
+    {
+        var handler = new  JwtSecurityTokenHandler();
+        var token = handler.ReadJwtToken(tokenstring);
+        var roleClaim = token.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Role);
+
+        if (roleClaim != null)
+        {
+            return roleClaim.Value;
+        }
+        else
+        {
+            throw new ArgumentException("The token does not contain a role claim.");
+        }
+    }
 
 }

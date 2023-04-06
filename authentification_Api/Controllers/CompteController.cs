@@ -25,7 +25,7 @@ namespace authentification_Api.Controllers
             if(result.status)
                 return Ok(result);
             else
-               return BadRequest(result);
+               return NotFound(result);
         }
 
 

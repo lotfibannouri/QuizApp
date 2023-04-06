@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\lotfi\\Desktop\\Repository\\QuizApp\\authentification_Api\\authentification_Api.csproj": {}
+    "C:\\PFE_2023\\QuizApp\\authentification_Api\\authentification_Api.csproj": {}
   },
   "projects": {
-    "C:\\Users\\lotfi\\Desktop\\Repository\\QuizApp\\authentification_Api\\authentification_Api.csproj": {
+    "C:\\PFE_2023\\QuizApp\\authentification_Api\\authentification_Api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\lotfi\\Desktop\\Repository\\QuizApp\\authentification_Api\\authentification_Api.csproj",
+        "projectUniqueName": "C:\\PFE_2023\\QuizApp\\authentification_Api\\authentification_Api.csproj",
         "projectName": "authentification_Api",
-        "projectPath": "C:\\Users\\lotfi\\Desktop\\Repository\\QuizApp\\authentification_Api\\authentification_Api.csproj",
-        "packagesPath": "C:\\Users\\lotfi\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\lotfi\\Desktop\\Repository\\QuizApp\\authentification_Api\\obj\\",
+        "projectPath": "C:\\PFE_2023\\QuizApp\\authentification_Api\\authentification_Api.csproj",
+        "packagesPath": "C:\\Users\\lob\\.nuget\\packages\\",
+        "outputPath": "C:\\PFE_2023\\QuizApp\\authentification_Api\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\lotfi\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\lob\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -22,6 +22,8 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files (x86)\\Progress\\Telerik UI for Blazor 3.7.0\\packages": {},
+          "C:\\Users\\lob\\Documents\\blazor\\packages": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -75,6 +77,10 @@
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.4.0, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[6.28.1, )"
             }
           },
           "imports": [
@@ -96,7 +102,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.101\\RuntimeIdentifierGraph.json"
         }
       }
     }

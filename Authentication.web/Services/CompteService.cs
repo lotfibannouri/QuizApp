@@ -11,9 +11,10 @@ namespace Authentication.web.Services
             _httpClient = httpClient;
 
         }
-        public async Task<HttpResponseMessage> LoginAsync(LoginModel model)
+        public async Task<Response> LoginAsync(LoginModel model)
         {
-            var response = await _httpClient.PostAsJsonAsync("/api/Compte/auth", model);
+            HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync("/api/Compte/auth", model);
+            Response response = await httpResponseMessage.Content.ReadFromJsonAsync<Response>();
             return response;
         }
 

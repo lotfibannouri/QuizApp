@@ -1,7 +1,9 @@
 ﻿@page "/Authentification"
+@using Authentication.web.Model;
 @using global::Authentication.web.Services;
 @using Layout_Auth
 @inject  ICompteService service
+@inject NavigationManager NavigationManager
 @layout AuthLayout
 
 <section class="vh-100" style="background-color: #28AADC;">
@@ -39,9 +41,14 @@
                                                formControlName="Password" @bind="loginRequest.password" />
                                         <label class="form-label" for="form2Example27">Password</label>
                                     </div>
+                                    <div>@if(!response.status)
+                                        {
+                                            <p class="fw-bold text-danger">Mot de passe ou Email incorrecte </p>
+                                        }
+                                    </div>
 
                                     <div class="pt-1 mb-4">
-                                        <button class="btn btn-dark btn-lg btn-block" type="submit" @onclick="LogIn">Login</button>
+                                        <button class="btn btn-dark btn-lg btn-block" type="submit" @onclick:preventDefault="true"  @onclick="LogIn">Login</button>
 
                                     </div>
 

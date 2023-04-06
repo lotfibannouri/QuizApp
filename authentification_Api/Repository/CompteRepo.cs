@@ -37,7 +37,7 @@ namespace authentification_Api.Repository
             {
                 new Claim(ClaimTypes.Name, model.email),
                 new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
-                new Claim("Role","User")
+                new Claim(ClaimTypes.Role,"User")
 
             };
             var authSigninKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration["JWT:Secret"]));
