@@ -3,6 +3,7 @@ using Microsoft.JSInterop;
 using System.Security.Claims;
 using System.Net.Http.Headers;
 using Authentication.web.utility;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Authentication.web.AuthProviders
 {
@@ -35,10 +36,13 @@ namespace Authentication.web.AuthProviders
 
         public void NotifyUserAuthentication(string username)
         {
-            var authUser = new ClaimsPrincipal(new ClaimsIdentity(
-                new[] { new Claim(ClaimTypes.Name, username) }, "JwtAuthType"
-                )); 
-            var authState = Task.FromResult(new AuthenticationState(authUser));
+            //var authUser = new ClaimsPrincipal(new ClaimsIdentity(
+            //    new[] { new Claim(ClaimTypes.Name, username) }, "JwtAuthType"
+            //    )); 
+            //var authState = Task.FromResult(new AuthenticationState(authUser));
+            var authenticatedUser = new ClaimsPrincipal(new ClaimsIdentity(JwtParser.ParseClaimsFromJwt(username), "jwt"));
+            var x = new ClaimsIdentity(JwtParser.ParseClaimsFromJwt(username), "jwt");
+            var authState = Task.FromResult(new AuthenticationState(authenticatedUser));
             NotifyAuthenticationStateChanged(authState);
         }
 
@@ -46,6 +50,22 @@ namespace Authentication.web.AuthProviders
         {
             var authState = Task.FromResult(_anonymous);
             NotifyAuthenticationStateChanged(authState); 
+        }
+
+        public string GetUserRoleFromToken(string tokenstring)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var token = handler.ReadJwtToken(tokenstring);
+            var roleClaim = token.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Role);
+
+            if (roleClaim != null)
+            {
+                return roleClaim.Value;
+            }
+            else
+            {
+                throw new ArgumentException("The token does not contain a role claim.");
+            }
         }
     }
 }

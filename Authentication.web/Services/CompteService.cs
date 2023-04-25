@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Reflection;
 using static System.Net.WebRequestMethods;
 
 namespace Authentication.web.Services
@@ -24,18 +25,24 @@ namespace Authentication.web.Services
         {
             HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync("/api/Compte/auth", model);
             Response? response = await httpResponseMessage.Content.ReadFromJsonAsync<Response>();
-            if (response.content != null)
+            if (httpResponseMessage.IsSuccessStatusCode && response.content != null)
             {
                 await _localStorage.SetItemAsync("tokenAccess",response.content);
-                ((AuthProvider)_authProvider).NotifyUserAuthentication(model.email);
+                ((AuthProvider)_authProvider).NotifyUserAuthentication(response.content);
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", response.content);
             }
             return response;
         }
 
-        public Task<HttpResponseMessage> logoutAsync()
+        public async Task<Response> logoutAsync()
         {
-            throw new NotImplementedException();
+            HttpResponseMessage httpResponseMessage = await _httpClient.GetAsync("/api/Compte/auth");
+            Response? response = await httpResponseMessage.Content.ReadFromJsonAsync<Response>();
+
+            await _localStorage.RemoveItemAsync("tokenAccess");
+            ((AuthProvider)_authProvider).NotifyUserLogout();
+            _httpClient.DefaultRequestHeaders.Authorization = null;
+            return response;
         }
 
         public async Task<HttpResponseMessage> SignUpAsync(SignUpModel model)

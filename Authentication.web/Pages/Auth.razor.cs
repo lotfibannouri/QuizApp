@@ -22,7 +22,7 @@ namespace Authentication.web.Pages
             {
                
                 if (response.content!= null) {
-                    NavigationManager.NavigateTo("/Main?value="+response.content);
+                    NavigationManager.NavigateTo("/Main?value="+response.content,true);
 }
             }
            

@@ -3,7 +3,7 @@
 @using Authentication.web.Enum;
 @using MainPrincipal_Layout 
 @using System.Security.Claims;
-@layout PrincipalMainLayout
+@layout MainLayout
 @inject NavigationManager NavigationManager
 @code {
     private string token;
@@ -13,23 +13,8 @@
         var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
         var queryParams = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
         token = queryParams["value"];
-        Role = GetUserRoleFromToken(token);
+        //Role = GetUserRoleFromToken(token);
     }
 
-    public string GetUserRoleFromToken(string tokenstring)
-    {
-        var handler = new  JwtSecurityTokenHandler();
-        var token = handler.ReadJwtToken(tokenstring);
-        var roleClaim = token.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Role);
-
-        if (roleClaim != null)
-        {
-            return roleClaim.Value;
-        }
-        else
-        {
-            throw new ArgumentException("The token does not contain a role claim.");
-        }
-    }
 
 }

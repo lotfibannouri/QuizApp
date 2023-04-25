@@ -1,21 +1,52 @@
 ﻿@inherits LayoutComponentBase
+@using global::Authentication.web.Services;
+@inject ICompteService service
+<MudThemeProvider />
 
-<MudThemeProvider/>
-<MudDialogProvider />
-<MudSnackbarProvider />
+<MudLayout>
+    <MudAppBar Elevation="1">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+        <MudSpacer />
+        <MudMenu  ActivationEvent="@MouseEvent.LeftClick" AnchorOrigin="Origin.BottomCenter" PositionAtCursor="true">
+            <ActivatorContent>
+                <MudChip  Icon="@Icons.Material.Filled.AccountCircle" Color="Color.Secondary"></MudChip>
+            </ActivatorContent>
+            <ChildContent>
+                <MudMenuItem @onclick="logout">
+                    Logout
+                </MudMenuItem>
+            </ChildContent>
+        </MudMenu>
+    
+    </MudAppBar>
+    <MudDrawer @bind-Open="_drawerOpen" Elevation="2">
+        <MudDrawerHeader>
+            <MudText Typo="Typo.h5" Class="mt-1">QuizApp</MudText>
+        </MudDrawerHeader>
+        <NavMenu/>
+    </MudDrawer>
+    <MudMainContent>
+        @Body
+    </MudMainContent>
+</MudLayout>
+@code {
+    bool _drawerOpen = true;
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+    void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+    async void logout()
+    {
+        var response = await service.logoutAsync();
+        //if (response.status)
+        //{
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-        </div>
+        //    if (response.content != null)
+        //    {
+        //        NavigationManager.NavigateTo("/Main?value=" + response.content, true);
+        //    }
+        //}
+    }
 
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
+}

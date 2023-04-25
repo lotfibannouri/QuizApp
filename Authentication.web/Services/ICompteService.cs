@@ -6,6 +6,6 @@ namespace Authentication.web.Services
     {
         Task<HttpResponseMessage> SignUpAsync(SignUpModel model);
         Task<Response> LoginAsync(LoginModel model);
-        Task<HttpResponseMessage> logoutAsync();
+        Task<Response> logoutAsync();
     }
 }
