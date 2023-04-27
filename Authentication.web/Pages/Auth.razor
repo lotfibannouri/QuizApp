@@ -1,6 +1,5 @@
 ﻿@page "/Authentification"
 @using Authentication.web.Model;
-@using global::Authentication.web.Services;
 @using Layout_Auth
 @inject  ICompteService service
 @inject NavigationManager NavigationManager
@@ -54,7 +53,7 @@
 
                                     <a class="small text-muted" href="#!">Forgot password?</a>
                                     <p class="mb-5 pb-lg-2" style="color: #393f81;">
-                                        Don't have an account? <a href="#!"
+                                        Don't have an account? <a href="Inscription"
                                                                   style="color: #393f81;">Register here</a>
                                     </p>
                                     <a href="#!" class="small text-muted">Terms of use.</a>

@@ -1,6 +1,7 @@
 ﻿@inherits LayoutComponentBase
 @using global::Authentication.web.Services;
 @inject ICompteService service
+@inject NavigationManager NavigationManager
 <MudThemeProvider />
 
 <MudLayout>
@@ -14,6 +15,9 @@
             <ChildContent>
                 <MudMenuItem @onclick="logout">
                     Logout
+                </MudMenuItem>
+                 <MudMenuItem>
+                    About
                 </MudMenuItem>
             </ChildContent>
         </MudMenu>
@@ -38,15 +42,9 @@
     }
     async void logout()
     {
-        var response = await service.logoutAsync();
-        //if (response.status)
-        //{
-
-        //    if (response.content != null)
-        //    {
-        //        NavigationManager.NavigateTo("/Main?value=" + response.content, true);
-        //    }
-        //}
+        await service.logout();
+        NavigationManager.NavigateTo("/Authentification", true);
+              
     }
 
 }

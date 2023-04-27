@@ -23,5 +23,14 @@ builder.Services.AddHttpClient <ICompteService, CompteService>(client =>
 #endif
 
 });
+builder.Services.AddHttpClient<IAdministrationService, AdministrationService>(client =>
+{
+#if (DEBUG)
+    client.BaseAddress = new Uri("https://localhost:7297");
+#else
+	client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
+#endif
+
+});
 
 await builder.Build().RunAsync();

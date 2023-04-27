@@ -11,7 +11,7 @@ namespace authentification_Api.Repository
         Task<List<User>> GetUsers();
         Task<User?> GetUserByName(string name);
         Task<User?> GetUserById(string id);
-
+        Task<List<IdentityUserRole<string>>> GetUsersRoles();
         Task<IdentityResult> CreateRoleAsync(Role role);
         Task<IdentityResult> UpdateRoleAsync(string id, ViewModelRole model);
         Task<IdentityResult> DeleteRoleAsync(string id);

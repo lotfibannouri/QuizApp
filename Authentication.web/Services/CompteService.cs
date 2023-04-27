@@ -34,15 +34,12 @@ namespace Authentication.web.Services
             return response;
         }
 
-        public async Task<Response> logoutAsync()
+        public async Task logout()
         {
-            HttpResponseMessage httpResponseMessage = await _httpClient.GetAsync("/api/Compte/auth");
-            Response? response = await httpResponseMessage.Content.ReadFromJsonAsync<Response>();
-
             await _localStorage.RemoveItemAsync("tokenAccess");
             ((AuthProvider)_authProvider).NotifyUserLogout();
             _httpClient.DefaultRequestHeaders.Authorization = null;
-            return response;
+            
         }
 
         public async Task<HttpResponseMessage> SignUpAsync(SignUpModel model)

@@ -1,6 +1,7 @@
 ﻿using authentification_Api.Models;
 using authentification_Api.Repository;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,6 +14,7 @@ namespace authentification_Api.Controllers
     {
         #region attributs
         private readonly IAdministrationRepository _administrationRepository;
+
         #endregion
 
         #region Constructors
@@ -28,6 +30,27 @@ namespace authentification_Api.Controllers
             var result = await _administrationRepository.GetUsers();
             if(result!= null)
                 return Ok(result);
+            else
+                return NotFound("la liste des utilisateurs est vide ");
+
+        }
+
+        [HttpGet("ListUsersRoles")]
+        public async Task<IActionResult> GetUsersWithRoles()
+        {
+            var result = await _administrationRepository.GetUsersRoles();
+            var userRoleList = result.GroupBy(ur => ur.UserId).Select(
+                grp => new UserRole
+                {
+                    userId = grp.Key,
+                    roles = grp.Select(ur => _administrationRepository.GetRoleById(ur.RoleId).Result.Name).ToList() 
+                }).ToList();
+
+            if (userRoleList != null)
+            {
+                return Ok(userRoleList);
+            }
+               
             else
                 return NotFound("la liste des utilisateurs est vide ");
 

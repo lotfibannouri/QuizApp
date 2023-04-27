@@ -5,16 +5,16 @@
         
                 <MudNavLink Href="">Dashboard</MudNavLink>
                 <MudNavLink Match="NavLinkMatch.Prefix" Href="">Creation test</MudNavLink>
-        <AuthorizeView Roles=@($"{Roles.Admin}, {Roles.User}")>
+        <AuthorizeView Roles=@($"{Roles.Admin}")>
             <Authorized>
-                <MudNavGroup Title="Settings" Expanded="true">
-                  
-                    <MudNavLink Href="">Users</MudNavLink>
+                <MudNavGroup Title="Settings" Expanded="true"> 
+                    <MudNavLink Href="UserManagement">Users</MudNavLink>
                     <MudNavLink Href="">Roles</MudNavLink>
                 </MudNavGroup>
             </Authorized>
         </AuthorizeView>
-        <MudNavLink Href="">About</MudNavLink>
+        <MudNavLink Href="Authentification"> Authentication</MudNavLink>
+        <MudNavLink Href="Inscription"> Inscription</MudNavLink>
 
     </MudNavMenu>
 </MudPaper>

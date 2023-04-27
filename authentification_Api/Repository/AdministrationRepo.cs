@@ -55,7 +55,12 @@ namespace authentification_Api.Repository
         {
             return await _dbContext.Users.ToListAsync();
         }
-
+   
+        public async Task<List<IdentityUserRole<string>>> GetUsersRoles()
+        {
+            
+            return await _dbContext.UserRoles.ToListAsync();
+        }
 
         public async Task<IdentityResult> UpdateUserAsync(string id,SignUpModel model)
         {
