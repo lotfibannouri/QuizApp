@@ -65,15 +65,21 @@
     {
         if (string.IsNullOrWhiteSpace(_searchString))
             return true;
-
-        if (x.lastName.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+        
+        if (!string.IsNullOrWhiteSpace(x.lastName) && x.lastName.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
             return true;
 
-        if (x.firstName.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+        if (!string.IsNullOrWhiteSpace(x.firstName) && x.firstName.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (!string.IsNullOrWhiteSpace(x.rowNumber.ToString()) && x.rowNumber.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (!string.IsNullOrWhiteSpace(x.adresse.ToString()) && x.email.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (!string.IsNullOrWhiteSpace(x.email.ToString()) && x.email.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase))
             return true;
 
-        if ($"{x.rowNumber} {x.adresse} {x.email}".Contains(_searchString))
-            return true;
+        //if ($"{x.rowNumber} {x.adresse} {x.email}".Contains(_searchString))
+        //    return true;
 
         return false;
     };

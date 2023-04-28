@@ -34,15 +34,20 @@ namespace Authentication.web.Services
 
         public async Task<IEnumerable<User>> GetUsers()
         {
+            int index = 0;
             HttpResponseMessage httpResponseMessage = await _httpClient.GetAsync("/api/Administration/ListUsers");
             IEnumerable<User?> Users = await httpResponseMessage.Content.ReadFromJsonAsync<IEnumerable<User?>>();
             httpResponseMessage = await _httpClient.GetAsync("/api/Administration/ListUsersRoles");
             IEnumerable<UserRole?> Usersroles = await httpResponseMessage.Content.ReadFromJsonAsync<IEnumerable<UserRole?>>();
             foreach (var item in Users)
             {
+                item.rowNumber = ++index;
                 var userrole = Usersroles.FirstOrDefault(x => x.userId == item.id);
                 if (userrole != null)
+                {   
                     item.role = userrole.roles;
+                    
+                }
             }
             return Users;
            
