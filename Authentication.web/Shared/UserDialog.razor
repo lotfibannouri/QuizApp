@@ -1,0 +1,20 @@
+﻿<h3>UserDialog</h3>
+
+<MudDialog>
+    <DialogContent>
+        <MudText>Do you confirm?</MudText>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Success" Variant="Variant.Filled" OnClick="Submit">Yes</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+
+    }
+    void Submit() => MudDialog.Close(DialogResult.Ok(true));
+    void Cancel() => MudDialog.Cancel();
+}
