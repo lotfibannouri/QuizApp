@@ -71,18 +71,21 @@ namespace Authentication.web.Pages
         private async Task AddUser()
         {
 
-         
 
-        var options = new DialogOptions { CloseOnEscapeKey = true };
+
+            var options = new DialogOptions { CloseOnEscapeKey = true, CloseButton = true  , FullWidth = true};
             var parameters = new DialogParameters();
             parameters.Add("ContentText", "Do you want to confirm?");
             parameters.Add("ButtonText", "Yes");
-            var dialogresult = await dialogService.ShowAsync<UserDialog>("Confirm", parameters);
+
+            var dialogresult = await dialogService.ShowAsync<UserDialog>("Création des Utilisateurs",options);
             var result = await dialogresult.Result;
+            Users = await adminService.GetUsers();
+
             //if (!result.Cancelled && bool.TryParse(result.Data.ToString(), out bool resultbool)) IncrementCount();
 
             //var dialogResult = dialogService.Show<UserDialog>("AddUserDialog", options);
-        
+
         }
     }
 }

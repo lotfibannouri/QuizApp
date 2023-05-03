@@ -42,10 +42,12 @@ namespace Authentication.web.Services
             
         }
 
-        public async Task<HttpResponseMessage> SignUpAsync(SignUpModel model)
+        public async Task<Response> SignUpAsync(SignUpModel model)
         {
-            var response = await _httpClient.PostAsJsonAsync("/api/Compte/signUp", model);
-            return response;
+            HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync("/api/Compte/signUp", model);
+            Response response = await httpResponseMessage.Content.ReadFromJsonAsync<Response>();
+
+            return response!=null?response:new Response();
         }
     }
 }

@@ -101,7 +101,7 @@ namespace authentification_Api.Repository
             else
             {
                 _response.status = false;
-                _response.content = "erreur d'inscription";
+                _response.content = result.Errors.ToString();
                 return _response;
             }
         }

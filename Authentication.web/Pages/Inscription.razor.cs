@@ -15,7 +15,7 @@ namespace Authentication.web.Pages
             success = true;
             StateHasChanged();
             var Response = await service.SignUpAsync(model);
-            Console.WriteLine(Response);
+           
 
         }
     }

@@ -1,20 +1,74 @@
-﻿<h3>UserDialog</h3>
-
+﻿@using Authentication.web.Model;
+@inject ICompteService service
 <MudDialog>
     <DialogContent>
-        <MudText>Do you confirm?</MudText>
+        <MudContainer Style="max-height: 500px; overflow-y: scroll">
+            <MudText>Nouveau utilisateur</MudText>
+            <EditForm Model="@model" OnValidSubmit="OnValidSubmit">
+                <DataAnnotationsValidator />
+                <MudGrid>
+                    <MudItem xs="12" sm="7">
+                        <MudCard>
+                            <MudCardContent>
+
+                                <MudTextField Label="nom" HelperText="Max. 8 characters"
+                                              @bind-Value="model.nom" For="@(() => model.nom)" />
+                                <MudTextField Label="prenom" HelperText="Max. 8 characters"
+                                              @bind-Value="model.prenom" For="@(() => model.prenom)" />
+                                <MudTextField Label="Choose your adresse" Variant="Variant.Text" Lines="2"
+                                              @bind-Value="model.adresse" For="@(() => model.adresse)" />
+                                <MudTextField Label="Email" Class="mt-3"
+                                              @bind-Value="model.login" For="@(() => model.login)" />
+                                <MudTextField Label="Password" HelperText="choose password" Class="mt-3"
+                                              @bind-Value="model.password" For="@(() => model.password)" InputType="InputType.Password" />
+
+
+
+                            </MudCardContent>
+                        </MudCard>
+                    </MudItem>
+                    <MudItem xs="12" sm="5">
+                        <MudPaper Class="pa-4 mud-height-full">
+                            <MudText Typo="Typo.subtitle2">Validation</MudText>
+
+                            <MudText Color="@Color.Error">@err</MudText>
+
+                        </MudPaper>
+                    </MudItem>
+
+                </MudGrid>
+
+
+            </EditForm>
+        </MudContainer>
+
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="Cancel">Cancel</MudButton>
-        <MudButton Color="Color.Success" Variant="Variant.Filled" OnClick="Submit">Yes</MudButton>
+        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="OnValidSubmit">Register</MudButton>
     </DialogActions>
+
 </MudDialog>
 @code {
-    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
-    protected override async Task OnInitializedAsync()
-    {
 
-    }
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    public SignUpModel model = new SignUpModel();
     void Submit() => MudDialog.Close(DialogResult.Ok(true));
     void Cancel() => MudDialog.Cancel();
+    public string err { get; set; }
+
+    private async void OnValidSubmit()
+    {
+
+        var Response = await service.SignUpAsync(model);
+        if (Response.status)
+        {
+            this.Submit();
+        }
+        else
+        {
+            err = Response.content;
+
+        }
+    }
 }

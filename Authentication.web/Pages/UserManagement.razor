@@ -19,8 +19,8 @@
     <Columns>
         <SelectColumn T="User" />
         <PropertyColumn Property="x=>x.rowNumber" Title="Nr" Sortable="false" Filterable="false" />
-        <PropertyColumn Property="x => x.firstName" Title="nom" />
-        <PropertyColumn Property="x => x.lastName" SortBy="@_sortBy" Title="prénom"/>
+        <PropertyColumn Property="x => x.lastName" Title="nom" />
+        <PropertyColumn Property="x => x.firstName" SortBy="@_sortBy" Title="prénom" />
         <PropertyColumn Property="x => x.adresse" Title="adresse" />
         <PropertyColumn Property="x => x.email" Title="Email" />
         <PropertyColumn Property="x =>string.Join(',',x.role)" Title="Role Utilisateur" />
