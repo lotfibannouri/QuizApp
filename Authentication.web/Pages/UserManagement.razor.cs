@@ -87,5 +87,10 @@ namespace Authentication.web.Pages
             //var dialogResult = dialogService.Show<UserDialog>("AddUserDialog", options);
 
         }
+
+        private async Task AddUser()
+        {
+
+        }
     }
 }

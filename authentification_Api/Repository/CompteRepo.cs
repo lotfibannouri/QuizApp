@@ -101,7 +101,8 @@ namespace authentification_Api.Repository
             else
             {
                 _response.status = false;
-                _response.content = result.Errors.ToString();
+                var errors = result.Errors.Select(x => x.Description).ToList();
+                _response.content = string.Join(",", errors);
                 return _response;
             }
         }

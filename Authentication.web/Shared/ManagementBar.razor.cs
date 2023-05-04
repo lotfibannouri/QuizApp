@@ -7,9 +7,12 @@ namespace Authentication.web.Shared
     {
         [Parameter]
         public EventCallback OnAddEventClicked  { get; set; }
+        [Parameter]
+        public EventCallback OnDeleteEventClicked { get; set; }
 
 
-       private async Task InvokAddUser()=> await OnAddEventClicked.InvokeAsync();
+        private async Task InvokAddUser()=> await OnAddEventClicked.InvokeAsync();
 
+        private async Task InvokDeleteUser()=> await OnDeleteEventClicked.InvokeAsync();
     }
 }
