@@ -3,6 +3,8 @@ using System.Net.Http;
 using System.Reflection;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using Microsoft.AspNetCore.Identity;
+
 namespace Authentication.web.Services
 {
     public class AdministrationService : IAdministrationService
@@ -17,9 +19,12 @@ namespace Authentication.web.Services
             throw new NotImplementedException();
         }
 
-        public Task<HttpResponseMessage> DeleteUserAsync(string id)
+        public async Task<IdentityResult> DeleteUserAsync(string id)
         {
-            throw new NotImplementedException();
+            HttpResponseMessage httpResponseMessage = await _httpClient.DeleteAsync("/api/Administration/deleteUser?id="+id)   ;
+            IdentityResult response = await httpResponseMessage.Content.ReadFromJsonAsync<IdentityResult>() ;
+            return response;
+
         }
 
         public Task<HttpResponseMessage?> GetUserById(string id)

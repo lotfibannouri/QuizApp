@@ -1,5 +1,8 @@
 ﻿using Authentication.web.Model;
+using Authentication.web.Services;
 using Authentication.web.Shared;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Identity;
 using MudBlazor;
 using System;
 using System.Runtime.CompilerServices;
@@ -15,7 +18,10 @@ namespace Authentication.web.Pages
         private string _searchString;
         private bool _sortNameByLength;
         private List<string> _events = new();
-      
+        private List<User> UsersSelected = new();
+        [Inject]
+        public IAdministrationService _administrationService{ get; set; }
+
         // custom sort by name length
 
         private Func<User, object> _sortBy => x =>
@@ -63,6 +69,7 @@ namespace Authentication.web.Pages
 
         void SelectedItemsChanged(HashSet<User> items)
         {
+            UsersSelected = items.ToList();
             _events.Insert(0, $"Event = SelectedItemsChanged, data = {System.Text.Json.JsonSerializer.Serialize(items)}");
         }
 
@@ -88,9 +95,24 @@ namespace Authentication.web.Pages
 
         }
 
-        private async Task AddUser()
+        private async Task DeleteUser()
         {
+            foreach (var item in UsersSelected)
+            {
+                IdentityResult response =  await _administrationService.DeleteUserAsync(item.id);
+                if(response.Errors.Count()>0) 
+                {
+                    foreach(var err in response.Errors)
+                        Console.WriteLine(err);
+                }
+                else
+                {
+                    Console.WriteLine("delete succeded");
+                }
+            }
 
-        }
+            Users = await adminService.GetUsers();
+
+        }   
     }
 }

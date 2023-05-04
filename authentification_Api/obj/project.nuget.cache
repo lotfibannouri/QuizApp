@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "pl9zcK1vvVZOOw9O1jzjhUCZtbGr0jhIqaU3ovScrGxjeOdw2TbO3gg82XAd9Tm3hnR5UzK4bWPDp9dvzHz1CQ==",
+  "dgSpecHash": "rLQ4Vr9ccZCShBUHODpNS2ieJlgTIRf4aX8ba3XmrAEdraEzC8ciQFYSFjeDl+3ilEF1wsdBxSwkP/2D9JAsIQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\lotfi\\Desktop\\Repository\\QuizApp\\authentification_Api\\authentification_Api.csproj",
   "expectedPackageFiles": [
@@ -44,6 +44,7 @@
     "C:\\Users\\lotfi\\.nuget\\packages\\microsoft.identitymodel.protocols\\6.21.0\\microsoft.identitymodel.protocols.6.21.0.nupkg.sha512",
     "C:\\Users\\lotfi\\.nuget\\packages\\microsoft.identitymodel.protocols.openidconnect\\6.21.0\\microsoft.identitymodel.protocols.openidconnect.6.21.0.nupkg.sha512",
     "C:\\Users\\lotfi\\.nuget\\packages\\microsoft.identitymodel.tokens\\6.28.1\\microsoft.identitymodel.tokens.6.28.1.nupkg.sha512",
+    "C:\\Users\\lotfi\\.nuget\\packages\\microsoft.net.runtime.webassembly.sdk\\7.0.4\\microsoft.net.runtime.webassembly.sdk.7.0.4.nupkg.sha512",
     "C:\\Users\\lotfi\\.nuget\\packages\\microsoft.netcore.platforms\\5.0.0\\microsoft.netcore.platforms.5.0.0.nupkg.sha512",
     "C:\\Users\\lotfi\\.nuget\\packages\\microsoft.netcore.targets\\1.1.0\\microsoft.netcore.targets.1.1.0.nupkg.sha512",
     "C:\\Users\\lotfi\\.nuget\\packages\\microsoft.openapi\\1.4.3\\microsoft.openapi.1.4.3.nupkg.sha512",

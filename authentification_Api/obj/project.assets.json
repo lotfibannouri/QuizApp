@@ -709,6 +709,9 @@
           }
         }
       },
+      "Microsoft.NET.Runtime.WebAssembly.Sdk/7.0.4": {
+        "type": "package"
+      },
       "Microsoft.NETCore.Platforms/5.0.0": {
         "type": "package",
         "compile": {
@@ -2532,6 +2535,70 @@
         "microsoft.identitymodel.tokens.nuspec"
       ]
     },
+    "Microsoft.NET.Runtime.WebAssembly.Sdk/7.0.4": {
+      "sha512": "s7eFOad1eB/8KK5D3CfjRZUBvrVs+mKONsMnf9oxzvNN+KHBXxIPe5LFhqsCDLtjIsc2R+i4kApkOcqOV4ZeOA==",
+      "type": "package",
+      "path": "microsoft.net.runtime.webassembly.sdk/7.0.4",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "Sdk/AutoImport.props",
+        "Sdk/EmSdkRepo.Defaults.props",
+        "Sdk/Sdk.props",
+        "Sdk/Sdk.targets",
+        "Sdk/WasmApp.Native.targets",
+        "Sdk/WasmApp.props",
+        "Sdk/WasmApp.targets",
+        "THIRD-PARTY-NOTICES.TXT",
+        "WasmAppHost/BrowserDebugHost.deps.json",
+        "WasmAppHost/BrowserDebugHost.dll",
+        "WasmAppHost/BrowserDebugHost.runtimeconfig.json",
+        "WasmAppHost/BrowserDebugProxy.dll",
+        "WasmAppHost/Microsoft.CodeAnalysis.CSharp.Scripting.dll",
+        "WasmAppHost/Microsoft.CodeAnalysis.CSharp.dll",
+        "WasmAppHost/Microsoft.CodeAnalysis.Scripting.dll",
+        "WasmAppHost/Microsoft.CodeAnalysis.dll",
+        "WasmAppHost/Newtonsoft.Json.dll",
+        "WasmAppHost/WasmAppHost.deps.json",
+        "WasmAppHost/WasmAppHost.dll",
+        "WasmAppHost/WasmAppHost.runtimeconfig.json",
+        "microsoft.net.runtime.webassembly.sdk.7.0.4.nupkg.sha512",
+        "microsoft.net.runtime.webassembly.sdk.nuspec",
+        "tasks/WasmBuildTasks.deps.json",
+        "tasks/WasmBuildTasks.dll",
+        "tasks/net472/Microsoft.Bcl.AsyncInterfaces.dll",
+        "tasks/net472/Microsoft.Build.Framework.dll",
+        "tasks/net472/Microsoft.Build.Tasks.Core.dll",
+        "tasks/net472/Microsoft.Build.Utilities.Core.dll",
+        "tasks/net472/Microsoft.Build.dll",
+        "tasks/net472/Microsoft.IO.Redist.dll",
+        "tasks/net472/Microsoft.NET.StringTools.dll",
+        "tasks/net472/System.Buffers.dll",
+        "tasks/net472/System.Collections.Immutable.dll",
+        "tasks/net472/System.Configuration.ConfigurationManager.dll",
+        "tasks/net472/System.Memory.dll",
+        "tasks/net472/System.Numerics.Vectors.dll",
+        "tasks/net472/System.Reflection.Metadata.dll",
+        "tasks/net472/System.Reflection.MetadataLoadContext.dll",
+        "tasks/net472/System.Resources.Extensions.dll",
+        "tasks/net472/System.Runtime.CompilerServices.Unsafe.dll",
+        "tasks/net472/System.Security.AccessControl.dll",
+        "tasks/net472/System.Security.Permissions.dll",
+        "tasks/net472/System.Security.Principal.Windows.dll",
+        "tasks/net472/System.Text.Encodings.Web.dll",
+        "tasks/net472/System.Text.Json.dll",
+        "tasks/net472/System.Threading.Tasks.Dataflow.dll",
+        "tasks/net472/System.Threading.Tasks.Extensions.dll",
+        "tasks/net472/System.ValueTuple.dll",
+        "tasks/net472/WasmAppBuilder.dll",
+        "tasks/net472/WasmAppBuilder.dll.config",
+        "tasks/net7.0/System.Reflection.MetadataLoadContext.dll",
+        "tasks/net7.0/WasmAppBuilder.deps.json",
+        "tasks/net7.0/WasmAppBuilder.dll"
+      ]
+    },
     "Microsoft.NETCore.Platforms/5.0.0": {
       "sha512": "VyPlqzH2wavqquTcYpkIIAQ6WdenuKoFN0BdYBbCWsclXacSOHNQn66Gt4z5NBqEYW0FAPm5rlvki9ZiCij5xQ==",
       "type": "package",
@@ -4120,6 +4187,7 @@
       "Microsoft.EntityFrameworkCore.Design >= 7.0.4",
       "Microsoft.EntityFrameworkCore.SqlServer >= 7.0.4",
       "Microsoft.EntityFrameworkCore.Tools >= 7.0.4",
+      "Microsoft.NET.Runtime.WebAssembly.Sdk >= 7.0.4",
       "Swashbuckle.AspNetCore >= 6.4.0",
       "System.IdentityModel.Tokens.Jwt >= 6.28.1"
     ]
@@ -4192,6 +4260,10 @@
           "Microsoft.EntityFrameworkCore.Tools": {
             "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
             "suppressParent": "All",
+            "target": "Package",
+            "version": "[7.0.4, )"
+          },
+          "Microsoft.NET.Runtime.WebAssembly.Sdk": {
             "target": "Package",
             "version": "[7.0.4, )"
           },
