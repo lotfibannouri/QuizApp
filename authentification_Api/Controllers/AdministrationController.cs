@@ -80,14 +80,14 @@ namespace authentification_Api.Controllers
         }
 
         [HttpDelete("deleteUser")]
-        public async Task<IActionResult> DeleteUser(string id)
+        public async Task<Response> DeleteUser(string id)
         {
             var result = await _administrationRepository.DeleteUserAsync(id);
 
             if (result.Succeeded)
-                return Ok(result);
+                return new Response(true, "supression avec succée");
             else
-                return BadRequest(result);
+                return  new Response(false, "probléme serveur");
 
         }
 
@@ -120,13 +120,13 @@ namespace authentification_Api.Controllers
         }
 
         [HttpPost("updateUser")]
-        public async Task<IActionResult> UpdateUser(string id ,[FromBody] SignUpModel model)
+        public async Task<Response> UpdateUser(string id ,[FromBody] SignUpModel model)
         {
             var result = await _administrationRepository.UpdateUserAsync(id,model);
             if (result.Succeeded)
-                return Ok(result);
+                return new Response(true, "modification avec succées");
             else
-                return BadRequest(result);
+                return new Response(false, "Probléme serveur");
         }
         #endregion
 

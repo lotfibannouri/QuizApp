@@ -19,6 +19,7 @@ namespace Authentication.web.Pages
         private bool _sortNameByLength;
         private List<string> _events = new();
         private List<User> UsersSelected = new();
+        private bool IsEditPage = false;
         [Inject]
         public IAdministrationService _administrationService{ get; set; }
 
@@ -78,14 +79,12 @@ namespace Authentication.web.Pages
         private async Task AddUser()
         {
 
-
-
+            IsEditPage = false;
             var options = new DialogOptions { CloseOnEscapeKey = true, CloseButton = true  , FullWidth = true};
             var parameters = new DialogParameters();
-            parameters.Add("ContentText", "Do you want to confirm?");
-            parameters.Add("ButtonText", "Yes");
-
-            var dialogresult = await dialogService.ShowAsync<UserDialog>("Création des Utilisateurs",options);
+            parameters.Add("dialogTitle", "Ajouter utilisateur");
+            parameters.Add("IsEditPage", IsEditPage);
+            var dialogresult = await dialogService.ShowAsync<UserDialog>("Création des Utilisateurs",parameters,options);
             var result = await dialogresult.Result;
             Users = await adminService.GetUsers();
 
@@ -99,20 +98,46 @@ namespace Authentication.web.Pages
         {
             foreach (var item in UsersSelected)
             {
-                IdentityResult response =  await _administrationService.DeleteUserAsync(item.id);
-                if(response.Errors.Count()>0) 
+                Response response =  await _administrationService.DeleteUserAsync(item.id);
+                if(response.status) 
                 {
-                    foreach(var err in response.Errors)
-                        Console.WriteLine(err);
+                        Console.WriteLine(response.content);
                 }
                 else
                 {
-                    Console.WriteLine("delete succeded");
+                    Console.WriteLine(response.content);
                 }
             }
 
             Users = await adminService.GetUsers();
 
         }   
+
+        private async Task EditUser()
+        {
+            var optionsAlertBox = new DialogOptions { CloseOnEscapeKey = true };
+            var parametersAlertBox = new DialogParameters();
+
+            if (UsersSelected.Count() > 1)
+            { 
+              parametersAlertBox.Add("AlertMessage", "il faudra choisir un seul utilisateur!");
+              await dialogService.ShowAsync<AlertBox>("Alert", parametersAlertBox, optionsAlertBox);
+            }
+            else if (UsersSelected.Count == 0 )
+            {
+                parametersAlertBox.Add("AlertMessage", "il faudra choisir un utilisateur!");
+                await dialogService.ShowAsync<AlertBox>("Alert", parametersAlertBox, optionsAlertBox);
+            }
+            else { 
+            var options = new DialogOptions { CloseOnEscapeKey = true, CloseButton = true, FullWidth = true };
+            IsEditPage = true;
+            var parameters = new DialogParameters();
+            parameters.Add("UserSelected", UsersSelected);
+            parameters.Add("dialogTitle", "Modifier utilisateur");
+            parameters.Add("IsEditPage", IsEditPage);
+            var dialogresult = await dialogService.ShowAsync<UserDialog>("Modification des utilisateurs", parameters, options);
+            }
+
+        }
     }
 }

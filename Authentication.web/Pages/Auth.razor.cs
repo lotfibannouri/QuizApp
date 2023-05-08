@@ -25,6 +25,7 @@ namespace Authentication.web.Pages
                     NavigationManager.NavigateTo("/Main?value="+response.content,true);
 }
             }
+          
            
 
         }

@@ -27,39 +27,45 @@ namespace authentification_Api.Repository
         {
             
             User? user = await _userManager.FindByEmailAsync(model.email);
-            var result = await _signInManager.PasswordSignInAsync(user.UserName, model.password, false, false);
-
-            if (!result.Succeeded)
+            if (user != null)
             {
-                _response.status = false;
-                _response.content = "Email ou mot de passe incorrecte !";
-                return _response;
-            }
-            IList<string> roles = await _userManager.GetRolesAsync(user);
-            var authClaims = new List<Claim>
+                var result = await _signInManager.PasswordSignInAsync(user.UserName, model.password, false, false);
+
+                if (!result.Succeeded)
+                {
+                    _response.status = false;
+                    _response.content = "Email ou mot de passe incorrecte !";
+                    return _response;
+                }
+                IList<string> roles = await _userManager.GetRolesAsync(user);
+                var authClaims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, model.email),
                 new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
             };
-            foreach (var role in roles)
-            {
-                authClaims.Add(new Claim(ClaimTypes.Role, role));
+                foreach (var role in roles)
+                {
+                    authClaims.Add(new Claim(ClaimTypes.Role, role));
+                }
+                var authSigninKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration["JWT:Secret"]));
+
+                var token = new JwtSecurityToken(
+                    issuer: _configuration["JWT:ValidIssuer"],
+                    audience: _configuration["JWT:ValidAudience"],
+                    expires: DateTime.Now.AddDays(1),
+                    claims: authClaims,
+                    signingCredentials: new SigningCredentials(authSigninKey, SecurityAlgorithms.HmacSha256Signature)
+                    );
+
+                _response.status = true;
+                _response.content = new JwtSecurityTokenHandler().WriteToken(token);
+                return _response;
             }
-            var authSigninKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration["JWT:Secret"]));
 
-            var token = new JwtSecurityToken(
-                issuer: _configuration["JWT:ValidIssuer"],
-                audience: _configuration["JWT:ValidAudience"],
-                expires: DateTime.Now.AddDays(1),
-                claims: authClaims,
-                signingCredentials: new SigningCredentials(authSigninKey, SecurityAlgorithms.HmacSha256Signature)
-                );
-
-            _response.status = true;
-            _response.content = new JwtSecurityTokenHandler().WriteToken(token);
+            _response.status = false;
+            _response.content = "Mot de passe ou LogIn invalide";
             return _response;
 
-            
         }
 
         public async Task<Response> logoutAsync()

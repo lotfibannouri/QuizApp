@@ -1,9 +1,10 @@
 ﻿@using Authentication.web.Model;
-@inject ICompteService service
+@inject ICompteService Compteservice
+@inject IAdministrationService AdministrationService
 <MudDialog>
     <DialogContent>
         <MudContainer Style="max-height: 500px; overflow-y: scroll">
-            <MudText>Nouveau utilisateur</MudText>
+            <MudText>@dialogTitle</MudText>
             <EditForm Model="@model" OnValidSubmit="OnValidSubmit">
                 <DataAnnotationsValidator />
                 <MudGrid>
@@ -12,7 +13,7 @@
                             <MudCardContent>
 
                                 <MudTextField Label="nom" HelperText="Max. 8 characters"
-                                              @bind-Value="model.nom" For="@(() => model.nom)" />
+                                              @bind-Value="model.nom" For="@(() => model.nom)"  />
                                 <MudTextField Label="prenom" HelperText="Max. 8 characters"
                                               @bind-Value="model.prenom" For="@(() => model.prenom)" />
                                 <MudTextField Label="Choose your adresse" Variant="Variant.Text" Lines="2"
@@ -50,7 +51,27 @@
 </MudDialog>
 @code {
 
+    protected override async Task OnInitializedAsync()
+    {
+        if (IsEditPage)
+        {
+            model.prenom = UserSelected[0].lastName;
+            model.nom = UserSelected[0].firstName;
+            model.login = UserSelected[0].email;
+            model.adresse = UserSelected[0].adresse;
+
+        }
+    }
+
+    [Parameter]
+    public string dialogTitle { get; set; }
+    [Parameter]
+    public bool IsEditPage { get; set; }
+    [Parameter]
+    public List<User> UserSelected { get; set; }             
+
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
 
     public SignUpModel model = new SignUpModel();
     void Submit() => MudDialog.Close(DialogResult.Ok(true));
@@ -59,17 +80,33 @@
 
     private async void OnValidSubmit()
     {
-
-        var Response = await service.SignUpAsync(model);
-        if (Response.status)
+        if(!IsEditPage)
         {
-            this.Submit();
+            var Response = await Compteservice.SignUpAsync(model);
+            if (Response.status)
+            {
+                this.Submit();
+            }
+            else
+            {
+                err = Response.content;
+                StateHasChanged();
+
+            }
         }
         else
         {
-            err = Response.content;
-            StateHasChanged();
+            var Response = await AdministrationService.UpdateUserAsync(UserSelected[0].id, model);
+            if (Response.status)
+            {
+                this.Submit();
+            }
+            else
+            {
+                err = Response.content;
+                StateHasChanged();
 
+            }
         }
     }
 

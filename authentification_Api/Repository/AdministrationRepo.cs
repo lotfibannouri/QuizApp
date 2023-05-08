@@ -72,9 +72,10 @@ namespace authentification_Api.Repository
                 user.nom = model.nom;
                 user.Email = model.login;
                 user.adresse = model.adresse;
-                user.PasswordHash = model.password;
-
+                await _userManager.RemovePasswordAsync(user);
+                await _userManager.AddPasswordAsync(user, model.password);
                 await _userManager.AddToRoleAsync(user, "User");
+               
             }
             return await _userManager.UpdateAsync(user);
         }

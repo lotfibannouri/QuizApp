@@ -5,6 +5,8 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Identity;
 
+
+
 namespace Authentication.web.Services
 {
     public class AdministrationService : IAdministrationService
@@ -19,10 +21,10 @@ namespace Authentication.web.Services
             throw new NotImplementedException();
         }
 
-        public async Task<IdentityResult> DeleteUserAsync(string id)
+        public async Task<Response> DeleteUserAsync(string id)
         {
             HttpResponseMessage httpResponseMessage = await _httpClient.DeleteAsync("/api/Administration/deleteUser?id="+id)   ;
-            IdentityResult response = await httpResponseMessage.Content.ReadFromJsonAsync<IdentityResult>() ;
+            Response response = await httpResponseMessage.Content.ReadFromJsonAsync<Response>() ;
             return response;
 
         }
@@ -58,9 +60,13 @@ namespace Authentication.web.Services
            
         }
 
-        public Task<HttpResponseMessage> UpdateUserAsync(string id, SignUpModel model)
+        public async Task<Response> UpdateUserAsync(string id, SignUpModel model)
         {
-            throw new NotImplementedException();
+            HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync("/api/Administration/updateUser?id="+id, model);
+            Response result = await httpResponseMessage.Content.ReadFromJsonAsync<Response>();
+            return result;
+
+
         }
     }
 }

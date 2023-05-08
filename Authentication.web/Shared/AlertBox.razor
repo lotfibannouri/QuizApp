@@ -1,0 +1,15 @@
+﻿<MudDialog>
+    <DialogContent>
+        <MudText>@AlertMessage</MudText>
+    </DialogContent>
+    <DialogActions>
+        
+        <MudButton Color="Color.Primary" OnClick="Ok">Ok</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter]
+    public string AlertMessage { get; set; }
+    void Ok() => MudDialog.Close(DialogResult.Ok(true));
+}
