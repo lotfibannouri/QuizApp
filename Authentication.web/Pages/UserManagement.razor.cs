@@ -139,5 +139,14 @@ namespace Authentication.web.Pages
             }
 
         }
+
+        private async Task AssignRoleToUser()
+        {
+            var options = new DialogOptions { CloseOnEscapeKey = true, CloseButton = true, FullWidth = true };
+            var parameters = new DialogParameters();
+            parameters.Add("UserSelected", UsersSelected);
+            var dialogresult = await dialogService.ShowAsync<AssignUserRole>("Attribuer rôles", parameters, options);
+
+        }
     }
 }

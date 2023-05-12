@@ -6,7 +6,7 @@
 @inject IAdministrationService adminService
 @inject IDialogService dialogService ;
 
-<ManagementBar OnAddEventClicked="AddUser"  OnDeleteEventClicked="DeleteUser" OnEditEventClicked="EditUser"></ManagementBar>
+<ManagementBar OnAddEventClicked="AddUser"  OnDeleteEventClicked="DeleteUser" OnEditEventClicked="EditUser" OnAssignRoleToUserEventClicked="AssignRoleToUser"></ManagementBar>
 <MudDataGrid T="User" MultiSelection="true" Items="@Users" SortMode="SortMode.Multiple" Filterable="true" QuickFilter="@_quickFilter"
              Hideable="true" RowClick="@RowClicked" SelectedItemsChanged="@SelectedItemsChanged">
     <ToolBarContent>

@@ -3,44 +3,57 @@
     <DialogContent>
         <MudContainer Style="max-height: 500px; overflow-y: scroll">
             <MudText></MudText>
-            <EditForm Model="@model" OnValidSubmit="OnValidSubmit">
-                <DataAnnotationsValidator />
-               <MudDropContainer T="string" DraggingClass="mud-alert-text-warning" ItemDraggingClass="mud-alert-text-warning" Items="_items" ItemsSelector="@((item,dropzone) => item.Identifier == dropzone)" NoDropClass="mud-border-error" ItemDropped="ItemUpdated" Class="d-flex flex-wrap flex-grow-1">
-    <ChildContent>
-        <MudDropZone T="DropItem" Identifier="Enterprise" DraggingClass="mud-alert-text-info" ItemDraggingClass="mud-alert-text-info" Class="rounded-lg border-2 border-dashed mud-border-lines-default pa-6 ma-8" CanDrop="@((item) => item.Team == "BLUE")">
-            <MudText Typo="Typo.h6" Class="mb-4">USS Enterprise</MudText>
-         </MudDropZone>
-        <MudDropZone T="DropItem" Identifier="Air Zone 1" Class="rounded-lg border-2 border-dashed mud-border-lines-default pa-6 ma-8 flex-grow-1">
-            <MudText Typo="Typo.h6" Class="mb-4">Air Zone 1</MudText>
-        </MudDropZone>
-        </ChildContent>
-              </MudDropContainer>
-
-            </EditForm>
+            <MudDropContainer T="Item" DraggingClass="mud-alert-text-warning" ItemDraggingClass="mud-alert-text-warning" Items="_items" ItemsSelector="@((item,dropzone) => item.Identifier == dropzone)"  NoDropClass="mud-border-error" ItemDropped="ItemUpdated" Class="d-flex flex-wrap flex-grow-1">
+                    <ChildContent>
+                    <MudDropZone T="Item" Identifier="User" DraggingClass="mud-alert-text-info" ItemDraggingClass="mud-alert-text-info" Class="rounded-lg border-2 border-dashed mud-border-lines-default pa-6 ma-8" CanDrop="@((item) => true )">
+                            <MudText Typo="Typo.h6" Class="mb-4">Rôles de l'utilisateur</MudText>
+                        </MudDropZone>
+                    <MudDropZone T="Item" Identifier="Roles" Class="rounded-lg border-2 border-dashed mud-border-lines-default pa-6 ma-8 flex-grow-1" CanDrop="@((item) => true )">
+                            <MudText Typo="Typo.h6" Class="mb-4">Liste des Roles</MudText>
+                        </MudDropZone>
+                    </ChildContent>
+                <ItemRenderer>
+                    <div class="mud-elevation-25 pa-4 my-4">@context.name</div>
+                </ItemRenderer>
+                </MudDropContainer>
         </MudContainer>
-
     </DialogContent>
     <DialogActions>
-        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="OnValidSubmit">Register</MudButton>
+        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="OnValidSubmit">Ok</MudButton>
     </DialogActions>
 
 </MudDialog>
 
 @code {
 
+    [Parameter]
+    public List<User> UserSelected { get; set; }
 
-    public List<string> _items = new()
-    {
-        "Admin",
-        "User"
-    };
+    public User model = new User();
 
 
-    public Role model = new Role ();
+    private List<Item> _items { get; set; }
 
     public List<Role> MyProperty { get; set; }
     void OnValidSubmit()
     {
-        
+
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        model.lastName = UserSelected[0].lastName;
+        model.firstName = UserSelected[0].firstName;
+        model.email = UserSelected[0].email;
+        model.adresse = UserSelected[0].adresse;
+
+        _items = new() { new Item(model) { name = "Admin" }, new Item(model) { name = "User" } };
+ 
+    }
+
+    private void ItemUpdated(MudItemDropInfo<Item> dropItem)
+    {
+        dropItem.Item.Identifier = dropItem.DropzoneIdentifier;
     }
 }

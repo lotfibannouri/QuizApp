@@ -12,11 +12,15 @@ namespace Authentication.web.Shared
         [Parameter]
         public EventCallback OnEditEventClicked { get; set; }
 
+        [Parameter]
+        public EventCallback OnAssignRoleToUserEventClicked { get; set; }
         private async Task InvokAddUser()=> await OnAddEventClicked.InvokeAsync();
 
         private async Task InvokDeleteUser()=> await OnDeleteEventClicked.InvokeAsync();
 
 
         private async Task InvokEditUser() => await OnEditEventClicked.InvokeAsync();
+
+        private async Task InvokAssignRoletoUser() => await OnAssignRoleToUserEventClicked.InvokeAsync();
     }
 }
