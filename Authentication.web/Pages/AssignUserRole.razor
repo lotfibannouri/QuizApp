@@ -1,0 +1,46 @@
+﻿@inject IAdministrationService adminservice;
+<MudDialog>
+    <DialogContent>
+        <MudContainer Style="max-height: 500px; overflow-y: scroll">
+            <MudText></MudText>
+            <EditForm Model="@model" OnValidSubmit="OnValidSubmit">
+                <DataAnnotationsValidator />
+               <MudDropContainer T="string" DraggingClass="mud-alert-text-warning" ItemDraggingClass="mud-alert-text-warning" Items="_items" ItemsSelector="@((item,dropzone) => item.Identifier == dropzone)" NoDropClass="mud-border-error" ItemDropped="ItemUpdated" Class="d-flex flex-wrap flex-grow-1">
+    <ChildContent>
+        <MudDropZone T="DropItem" Identifier="Enterprise" DraggingClass="mud-alert-text-info" ItemDraggingClass="mud-alert-text-info" Class="rounded-lg border-2 border-dashed mud-border-lines-default pa-6 ma-8" CanDrop="@((item) => item.Team == "BLUE")">
+            <MudText Typo="Typo.h6" Class="mb-4">USS Enterprise</MudText>
+         </MudDropZone>
+        <MudDropZone T="DropItem" Identifier="Air Zone 1" Class="rounded-lg border-2 border-dashed mud-border-lines-default pa-6 ma-8 flex-grow-1">
+            <MudText Typo="Typo.h6" Class="mb-4">Air Zone 1</MudText>
+        </MudDropZone>
+        </ChildContent>
+              </MudDropContainer>
+
+            </EditForm>
+        </MudContainer>
+
+    </DialogContent>
+    <DialogActions>
+        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="OnValidSubmit">Register</MudButton>
+    </DialogActions>
+
+</MudDialog>
+
+@code {
+
+
+    public List<string> _items = new()
+    {
+        "Admin",
+        "User"
+    };
+
+
+    public Role model = new Role ();
+
+    public List<Role> MyProperty { get; set; }
+    void OnValidSubmit()
+    {
+        
+    }
+}

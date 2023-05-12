@@ -2,12 +2,12 @@
 
 <MudPaper Width="250px" Elevation="0" Class="py-3">
     <MudNavMenu Bordered="true">
-        <AuthorizeView Roles=@($"{Roles.User}")>
+        <AuthorizeView Roles=@($"{utility.Roles.User}")>
             <Authorized>
                 <MudNavLink Href="">Dashboard</MudNavLink>
             </Authorized>
         </AuthorizeView>
-        <AuthorizeView Roles=@($"{Roles.Admin}")>
+        <AuthorizeView Roles=@($"{utility.Roles.Admin}")>
             <Authorized>
                 <MudNavLink Match="NavLinkMatch.Prefix" Href="">Creation test</MudNavLink>
                 <MudNavGroup Title="Settings" Expanded="true">
