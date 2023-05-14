@@ -18,7 +18,7 @@ namespace authentification_Api.Repository
         Task<List<Role>> GetRoles();
         Task<Role?> GetRoleByName(string name);
         Task<Role?> GetRoleById(string id);
-
         Task<IdentityResult> AssignRole(string idUser, string idRole);
+        Task<IdentityResult> ClearRoles(string idUser, List<string> roles);
     }
 }

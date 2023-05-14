@@ -120,12 +120,12 @@ namespace Authentication.web.Pages
 
             if (UsersSelected.Count() > 1)
             { 
-              parametersAlertBox.Add("AlertMessage", "il faudra choisir un seul utilisateur!");
+              parametersAlertBox.Add("AlertMessage", "Fallai choisir un seul utilisateur!");
               await dialogService.ShowAsync<AlertBox>("Alert", parametersAlertBox, optionsAlertBox);
             }
             else if (UsersSelected.Count == 0 )
             {
-                parametersAlertBox.Add("AlertMessage", "il faudra choisir un utilisateur!");
+                parametersAlertBox.Add("AlertMessage", "Fallait choisir un utilisateur!");
                 await dialogService.ShowAsync<AlertBox>("Alert", parametersAlertBox, optionsAlertBox);
             }
             else { 
@@ -137,16 +137,31 @@ namespace Authentication.web.Pages
             parameters.Add("IsEditPage", IsEditPage);
             var dialogresult = await dialogService.ShowAsync<UserDialog>("Modification des utilisateurs", parameters, options);
             }
-
+            Users = await adminService.GetUsers();
         }
 
         private async Task AssignRoleToUser()
         {
             var options = new DialogOptions { CloseOnEscapeKey = true, CloseButton = true, FullWidth = true };
             var parameters = new DialogParameters();
+            IDialogReference? dialogresult;
+            if (UsersSelected.Count() == 0)
+            {
+                parameters.Add("AlertMessage", "Fallait choisir un utilisateur!");
+                dialogresult =  await dialogService.ShowAsync<AlertBox>("Alert", parameters, options);
+            }
+            else if (UsersSelected.Count() > 1)
+                {
+                parameters.Add("AlertMessage", "Fallait choisir un seul utilisateur!");
+                dialogresult =await dialogService.ShowAsync<AlertBox>("Alert", parameters, options);
+                }
+            else { 
             parameters.Add("UserSelected", UsersSelected);
-            var dialogresult = await dialogService.ShowAsync<AssignUserRole>("Attribuer rôles", parameters, options);
-
+             dialogresult = await dialogService.ShowAsync<AssignUserRole>("Attribuer rôles", parameters, options);
+            }
+            var result = await dialogresult.Result;
+            Users = await adminService.GetUsers();
+            StateHasChanged();
         }
     }
 }

@@ -3,28 +3,29 @@
     <DialogContent>
         <MudContainer Style="max-height: 500px; overflow-y: scroll">
             <MudText></MudText>
-            <MudDropContainer T="Item" DraggingClass="mud-alert-text-warning" ItemDraggingClass="mud-alert-text-warning" Items="_items" ItemsSelector="@((item,dropzone) => item.Identifier == dropzone)"  NoDropClass="mud-border-error" ItemDropped="ItemUpdated" Class="d-flex flex-wrap flex-grow-1">
+            <MudDropContainer T="Item" DraggingClass="mud-alert-text-warning" ItemDraggingClass="mud-alert-text-warning" Items="_items" ItemsSelector="@((item,dropzone) => item._Identifier == dropzone)"  NoDropClass="mud-border-error" ItemDropped="ItemUpdated" Class="d-flex flex-wrap flex-grow-1">
                     <ChildContent>
-                    <MudDropZone T="Item" Identifier="User" DraggingClass="mud-alert-text-info" ItemDraggingClass="mud-alert-text-info" Class="rounded-lg border-2 border-dashed mud-border-lines-default pa-6 ma-8" CanDrop="@((item) => true )">
-                            <MudText Typo="Typo.h6" Class="mb-4">Rôles de l'utilisateur</MudText>
-                        </MudDropZone>
-                    <MudDropZone T="Item" Identifier="Roles" Class="rounded-lg border-2 border-dashed mud-border-lines-default pa-6 ma-8 flex-grow-1" CanDrop="@((item) => true )">
+                    <MudDropZone T="Item" Identifier="Roles" DraggingClass="mud-alert-text-info" Class="rounded-lg border-2 border-light mud-border-lines-default pa-6 ma-8 flex-grow-1" CanDrop="@((item) => true )">
                             <MudText Typo="Typo.h6" Class="mb-4">Liste des Roles</MudText>
+                        </MudDropZone>
+                    <MudDropZone T="Item" Identifier="User" Class="rounded-lg border-2 border-light mud-border-lines-default pa-6 ma-8 flex-grow-1" CanDrop="@((item) => true )">
+                            <MudText Typo="Typo.h6" Class="mb-4">Rôles de l'utilisateur</MudText>
                         </MudDropZone>
                     </ChildContent>
                 <ItemRenderer>
-                    <div class="mud-elevation-25 pa-4 my-4">@context.name</div>
+                    <div class="mud-elevation-25 pa-4 my-4">@context._name</div>
                 </ItemRenderer>
                 </MudDropContainer>
         </MudContainer>
     </DialogContent>
     <DialogActions>
-        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="OnValidSubmit">Ok</MudButton>
+        <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="OnValidChanges">Confirmer</MudButton>
     </DialogActions>
 
 </MudDialog>
 
 @code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
 
     [Parameter]
     public List<User> UserSelected { get; set; }
@@ -35,25 +36,43 @@
     private List<Item> _items { get; set; }
 
     public List<Role> MyProperty { get; set; }
-    void OnValidSubmit()
-    {
 
-    }
 
     protected override async Task OnInitializedAsync()
     {
-
+        model.id = UserSelected[0].id;
         model.lastName = UserSelected[0].lastName;
         model.firstName = UserSelected[0].firstName;
         model.email = UserSelected[0].email;
         model.adresse = UserSelected[0].adresse;
+        model.role = UserSelected[0].role;
 
-        _items = new() { new Item(model) { name = "Admin" }, new Item(model) { name = "User" } };
- 
+        _items = new() { new Item(model,"Admin") , new Item(model,"User") };
+
     }
 
     private void ItemUpdated(MudItemDropInfo<Item> dropItem)
     {
-        dropItem.Item.Identifier = dropItem.DropzoneIdentifier;
+        dropItem.Item._Identifier = dropItem.DropzoneIdentifier;
+    }
+    private async void OnValidChanges()
+    {
+
+        List<string> newRoles = _items.FindAll(i => i._Identifier == "User").Select(r => r._name).ToList();
+        newRoles = newRoles.Except(model.role).ToList();
+        if (newRoles.Count == 0)
+        {    List<string> roles = _items.FindAll(i => i._Identifier == "Roles").Select(r => r._name).ToList();
+             roles = roles.Intersect(model.role).ToList();
+            await adminservice.clearRolesAsync(model.id, roles);
+        }
+
+        foreach( var nr in newRoles)
+        {
+            await adminservice.AssignRoleAsync(model.id, nr);
+        }
+        StateHasChanged();
+        MudDialog.Close(DialogResult.Ok(true));
+        
+        
     }
 }

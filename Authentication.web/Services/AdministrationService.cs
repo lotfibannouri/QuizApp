@@ -16,6 +16,31 @@ namespace Authentication.web.Services
         {
             _httpClient = httpClient;
         }
+
+        public async Task<Response> AssignRoleAsync(string idUser, string role)
+        {
+            List<Roles> roles = await GetRoles();
+            if(role == null) {
+                return new Response(false, "Liste des roles est vide ...");
+            }
+            string idRole = roles.Find(x=>x.name == role).id;
+            //Dictionary<string,string> parameters = new Dictionary<string,string>();
+            //parameters.Add(idUser, idRole);
+            //var content = new FormUrlEncodedContent(parameters);
+
+            HttpResponseMessage httpResponseMessage = await _httpClient.PostAsync("/api/Administration/AssignRole?idUser="+ idUser+ "&"+ "idRole="+idRole,null);
+            Response response = await httpResponseMessage.Content.ReadFromJsonAsync<Response>();
+           
+            return response;
+        }
+
+        public async Task<Response> clearRolesAsync(string idUser, List<string> roles)
+        {
+            HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync("/api/Administration/ClearRoles?idUser=" + idUser , roles);
+            Response response = await httpResponseMessage.Content.ReadFromJsonAsync<Response>();
+
+            return response;
+        }
         public Task<HttpResponseMessage> CreateUserAsync(User user, string password)
         {
             throw new NotImplementedException();
@@ -66,6 +91,15 @@ namespace Authentication.web.Services
             Response result = await httpResponseMessage.Content.ReadFromJsonAsync<Response>();
             return result;
 
+
+        }
+
+
+        public async Task<List<Roles>> GetRoles()
+        {
+            HttpResponseMessage httpResponseMessage = await _httpClient.GetAsync("/api/Administration/ListRoles");
+            List<Roles> result = await httpResponseMessage.Content.ReadFromJsonAsync<List<Roles>>();
+            return result;
 
         }
     }

@@ -147,13 +147,10 @@ namespace authentification_Api.Controllers
         }
 
         [HttpGet("ListRoles")]
-        public async Task<IActionResult> GetRoles()
+        public async Task<List<Role>> GetRoles()
         {
             var result = await _administrationRepository.GetRoles();
-            if (result != null)
-                return Ok(result);
-            else
-                return NotFound("la liste des roles est vide ");
+            return result;
 
         }
 
@@ -210,14 +207,24 @@ namespace authentification_Api.Controllers
         #endregion
         #region Assign user to role
         [HttpPost("AssignRole")]
-        public async Task<IActionResult> AssignToRole(string idUser, string idRole)
+        public async Task<Response> AssignToRole(string idUser, string idRole )
         {
             var result = await _administrationRepository.AssignRole(idUser, idRole);
             if (result.Succeeded)
-                return Ok(result);
+                return new Response(true, "Role Assigned");
             else
-                return BadRequest(result);
+                return new Response(false, "Problème de serveur");
         }
         #endregion
+        [HttpPost("ClearRoles")]
+        public async Task<Response> ClearRoles(string idUser , [FromBody] List<string> roles)
+        {
+            var result = await _administrationRepository.ClearRoles(idUser, roles);
+            if (result.Succeeded)
+                return new Response(true, "Roles utilisateur vide");
+            else
+                return new Response(false, "Problème de serveur");
+
+        }
     }
 }

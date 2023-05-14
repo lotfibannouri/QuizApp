@@ -119,8 +119,15 @@ namespace authentification_Api.Repository
             User? user = await GetUserById(idUser);
             Role? role = await GetRoleById(idRole);
 
-            return await _userManager.AddToRoleAsync(user, role.Name);
+            await _userManager.AddToRoleAsync(user, role.Name);
+            return await _userManager.UpdateAsync(user);
         }
         #endregion
+        public async Task<IdentityResult> ClearRoles(string idUser,List<string> roles)
+        {
+            User? user = await GetUserById(idUser);
+             await _userManager.RemoveFromRolesAsync(user, roles);
+            return await _userManager.UpdateAsync(user);
+        }
     }
 }
