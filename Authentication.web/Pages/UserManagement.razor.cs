@@ -18,7 +18,7 @@ namespace Authentication.web.Pages
         private string _searchString;
         private bool _sortNameByLength;
         private List<string> _events = new();
-        private List<User> UsersSelected = new();
+        private HashSet<User> UsersSelected = new();
         private bool IsEditPage = false;
         [Inject]
         public IAdministrationService _administrationService{ get; set; }
@@ -70,8 +70,8 @@ namespace Authentication.web.Pages
 
         void SelectedItemsChanged(HashSet<User> items)
         {
-            UsersSelected = items.ToList();
-            _events.Insert(0, $"Event = SelectedItemsChanged, data = {System.Text.Json.JsonSerializer.Serialize(items)}");
+            //UsersSelected = items.ToList();
+            //_events.Insert(0, $"Event = SelectedItemsChanged, data = {System.Text.Json.JsonSerializer.Serialize(items)}");
         }
 
 
@@ -132,7 +132,7 @@ namespace Authentication.web.Pages
             var options = new DialogOptions { CloseOnEscapeKey = true, CloseButton = true, FullWidth = true };
             IsEditPage = true;
             var parameters = new DialogParameters();
-            parameters.Add("UserSelected", UsersSelected);
+            parameters.Add("UserSelected", UsersSelected.ToList());
             parameters.Add("dialogTitle", "Modifier utilisateur");
             parameters.Add("IsEditPage", IsEditPage);
             var dialogresult = await dialogService.ShowAsync<UserDialog>("Modification des utilisateurs", parameters, options);
@@ -156,10 +156,11 @@ namespace Authentication.web.Pages
                 dialogresult =await dialogService.ShowAsync<AlertBox>("Alert", parameters, options);
                 }
             else { 
-            parameters.Add("UserSelected", UsersSelected);
+            parameters.Add("UserSelected", UsersSelected.ToList());
              dialogresult = await dialogService.ShowAsync<AssignUserRole>("Attribuer rôles", parameters, options);
             }
             var result = await dialogresult.Result;
+            UsersSelected= new HashSet<User>();
             Users = await adminService.GetUsers();
             StateHasChanged();
         }
