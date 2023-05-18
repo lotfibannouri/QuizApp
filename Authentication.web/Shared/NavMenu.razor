@@ -10,9 +10,24 @@
         <AuthorizeView Roles=@($"{utility.Roles.Admin}")>
             <Authorized>
                 <MudNavLink Match="NavLinkMatch.Prefix" Href="">Creation test</MudNavLink>
-                <MudNavGroup Title="Settings" Expanded="true">
+                <MudNavGroup Title="utilisateurs" Expanded="true" Icon="@Icons.Material.Outlined.ManageAccounts">
                     <MudNavLink Href="UserManagement">Users</MudNavLink>
                     <MudNavLink Href="">Roles</MudNavLink>
+                </MudNavGroup>
+                <MudNavGroup Title="Quiz" Expanded="true">
+                    <MudNavLink Href="">Liste Quiz</MudNavLink>
+                   
+                    <MudNavGroup Title="Créer nouveau Quiz" Expanded="true">
+                        <MudForm>
+                            <MudInputLabel>Niveau Test</MudInputLabel>
+                            <MudRadioGroup @bind-SelectedOption="@SelectedOption">
+                                <MudRadio Option="@("")">Niveau Debutant</MudRadio>
+                                <MudRadio Option="@("")">Niveau Moyen</MudRadio>
+                                <MudRadio Option="@("")">Niveau Avancé</MudRadio>
+                                <MudRadio Option="@("")">Niveau Expert</MudRadio>
+                            </MudRadioGroup>
+                        </MudForm>
+                    </MudNavGroup>
                 </MudNavGroup>
             </Authorized>
         </AuthorizeView>
@@ -67,6 +82,7 @@
 </div>*@
 
 @code {
+    public string SelectedOption { get; set; }
     private bool collapseNavMenu = true;
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 

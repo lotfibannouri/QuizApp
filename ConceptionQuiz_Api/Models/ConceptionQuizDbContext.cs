@@ -4,6 +4,8 @@ namespace ConceptionQuiz_Api.Models
 {
     public class ConceptionQuizDbContext : DbContext
     {
+        public DbSet<Question> questions { get; set; }
+        public DbSet<Quiz> quiz { get; set; }
 
         public ConceptionQuizDbContext(DbContextOptions<ConceptionQuizDbContext> options) : base(options)
         {
@@ -12,7 +14,7 @@ namespace ConceptionQuiz_Api.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder opbuilder)
         {
-            opbuilder.UseSqlServer("Data Source=PC06\\SQLEXPRESS01;Initial Catalog=QuizConceptionDB;Integrated Security=True;Encrypt=False");
+            opbuilder.UseSqlServer("Data Source=LAPTOP-GR853ENN\\SQL19;Initial Catalog=QuizConceptionDB;Integrated Security=True;Encrypt=False");
         }
     }
 }

@@ -46,9 +46,13 @@
         model.email = UserSelected[0].email;
         model.adresse = UserSelected[0].adresse;
         model.role = UserSelected[0].role;
-
-        _items = new() { new Item(model,"Admin") , new Item(model,"User") };
-
+        _items = new List<Item>();
+        var roleList =await adminservice.GetRoles();
+        if (roleList!=null)
+            foreach (var item in roleList)
+            {
+                _items.Add(new Item(model, item.name));
+            }
     }
 
     private void ItemUpdated(MudItemDropInfo<Item> dropItem)
