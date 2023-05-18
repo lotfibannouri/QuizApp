@@ -27,7 +27,7 @@ namespace ConceptionQuiz_Api.Controllers
             try
             {
                 var result = await _quizRepository.CreateQuiz(quiz);
-                if(result) 
+                if(result.status) 
                 {
                     return Ok(result);
                 }

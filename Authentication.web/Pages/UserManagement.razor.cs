@@ -20,6 +20,8 @@ namespace Authentication.web.Pages
         private List<string> _events = new();
         private HashSet<User> UsersSelected = new();
         private bool IsEditPage = false;
+        public string txtsnakSuccess = "<div>suppression réussie</div>";
+        public string txtsnakError = "<div>Problème de suppression</div>";
         [Inject]
         public IAdministrationService _administrationService{ get; set; }
 
@@ -101,11 +103,16 @@ namespace Authentication.web.Pages
                 Response response =  await _administrationService.DeleteUserAsync(item.id);
                 if(response.status) 
                 {
-                        Console.WriteLine(response.content);
+                    SnackbarService.Add
+                        (txtsnakSuccess, Severity.Success
+                        );
+
                 }
                 else
                 {
-                    Console.WriteLine(response.content);
+                    SnackbarService.Add
+                        (txtsnakError, Severity.Warning
+                        );
                 }
             }
 

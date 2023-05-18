@@ -34,4 +34,14 @@ builder.Services.AddHttpClient<IAdministrationService, AdministrationService>(cl
 
 });
 
+builder.Services.AddHttpClient<IQuizService, QuizService>(client =>
+{
+#if (DEBUG)
+    client.BaseAddress = new Uri("https://localhost:7284");
+#else
+	client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
+#endif
+
+});
+
 await builder.Build().RunAsync();

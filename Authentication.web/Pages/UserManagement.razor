@@ -5,6 +5,7 @@
 @inject HttpClient httpClient
 @inject IAdministrationService adminService
 @inject IDialogService dialogService ;
+@inject ISnackbar SnackbarService;
 
 <ManagementBar OnAddEventClicked="AddUser"  OnDeleteEventClicked="DeleteUser" OnEditEventClicked="EditUser" OnAssignRoleToUserEventClicked="AssignRoleToUser"></ManagementBar>
 <MudDataGrid T="User" MultiSelection="true" Items="@Users" SortMode="SortMode.Multiple" Filterable="true" QuickFilter="@_quickFilter"

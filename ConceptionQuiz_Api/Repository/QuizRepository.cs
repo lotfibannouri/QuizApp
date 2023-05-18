@@ -18,12 +18,18 @@ namespace ConceptionQuiz_Api.Repository
         }
         #endregion
         #region QuizMethods
-        public async Task<bool> CreateQuiz(Quiz quiz)
+        public async Task<Response> CreateQuiz(Quiz quiz)
         {
             
             await _dbContext.quiz.AddAsync(quiz);   
             int rowsAffected = await _dbContext.SaveChangesAsync();
-            return rowsAffected > 0;
+            if(rowsAffected > 0)
+            {
+                return new Response(true, "création de Quiz réussie...");
+
+            }
+            else
+                return new Response(false, "création de Quiz a été échoué...");
 
 
         }
