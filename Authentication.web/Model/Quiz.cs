@@ -4,7 +4,7 @@ namespace Authentication.web.Model
 {
     public class Quiz
     {
-        public string id { get; set; }
+        public string? id { get; set; } = "";
         [Required]
         public string titre { get; set; }
         [Required]

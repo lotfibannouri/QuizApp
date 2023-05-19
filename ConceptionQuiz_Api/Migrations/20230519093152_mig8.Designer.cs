@@ -4,6 +4,7 @@ using ConceptionQuiz_Api.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConceptionQuiz_Api.Migrations
 {
     [DbContext(typeof(ConceptionQuizDbContext))]
-    partial class ConceptionQuizDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230519093152_mig8")]
+    partial class mig8
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -46,11 +49,9 @@ namespace ConceptionQuiz_Api.Migrations
 
             modelBuilder.Entity("ConceptionQuiz_Api.Models.Quiz", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<string>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("dateCreation")
                         .HasColumnType("datetime2");
@@ -102,8 +103,8 @@ namespace ConceptionQuiz_Api.Migrations
                     b.Property<string>("questionsid")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("quizid")
-                        .HasColumnType("int");
+                    b.Property<string>("quizid")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("questionsid", "quizid");
 

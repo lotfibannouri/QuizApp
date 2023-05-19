@@ -34,7 +34,7 @@ builder.Services.AddHttpClient<IAdministrationService, AdministrationService>(cl
 
 });
 
-builder.Services.AddHttpClient<IQuizService, QuizService>(client =>
+builder.Services.AddHttpClient<IQuizService,QuizService>(client =>
 {
 #if (DEBUG)
     client.BaseAddress = new Uri("https://localhost:7284");

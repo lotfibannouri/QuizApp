@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ConceptionQuiz_Api.Models
 {
@@ -6,11 +7,13 @@ namespace ConceptionQuiz_Api.Models
     {
         public Quiz()
         {
-            id = Guid.NewGuid().ToString();
+           
             this.questions = new HashSet<Question>();
         }
+        [Key]
 
-        public  string id { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public  int id { get; set; }
         public string titre { get; set; }
         public string description { get; set; }
         public int niv_deficulte { get; set; }

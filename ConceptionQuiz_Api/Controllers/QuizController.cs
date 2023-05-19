@@ -22,17 +22,13 @@ namespace ConceptionQuiz_Api.Controllers
         #region QuizMethods
 
         [HttpPost("AddQuiz")]
-        public async Task<IActionResult> CreateQuiz([FromBody] Quiz quiz)
+        public async Task<Response> CreateQuiz([FromBody] Quiz quiz)
         {
             try
             {
                 var result = await _quizRepository.CreateQuiz(quiz);
-                if(result.status) 
-                {
-                    return Ok(result);
-                }
-                
-                return BadRequest();
+                return result; 
+               
 
             }
            catch(Exception ex)
