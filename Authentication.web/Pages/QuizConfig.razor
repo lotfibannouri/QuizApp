@@ -1,4 +1,5 @@
-﻿@inject IQuizService quizService ;
+﻿@using QuizApp.Entities.Conception_Entities.DTO.Quiz_DTO;
+@inject IQuizService quizService ;
 
 <MudNavGroup Title="Créer nouveau Quiz" Expanded="true">
     <MudCarousel Class="mud-width-full" Style="height:200px;" ShowArrows="true" ShowBullets="false" EnableSwipeGesture="false" AutoCycle="false" TData="object" ArrowsPosition="Position.Bottom">
@@ -40,12 +41,11 @@
 
     private async void SaveQuiz()
     {
-        Quiz quiz = new Quiz();
+        CreationQuizDTO quiz = new CreationQuizDTO();
         quiz.titre = TitreValue;
         quiz.description = DescriptionValue;
         quiz.duree_quiz = duree;
         quiz.niv_deficulte =Int32.Parse(SelectedOption);
-        quiz.dateCreation = DateTime.Now;
 
         await quizService.CreateQuiz(quiz);
 

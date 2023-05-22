@@ -11,14 +11,15 @@
         <AuthorizeView Roles=@($"{utility.Roles.Admin}")>
             <Authorized>
                 <MudNavGroup Title="utilisateurs" Expanded="true" Icon="@Icons.Material.Outlined.ManageAccounts">
-                    <MudNavLink Href="UserManagement">Users</MudNavLink>
-                    <MudNavLink Href="">Roles</MudNavLink>
+                    <MudNavLink Href="UserManagement">Gestionnaire d'utilisateurs</MudNavLink>
+                    <MudNavLink Href="">Gestionnaire de Roles</MudNavLink>-
                 </MudNavGroup>
                 <MudNavGroup Title="Quiz" Expanded="true"Icon="@Icons.Material.Outlined.Quiz">
+                    <MudNavLink Href="QuizManagement">Gestionnaire de Quiz</MudNavLink>
                     <QuizConfig>
 
                     </QuizConfig>
-                   
+                    <MudNavLink Href="QuestionManagement">Gestionnaire de Questions</MudNavLink>
                 </MudNavGroup>
             </Authorized>
         </AuthorizeView>

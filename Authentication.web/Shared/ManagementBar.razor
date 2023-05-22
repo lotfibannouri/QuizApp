@@ -1,8 +1,21 @@
 ﻿<MudPaper Elevation="25">
     <MudToolBar>
-        <MudIconButton Icon="@Icons.Material.Outlined.Add" OnClick="@InvokAddUser" />
-        <MudIconButton Icon="@Icons.Material.Outlined.Edit" OnClick="@InvokEditUser" />
-        <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Inherit" OnClick="@InvokDeleteUser" />
-        <MudIconButton Icon="@Icons.Material.Outlined.ManageAccounts" OnClick="@InvokAssignRoletoUser" />
+        @switch (TypeBar)
+        {
+            case Type.USER:
+
+                <MudIconButton Icon="@Icons.Material.Outlined.Add" OnClick="@InvokAddUser" />
+                <MudIconButton Icon="@Icons.Material.Outlined.Edit" OnClick="@InvokEditUser" />
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Inherit" OnClick="@InvokDeleteUser" />
+                <MudIconButton Icon="@Icons.Material.Outlined.ManageAccounts" OnClick="@InvokAssignRoletoUser" />
+                break;
+            case Type.QUIZ:
+                <MudIconButton Icon="@Icons.Material.Outlined.Add" />
+                <MudIconButton Icon="@Icons.Material.Outlined.QuestionAnswer" />
+                <MudIconButton Icon="@Icons.Material.Outlined.Edit"/>
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Inherit" />
+
+                break;
+        }
     </MudToolBar>
 </MudPaper>

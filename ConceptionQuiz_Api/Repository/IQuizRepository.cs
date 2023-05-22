@@ -1,13 +1,15 @@
 ﻿using ConceptionQuiz_Api.Models;
+using QuizApp.Entities.Conception_Entities;
+using QuizApp.Entities.Conception_Entities.DTO.Quiz_DTO;
 
 namespace ConceptionQuiz_Api.Repository
 {
     public interface IQuizRepository
     {
-        Task<Response> CreateQuiz(Quiz quiz);
+        Task<Response> CreateQuiz(CreationQuizDTO quiz);
         Task<bool> DeleteQuiz(string id);
         Task<bool> UpdateQuiz(string id, Quiz quiz);
-        Task<List<Quiz>> ListQuiz();
+        Task<List<ListQuizDTO>> ListQuiz();
         Task<Quiz> GetQuizById(string id);
         Task<Quiz> GetQuizByName(string name);
 

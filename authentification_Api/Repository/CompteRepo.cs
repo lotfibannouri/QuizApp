@@ -25,7 +25,7 @@ namespace authentification_Api.Repository
          
         public async Task<Response> LoginAsync(LoginModel model)
         {
-            
+
             User? user = await _userManager.FindByEmailAsync(model.email);
             if (user != null)
             {
@@ -87,6 +87,7 @@ namespace authentification_Api.Repository
 
         public async Task<Response> SignUpAsync(SignUpModel model)
         {
+            IdentityResult result;
             var user = new User()
             {
                 nom = model.nom,
@@ -96,7 +97,14 @@ namespace authentification_Api.Repository
                 UserName = model.prenom+"."+model.nom,
 
             };
-            var result = await _userManager.CreateAsync(user, model.password);
+            var emailExist = await _userManager.FindByEmailAsync(user.Email);    
+            if(emailExist != null)
+            {
+                _response.status = false;
+                _response.content = "Cette adresse mail existe déja !";
+                return _response;
+            }
+            result = await _userManager.CreateAsync(user, model.password);
             if(result.Succeeded)
             {
                 _response.status = true;

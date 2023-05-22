@@ -23,7 +23,7 @@ namespace Authentication.web.Pages
         public string txtsnakSuccess = "<div>suppression réussie</div>";
         public string txtsnakError = "<div>Problème de suppression</div>";
         [Inject]
-        public IAdministrationService _administrationService{ get; set; }
+        public IAdministrationService _administrationService { get; set; }
 
         // custom sort by name length
 

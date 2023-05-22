@@ -1,10 +1,12 @@
 ﻿using Authentication.web.Model;
+using QuizApp.Entities.Conception_Entities.DTO.Quiz_DTO;
 
 namespace Authentication.web.Services
 {
     public interface IQuizService
     {
-        Task<Response> CreateQuiz(Quiz quiz);
+        Task<Response> CreateQuiz(CreationQuizDTO quiz);
+        Task<List<ListQuizDTO>> ListeQuiz();
 
     }
 }

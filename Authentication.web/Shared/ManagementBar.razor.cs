@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Authentication.web.Model;
+using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
 namespace Authentication.web.Shared
 {
     public partial class ManagementBar
     {
+        [Parameter]
+        public Type TypeBar { get; set; }
         [Parameter]
         public EventCallback OnAddEventClicked  { get; set; }
         [Parameter]
@@ -22,5 +25,12 @@ namespace Authentication.web.Shared
         private async Task InvokEditUser() => await OnEditEventClicked.InvokeAsync();
 
         private async Task InvokAssignRoletoUser() => await OnAssignRoleToUserEventClicked.InvokeAsync();
+  
+        public enum Type
+        {
+            USER,
+            QUIZ,
+            ROLE
+        }
     }
 }

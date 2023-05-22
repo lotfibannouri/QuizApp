@@ -1,6 +1,10 @@
-﻿using ConceptionQuiz_Api.Models;
+﻿using AutoMapper;
+using ConceptionQuiz_Api.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using QuizApp.Entities.Conception_Entities;
+using QuizApp.Entities.Conception_Entities.DTO.Quiz_DTO;
 
 namespace ConceptionQuiz_Api.Repository
 {
@@ -8,19 +12,20 @@ namespace ConceptionQuiz_Api.Repository
     {
         #region properties
         private readonly ConceptionQuizDbContext _dbContext;
+        private readonly IMapper _mapper;
         #endregion
         #region Constructors
-        public QuizRepository(ConceptionQuizDbContext dbContext)
+        public QuizRepository(ConceptionQuizDbContext dbContext, IMapper mapper)
         {
-
+            _mapper = mapper;
             _dbContext = dbContext;
 
         }
         #endregion
         #region QuizMethods
-        public async Task<Response> CreateQuiz(Quiz quiz)
+        public async Task<Response> CreateQuiz(CreationQuizDTO value)
         {
-            
+            Quiz quiz = _mapper.Map<CreationQuizDTO,Quiz>(value);
             await _dbContext.quiz.AddAsync(quiz);   
             int rowsAffected = await _dbContext.SaveChangesAsync();
             if(rowsAffected > 0)
@@ -53,9 +58,14 @@ namespace ConceptionQuiz_Api.Repository
             throw new NotImplementedException();
         }
 
-        public async Task<List<Quiz>> ListQuiz()
+        public async Task<List<ListQuizDTO>> ListQuiz()
         {
-            return await _dbContext.quiz.ToListAsync();
+            
+            List<Quiz> data = await _dbContext.quiz.ToListAsync();
+            List<ListQuizDTO> listQuiz = new List<ListQuizDTO>();
+            foreach (Quiz quiz in data)
+                listQuiz.Add(_mapper.Map<Quiz, ListQuizDTO>(quiz));
+            return listQuiz;
         }
 
 

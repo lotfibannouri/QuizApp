@@ -2,6 +2,8 @@
 using ConceptionQuiz_Api.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using QuizApp.Entities.Conception_Entities;
+using QuizApp.Entities.Conception_Entities.DTO.Quiz_DTO;
 
 namespace ConceptionQuiz_Api.Controllers
 {
@@ -20,9 +22,9 @@ namespace ConceptionQuiz_Api.Controllers
         #endregion
 
         #region QuizMethods
-
+            
         [HttpPost("AddQuiz")]
-        public async Task<Response> CreateQuiz([FromBody] Quiz quiz)
+        public async Task<Response> CreateQuiz([FromBody] CreationQuizDTO quiz)
         {
             try
             {

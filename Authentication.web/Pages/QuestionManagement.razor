@@ -1,0 +1,29 @@
+﻿@page "/QuestionManagement"
+<div class="container">
+<EditForm Model="@model" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    <MudGrid>
+        <MudItem xs="12" sm="6">
+            <MudTextField T="string" Label="texte de question" Required="true" Lines="3" RequiredError="le texte est obligatoire!" />
+        </MudItem>
+        <MudItem xs="12" sm="6">
+            <MudSelect T="string" Label="Type de question" AnchorOrigin="Origin.BottomCenter" @bind-Value="selectedOption">
+                <MudSelectItem Value="@("Choix Multiple")" />
+                <MudSelectItem Value="@("Vrai/Faux")" />
+                <MudSelectItem Value="@("Codage")" />
+            </MudSelect>
+        </MudItem>
+        <MudItem xs="12" sm="12">
+            <MudCard>
+                @if (selectedOption == "Choix Multiple" || selectedOption == "Vrai/Faux"){
+                <MudFab  Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" Label="novelle proposition"  />
+                    
+                    }
+               
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+</EditForm>
+</div>
+
+
