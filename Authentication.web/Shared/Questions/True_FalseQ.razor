@@ -1,0 +1,18 @@
+﻿
+<MudGrid>
+    <MudItem xs="7" sm="7">
+        <MudTextField @bind-Value="TextValue" Label="proposition" Variant="Variant.Text"></MudTextField>
+    </MudItem>
+    <MudItem xs="3" sm="5">
+        <MudRadioGroup @bind-SelectedOption="@SelectedOption" style="display: flex; flex-direction: row;">
+            <MudRadio Size="Size.Small" Option="@("true")" Disabled="true"><p style="font-size:small">Vrai</p></MudRadio>
+            <MudRadio Size="Size.Small" Option="@("false")" Disabled="true"><p style="font-size:small">Faux</p></MudRadio>
+        </MudRadioGroup>
+    </MudItem>
+</MudGrid>
+
+@code {
+    public string SelectedOption { get; set; }
+    public string TextValue { get; set; }
+
+}

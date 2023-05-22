@@ -58,13 +58,15 @@ namespace ConceptionQuiz_Api.Repository
             throw new NotImplementedException();
         }
 
-        public async Task<List<ListQuizDTO>> ListQuiz()
-        {
-            
-            List<Quiz> data = await _dbContext.quiz.ToListAsync();
+        public async Task<List<ListQuizDTO>>? ListQuiz()
+        {            
+            List<Quiz>? data = await _dbContext.quiz.ToListAsync();
             List<ListQuizDTO> listQuiz = new List<ListQuizDTO>();
+            if(data!= null)
+            { 
             foreach (Quiz quiz in data)
                 listQuiz.Add(_mapper.Map<Quiz, ListQuizDTO>(quiz));
+            }
             return listQuiz;
         }
 

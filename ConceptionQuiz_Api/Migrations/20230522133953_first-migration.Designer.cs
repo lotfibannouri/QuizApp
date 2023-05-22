@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConceptionQuiz_Api.Migrations
 {
     [DbContext(typeof(ConceptionQuizDbContext))]
-    [Migration("20230520202241_first-migration")]
+    [Migration("20230522133953_first-migration")]
     partial class firstmigration
     {
         /// <inheritdoc />
