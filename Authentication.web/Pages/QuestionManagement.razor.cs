@@ -10,8 +10,12 @@ namespace Authentication.web.Pages
         List<RenderFragment> _propositionsList = new List<RenderFragment>();
         public string selectedOption { get; set; }
         public string TextValue { get; set; }
+
         CreationQuestionDTO model = new CreationQuestionDTO();
 
+
+       
+        
         public void OnValidSubmit() {
 
            
@@ -19,12 +23,15 @@ namespace Authentication.web.Pages
 
         public void OnAddProposition<TComponent>() where TComponent : IComponent
         {
+            var newval = _propositionsList.Count();
             RenderFragment childComponent = builder =>
             {
                 builder.OpenComponent(0, typeof(TComponent));
+                builder.AddAttribute(1, "index", newval);
+                builder.AddAttribute(2, "OnDeleteEventClicked", EventCallback.Factory.Create<int>(this,OnDeleteItem));
                 builder.CloseComponent();
             };
-
+           
             _propositionsList.Add(childComponent);
         }
 
@@ -35,7 +42,10 @@ namespace Authentication.web.Pages
 
         }
 
-
+        public void OnDeleteItem(int index)
+         {
+            _propositionsList.RemoveAt(index);
+         }
 
 
     }
