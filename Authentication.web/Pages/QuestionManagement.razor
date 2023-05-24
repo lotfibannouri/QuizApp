@@ -3,7 +3,7 @@
 <div class="container">
     <EditForm Model="@model" OnValidSubmit="OnValidSubmit">
         <DataAnnotationsValidator />
-        <MudGrid>
+        <MudGrid @ref="@MainGrid">
             <MudItem xs="12" sm="6">
                 <MudTextField T="string" Label="texte de question" Required="true" Lines="3" RequiredError="le texte est obligatoire!" @bind-Value="TextValue" />
             </MudItem>
@@ -21,9 +21,9 @@
                     {
 
                         <MudItem xs="12" sm="6">
-                            @foreach (var component in _propositionsList)
-                                @component
-
+                           @* @foreach (var component in _propositionsList)
+                                @component *@          
+                                <MultiCheckQ ></MultiCheckQ>
                             </MudItem>
 
                         <MudFab Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" Label="novelle proposition" OnClick="OnAddProposition<MultiCheckQ>" />
@@ -32,12 +32,9 @@
                     {
 
                         <MudItem xs="12" sm="6">
-                            @foreach (var component in _propositionsList)
-                                @component
-
-
-
-
+                           @* @foreach (var component in _propositionsList)
+                                @component*@
+                                <True_FalseQ></True_FalseQ>
                             </MudItem>
 
                         <MudFab Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" Label="novelle proposition" OnClick="OnAddProposition<True_FalseQ>" />
@@ -50,7 +47,6 @@
                         </MudItem>
 
                     }
-
 
                 </MudCard>
             </MudItem>
