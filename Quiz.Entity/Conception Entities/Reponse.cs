@@ -9,8 +9,9 @@ namespace QuizApp.Entities.Conception_Entities
 {
     public class Reponse : BaseEntity
     {
-        public string body { get; set; }
-        public string questionId { get; set; }
-        public virtual Question question { get; set; }
+        public string Body { get; set; }
+        public Guid QuestionId { get; set; }
+        public bool IsRawAnswer { get; set; }
+        public  Question Question { get; set; }
     }
 }

@@ -11,8 +11,8 @@ namespace QuizApp.Entities.Conception_Entities
     {
         public string questionText { get; set; }
         public string type { get; set; }
-        public string body { get; set; }
-        public virtual ICollection<Quiz>? quiz { get; set; }
-        public virtual ICollection<Reponse>? reponses { get; set; }
+        public  ICollection<Quiz>? quiz { get; set; }
+        public  ICollection<Reponse>? reponses { get; set; }
+        public  ICollection<Proposition>? propositions { get; set; }
     }
 }

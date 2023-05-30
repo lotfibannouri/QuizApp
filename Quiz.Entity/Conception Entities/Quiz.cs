@@ -14,6 +14,6 @@ namespace QuizApp.Entities.Conception_Entities
         public int niv_deficulte { get; set; }
         public int duree_quiz { get; set; }
         public int nbr_questions { get; set; }
-        public virtual ICollection<Question>? questions { get; set; }
+        public ICollection<Question>? questions { get; set; }
     }
 }

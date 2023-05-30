@@ -55,46 +55,46 @@ namespace ConceptionQuiz_Api.Controllers
             }
 
         }
-        #endregion
-        #region QuestionMethods
-        [HttpPost("AddQuestion")]
-        public async Task<IActionResult> CreateQuestion([FromBody] Question question)
-        {
-            try
-            {
-                var result = await _quizRepository.CreateQuestion(question);
-                if (result)
-                {
-                    return Ok(result);
-                }
+        //#endregion
+        //#region QuestionMethods
+        //[HttpPost("AddQuestion")]
+        //public async Task<IActionResult> CreateQuestion([FromBody] Question question)
+        //{
+        //    try
+        //    {
+        //        var result = await _quizRepository.CreateQuestion(question);
+        //        if (result)
+        //        {
+        //            return Ok(result);
+        //        }
 
-                return BadRequest();
+        //        return BadRequest();
 
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.ToString());
-            }
-        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception(ex.ToString());
+        //    }
+        //}
 
 
-        [HttpGet("ListQuestions")]
-        public async Task<IActionResult> GetQuestions()
-        {
-            try
-            {
-                var result = await _quizRepository.ListQuestions();
-                if (result != null)
-                    return Ok(result);
-                else
-                    return NotFound("liste des Question est vide ");
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.ToString());
-            }
+        //[HttpGet("ListQuestions")]
+        //public async Task<IActionResult> GetQuestions()
+        //{
+        //    try
+        //    {
+        //        var result = await _quizRepository.ListQuestions();
+        //        if (result != null)
+        //            return Ok(result);
+        //        else
+        //            return NotFound("liste des Question est vide ");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception(ex.ToString());
+        //    }
 
-        }
+        //}
 
         [HttpPost("AddToQuiz")]
         public async Task<IActionResult> AddToQuiz(string idQuiz, string idQuestion)

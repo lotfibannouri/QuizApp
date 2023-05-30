@@ -26,6 +26,7 @@ builder.Services.AddCors(option =>
 }
 );
 builder.Services.AddTransient<IQuizRepository, QuizRepository>();
+builder.Services.AddTransient<IQuestionRepository, QuestionRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

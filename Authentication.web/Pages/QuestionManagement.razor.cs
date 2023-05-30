@@ -8,6 +8,7 @@ using QuizApp.Entities.Conception_Entities.DTO.QuestionDTO;
 namespace Authentication.web.Pages
 {
     public partial class QuestionManagement
+<<<<<<< Updated upstream
     {
         List<RenderFragment> _propositionsList = new List<RenderFragment>();
         public string selectedOption { get; set; }
@@ -50,6 +51,11 @@ namespace Authentication.web.Pages
 
          }
 
+=======
+    {   
+       
+        public CreationQ_PropDTO model = new CreationQ_PropDTO();
+>>>>>>> Stashed changes
 
     }
 }

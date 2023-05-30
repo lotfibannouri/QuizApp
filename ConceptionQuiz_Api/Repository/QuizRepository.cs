@@ -13,13 +13,14 @@ namespace ConceptionQuiz_Api.Repository
         #region properties
         private readonly ConceptionQuizDbContext _dbContext;
         private readonly IMapper _mapper;
+        private readonly IQuestionRepository _questionRepository;
         #endregion
         #region Constructors
-        public QuizRepository(ConceptionQuizDbContext dbContext, IMapper mapper)
+        public QuizRepository(ConceptionQuizDbContext dbContext, IMapper mapper, IQuestionRepository questionRepository)
         {
             _mapper = mapper;
             _dbContext = dbContext;
-
+            _questionRepository = questionRepository;
         }
         #endregion
         #region QuizMethods
@@ -76,37 +77,12 @@ namespace ConceptionQuiz_Api.Repository
             throw new NotImplementedException();
         }
         #endregion
-        #region QuestionMethods
-        public async Task<bool> CreateQuestion(Question question)
-        {
-            await _dbContext.questions.AddAsync(question);
-            int rowsAffected = await _dbContext.SaveChangesAsync();
-            return rowsAffected > 0;
-
-        }
-        public async Task<bool> DeleteQuestion(string id)
-        {
-            Question? question = await GetQuestionById(id);
-            _dbContext.questions.Remove(question);
-            int rowsAffected = await _dbContext.SaveChangesAsync();
-
-            return rowsAffected > 0;
-        }
-        public async Task<Question> GetQuestionById(string id)
-        {
-            return await _dbContext.questions.FindAsync(id);
-        }
-
-        public async Task<List<Question>> ListQuestions()
-        {
-            return await _dbContext.questions.ToListAsync();
-        }
-        #endregion
+       
 
         public async Task<bool> AddToQuiz(string Idquestion, string Idquiz)
         {
             Quiz quizref = await this.GetQuizById(Idquiz);
-            Question questionref =await GetQuestionById(Idquestion);
+            Question questionref =await _questionRepository.GetQuestionById(Idquestion);
            
             quizref.questions.Add(questionref);
             _dbContext.quiz.Update(quizref);

@@ -1,26 +1,32 @@
 ﻿@page "/QuestionManagement"
 @using Authentication.web.Shared.Questions
 <div class="container">
-    <EditForm Model="@model" OnValidSubmit="OnValidSubmit">
+    <EditForm Model="@model" >
         <DataAnnotationsValidator />
         <MudGrid @ref="@MainGrid">
             <MudItem xs="12" sm="6">
-                <MudTextField T="string" Label="texte de question" Required="true" Lines="3" RequiredError="le texte est obligatoire!" @bind-Value="TextValue" />
+                <MudTextField T="string" Label="texte de question" Required="true" Lines="3" RequiredError="le texte est obligatoire!" @bind-Value="model.questionText" />
             </MudItem>
             <MudItem xs="12" sm="6">
-                <MudSelect T="string" Label="Type de question" AnchorOrigin="Origin.BottomCenter" @bind-Value="selectedOption" SelectedValuesChanged="OnSelectedValueChanged">
+                <MudSelect T="string" Label="Type de question" AnchorOrigin="Origin.BottomCenter" @bind-Value="model.type">
                     <MudSelectItem Value="@("Choix Multiple")" />
                     <MudSelectItem Value="@("Vrai/Faux")" />
                     <MudSelectItem Value="@("Codage")" />
                 </MudSelect>
             </MudItem>
             <MudItem xs="12" sm="12">
-                <MudCard>
                     <h3>choix</h3>
-                    @if (selectedOption == "Choix Multiple")
+                    @if (model.type == "Choix Multiple")
+                    {
+                        <MudItem xs="12" sm="6">
+                            <MultiCheckQ data="model"/>
+                        </MudItem>
+                    }
+                    else if (model.type == "Vrai/Faux")
                     {
 
                         <MudItem xs="12" sm="6">
+<<<<<<< Updated upstream
                            @* @foreach (var component in _propositionsList)
                                 @component *@          
                                 <MultiCheckQ ></MultiCheckQ>
@@ -38,17 +44,25 @@
                             </MudItem>
 
                         <MudFab Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" Label="novelle proposition" OnClick="OnAddProposition<True_FalseQ>" />
+=======
+                            <True_FalseQ />
+                        </MudItem>
+>>>>>>> Stashed changes
 
                     }
-                    else if (selectedOption == "Codage")
+                    else if (model.type == "Codage")
                     {
                         <MudItem xs="12" sm="6">
                             <CodingQ />
                         </MudItem>
+<<<<<<< Updated upstream
 
                     }
 
                 </MudCard>
+=======
+                    }   
+>>>>>>> Stashed changes
             </MudItem>
         </MudGrid>
     </EditForm>

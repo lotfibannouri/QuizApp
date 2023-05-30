@@ -1,4 +1,5 @@
 ﻿@using Authentication.web.Shared.Questions
+<<<<<<< Updated upstream
 <MudGrid Cols="12">
       @foreach (var component in QuestionsList)
     {
@@ -9,10 +10,44 @@
         </MudItem>   
     }
     
+=======
+@inject IQuestionService Questionservice
+@if(!responsePage)
+{
+<MudGrid>
+    @foreach (var prop in propositions)
+        {
+    <MudItem xs="7" sm="10">
+            <MudTextField @bind-Value="prop._textPropositon" Label="proposition" Variant="Variant.Text"></MudTextField>
+    </MudItem>
+    <MudItem xs="2" sm="2">
+            <MudFab Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Delete" Size="Size.Small" OnClick="() => OnDeleteProp(prop)" />
+    </MudItem>
+        }
+    <MudItem xs="7" sm="12">
+        <MudFab Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add"  OnClick="OnAddProp" />
+        
+    </MudItem>
+
+>>>>>>> Stashed changes
 </MudGrid>
+}
+else{
+<MudGrid>
+    @foreach (var prop in propositions)
+    {<MudItem xs="7" sm="4">
+                <MudCheckBox @bind-Checked="@prop._chkProposition" LabelPosition="LabelPosition.Start" Color="@((!prop._chkProposition) ? Color.Secondary : Color.Success)"></MudCheckBox>
+        </MudItem>
+        <MudItem xs="7" sm="8">
+            <MudTextField @bind-Value="prop._textPropositon" Label="proposition" Variant="Variant.Text" Disabled="true"></MudTextField>
+        </MudItem>
+    }
+</MudGrid>
+}
 
-@code{
+<MudButton Color="Color.Warning" StartIcon="@Icons.Material.Filled.ArrowForwardIos" OnClick="RenderResponse" style="@(responsePage ? "display: none;" : "")">Réponse</MudButton>
 
+<<<<<<< Updated upstream
 
 
     
@@ -33,3 +68,7 @@
                 margin-right: 0;
             }
 </style>
+=======
+<MudFab Color="Color.Primary" StartIcon="@Icons.Material.Filled.ArrowBack" style="@(!responsePage ? "display: none;" : "")" OnClick="OnPrevious" />
+<MudFab Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" style="@(!responsePage ? "display: none;" : "")" OnClick="SaveQuestion" />
+>>>>>>> Stashed changes
