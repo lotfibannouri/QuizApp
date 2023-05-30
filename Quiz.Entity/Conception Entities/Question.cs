@@ -1,4 +1,5 @@
 ﻿using QuizApp.Entities.Base_Entities;
+using QuizApp.Entities.Conception_Entities.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,7 @@ namespace QuizApp.Entities.Conception_Entities
         public string type { get; set; }
         public  ICollection<Quiz>? quiz { get; set; }
         public  ICollection<Reponse>? reponses { get; set; }
+        
         public  ICollection<Proposition>? propositions { get; set; }
     }
 }

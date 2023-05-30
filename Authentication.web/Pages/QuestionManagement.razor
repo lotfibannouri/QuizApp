@@ -1,9 +1,9 @@
 ﻿@page "/QuestionManagement"
 @using Authentication.web.Shared.Questions
 <div class="container">
-    <EditForm Model="@model" >
+    <EditForm Model="@model">
         <DataAnnotationsValidator />
-        <MudGrid @ref="@MainGrid">
+        <MudGrid>
             <MudItem xs="12" sm="6">
                 <MudTextField T="string" Label="texte de question" Required="true" Lines="3" RequiredError="le texte est obligatoire!" @bind-Value="model.questionText" />
             </MudItem>
@@ -25,29 +25,16 @@
                     else if (model.type == "Vrai/Faux")
                     {
 
-                        <MudItem xs="12" sm="6">
-<<<<<<< Updated upstream
-                           @* @foreach (var component in _propositionsList)
-                                @component *@          
+                        <MudItem xs="12" sm="6">      
                                 <MultiCheckQ ></MultiCheckQ>
                             </MudItem>
-
-                        <MudFab Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" Label="novelle proposition" OnClick="OnAddProposition<MultiCheckQ>" />
                     }
-                    else if (selectedOption == "Vrai/Faux")
+                 else if (model.type == "Vrai/Faux")
                     {
 
                         <MudItem xs="12" sm="6">
-                           @* @foreach (var component in _propositionsList)
-                                @component*@
-                                <True_FalseQ></True_FalseQ>
-                            </MudItem>
-
-                        <MudFab Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" Label="novelle proposition" OnClick="OnAddProposition<True_FalseQ>" />
-=======
-                            <True_FalseQ />
+                             <True_FalseQ></True_FalseQ>
                         </MudItem>
->>>>>>> Stashed changes
 
                     }
                     else if (model.type == "Codage")
@@ -55,14 +42,11 @@
                         <MudItem xs="12" sm="6">
                             <CodingQ />
                         </MudItem>
-<<<<<<< Updated upstream
+
 
                     }
 
-                </MudCard>
-=======
-                    }   
->>>>>>> Stashed changes
+                
             </MudItem>
         </MudGrid>
     </EditForm>
