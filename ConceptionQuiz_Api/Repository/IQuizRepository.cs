@@ -8,7 +8,7 @@ namespace ConceptionQuiz_Api.Repository
     public interface IQuizRepository
     {
         Task<Response> CreateQuiz(CreationQuizDTO quiz);
-        Task<bool> DeleteQuiz(string id);
+        Task<Response> DeleteQuiz(string id);
         Task<bool> UpdateQuiz(string id, Quiz quiz);
         Task<List<ListQuizDTO>> ListQuiz();
         Task<Quiz> GetQuizById(string id);

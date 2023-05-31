@@ -1,0 +1,30 @@
+﻿@inject IQuizService quizService ;
+@inject ISnackbar SnackbarService;
+<MudDialog>
+    <DialogContent>
+        <MudContainer Style="max-height: 500px; overflow-y: scroll">
+            <MudText>Ajouter Quiz</MudText>
+            <EditForm Model="@model" OnValidSubmit="OnValidSubmit">
+                <DataAnnotationsValidator />
+                <MudInputLabel>titre Quiz</MudInputLabel>
+                <MudTextField @bind-Value="model.titre" Label="Titre" Variant="Variant.Text" Required="true"></MudTextField>
+                <MudInputLabel>Description</MudInputLabel>
+                <MudTextField T="string" Label="Description" Variant="Variant.Outlined" @bind-Value="model.description" Lines="3" Required="true" />
+                <MudInputLabel>Niveau Test</MudInputLabel>
+                <MudRadioGroup @bind-SelectedOption="model.niv_deficulte" style="display: grid;" Required="true">
+                    <MudRadio Size="Size.Small" Option="@(1)"><p style="font-size:small">Debutant</p></MudRadio>
+                    <MudRadio Size="Size.Small" Option="@(2)"><p style="font-size:small">Moyen</p></MudRadio>
+                    <MudRadio Size="Size.Small" Option="@(3)"><p style="font-size:small">avancé</p></MudRadio>
+                    <MudRadio Size="Size.Small" Option="@(4)"><p style="font-size:small">Expert</p></MudRadio>
+                </MudRadioGroup>
+                <MudInputLabel>Durée Quiz</MudInputLabel>
+                <MudNumericField @bind-Value="model.duree_quiz" Label="Entrer la durée de test" Variant="Variant.Outlined" Required="true" />
+            </EditForm>
+        </MudContainer>
+
+    </DialogContent>
+    <DialogActions>
+        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="OnValidSubmit">Enregistrer</MudButton>
+    </DialogActions>
+
+</MudDialog>

@@ -25,13 +25,14 @@ namespace Authentication.web.Shared
 
         private async Task InvokDeleteUser()=> await OnDeleteEventClicked.InvokeAsync();
 
-
         private async Task InvokEditUser() => await OnEditEventClicked.InvokeAsync();
 
         private async Task InvokAssignRoletoUser() => await OnAssignRoleToUserEventClicked.InvokeAsync();
 
         private async Task InvokeBindUsertoQuiz() => await OnBindUserToQuiz.InvokeAsync();
-
+       
+        private async Task InvokAddQuiz() => await OnAddEventClicked.InvokeAsync();
+        private async Task InvokDeleteQuiz() => await OnDeleteEventClicked.InvokeAsync();
 
         public enum Type
         {

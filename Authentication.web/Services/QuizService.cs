@@ -36,5 +36,12 @@ namespace Authentication.web.Services
             Response response = await httpResponseMessage.Content.ReadFromJsonAsync<Response>();
             return response;
         }
+
+        public async Task<Response> DeleteQuiz(string id) 
+        {
+            HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync("/api/Quiz/DeleteQuiz", id);
+            Response response = await httpResponseMessage.Content.ReadFromJsonAsync<Response>();
+            return response;
+        }
     }
 }

@@ -2,7 +2,7 @@
 {
     public class BaseUpdateDTO
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public DateTime Created { get; set; }
         public DateTime Modified { get; set; }
     }

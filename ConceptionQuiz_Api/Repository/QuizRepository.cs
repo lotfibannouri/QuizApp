@@ -41,13 +41,19 @@ namespace ConceptionQuiz_Api.Repository
 
         }
 
-        public async Task<bool> DeleteQuiz(string id)
+        public async Task<Response> DeleteQuiz(string id)
         {
             Quiz? quiz = await GetQuizById(id);
             _dbContext.quiz.Remove(quiz);
             int rowsAffected = await _dbContext.SaveChangesAsync();
 
-            return rowsAffected > 0;
+            if (rowsAffected > 0)
+                return new Response(true, " suppression réussie ");
+
+            else
+
+                return new Response(true, " suppression à été échouée ");
+
         }
 
         public async Task<Quiz> GetQuizById(string id)

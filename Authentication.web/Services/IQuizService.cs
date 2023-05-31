@@ -8,6 +8,7 @@ namespace Authentication.web.Services
         Task<Response> CreateQuiz(CreationQuizDTO quiz);
         Task<List<ListQuizDTO>> ListeQuiz();
         Task<Response> BindQuiz(QuizUserDTO QuizUser);
+        Task<Response> DeleteQuiz(string id);
 
     }
 }

@@ -10,14 +10,13 @@
                 <MudIconButton Icon="@Icons.Material.Outlined.ManageAccounts" OnClick="@InvokAssignRoletoUser" />
                 break;
             case Type.QUIZ:
-                <MudIconButton Icon="@Icons.Material.Outlined.Add" />
-                <MudIconButton Icon="@Icons.Material.Outlined.QuestionAnswer" />
+                <MudIconButton Icon="@Icons.Material.Outlined.Add" OnClick="@InvokAddQuiz" />
+                <MudIconButton Icon="@Icons.Material.Outlined.QuestionAnswer"/>
                 <MudIconButton Icon="@Icons.Material.Outlined.Edit"/>
-                <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Inherit" />
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Inherit" OnClick="@InvokDeleteQuiz" />
                 <MudIconButton Icon="@Icons.Material.Filled.EditCalendar" Color="Color.Inherit" OnClick="@InvokeBindUsertoQuiz"/>
-
-
                 break;
         }
     </MudToolBar>
-</MudPaper>
+
+</MudPaper> 

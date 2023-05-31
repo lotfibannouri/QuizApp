@@ -96,6 +96,20 @@ namespace ConceptionQuiz_Api.Controllers
 
         //}
 
+        [HttpPost("DeleteQuiz")]
+        public async Task<Response> DeleteQuiz(string idQuiz)
+        {
+            try 
+            {
+                var result = await _quizRepository.DeleteQuiz(idQuiz);
+                return result;
+            } 
+             catch (Exception ex)
+            {
+                throw new Exception(ex.ToString());
+            }   
+        }
+
         [HttpPost("AddToQuiz")]
         public async Task<IActionResult> AddToQuiz(string idQuiz, string idQuestion)
         {
