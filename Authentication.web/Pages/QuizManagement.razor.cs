@@ -1,4 +1,5 @@
 ﻿using Authentication.web.Dialogs;
+﻿using Authentication.web.Model;
 using Authentication.web.Services;
 using Authentication.web.Shared;
 using Microsoft.AspNetCore.Components;
@@ -14,6 +15,8 @@ namespace Authentication.web.Pages
         private bool _sortNameByLength;
         private HashSet<ListQuizDTO> QuizSelected = new();
         private List<string> _events = new();
+        public string txtsnakSuccess = "<div>suppression réussie</div>";
+        public string txtsnakError = "<div>Problème de suppression</div>";
         [Inject]
         public IQuizService _quizService { get; set; }
         protected override async Task OnInitializedAsync()
@@ -42,7 +45,7 @@ namespace Authentication.web.Pages
                 return true;
             if (!string.IsNullOrWhiteSpace(x.duree_quiz.ToString()) && x.duree_quiz.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase))
                 return true;
-            
+
 
             //if ($"{x.rowNumber} {x.adresse} {x.email}".Contains(_searchString))
             //    return true;
@@ -74,10 +77,42 @@ namespace Authentication.web.Pages
                 var result = await dialogresult.Result;
 
             }
-            
+
         }
 
+        public async Task AddQuiz()
+        {
+            var options = new DialogOptions { CloseOnEscapeKey = true, CloseButton = true, FullWidth = true };
+            var dialogresult = await dialogService.ShowAsync<QuizDialog>("Création Quiz", options);
+            var result = await dialogresult.Result;
+            Quiz = await _quizService.ListeQuiz();
+
+        }
+
+        private async Task DeleteQuiz()
+        {
+            foreach (var item in QuizSelected)
+            {
+                Response response = await _quizService.DeleteQuiz(item.Id);
+                if (response.status)
+                {
+                    SnackbarService.Add
+                        (txtsnakSuccess, Severity.Success
+                        );
+
+                }
+                else
+                {
+                    SnackbarService.Add
+                        (txtsnakError, Severity.Warning
+                        );
+                }
+            }
+
+
+            Quiz = await _quizService.ListeQuiz();
+
+        }
     }
 
-        
 }
