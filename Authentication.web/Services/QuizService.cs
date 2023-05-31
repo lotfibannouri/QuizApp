@@ -1,5 +1,7 @@
 ﻿using Authentication.web.Model;
+using QuizApp.Entities.Conception_Entities;
 using QuizApp.Entities.Conception_Entities.DTO.Quiz_DTO;
+using System.Net.Http;
 using System.Net.Http.Json;
 
 namespace Authentication.web.Services
@@ -26,8 +28,13 @@ namespace Authentication.web.Services
             HttpResponseMessage httpResponseMessage = await _httpClient.GetAsync("/api/Quiz/ListQuiz");
             IEnumerable<ListQuizDTO>? listQuiz = await httpResponseMessage.Content.ReadFromJsonAsync<IEnumerable<ListQuizDTO>>();
             return listQuiz.ToList();
-
-           
+   
+        }
+        public async Task<Response> BindQuiz(QuizUserDTO quizUser)
+        {
+            HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync("/api/Quiz/BindQuiz", quizUser);
+            Response response = await httpResponseMessage.Content.ReadFromJsonAsync<Response>();
+            return response;
         }
     }
 }

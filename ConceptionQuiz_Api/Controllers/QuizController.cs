@@ -117,6 +117,22 @@ namespace ConceptionQuiz_Api.Controllers
 
         }
 
+        [HttpPost("BindQuiz")]
+        public async Task<Response> BindQuiz([FromBody] QuizUserDTO quizUser)
+        {
+            try
+            {
+                var result = await _quizRepository.BindQuiz(quizUser);
+                return result;
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.ToString());
+            }
+
+        }
+
         #endregion
     }
 }

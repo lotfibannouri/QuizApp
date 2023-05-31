@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ConceptionQuiz_Api.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using QuizApp.Entities.Conception_Entities;
@@ -90,5 +91,22 @@ namespace ConceptionQuiz_Api.Repository
             return (rowsAffected > 0);
 
         }
+
+        public async Task<Response> BindQuiz(QuizUserDTO quizUser)
+        {
+            QuizUser quiz = _mapper.Map<QuizUserDTO, QuizUser>(quizUser);
+            _dbContext.QuizUser.Add(quiz);
+            int rowsAffected = await _dbContext.SaveChangesAsync();
+           
+            if (rowsAffected > 0)
+            {
+                return new Response(true, "Quiz Binded...");
+
+            }
+            else
+                return new Response(false, "Quiz not Binded...");
+
+        }
+       
     }
 }

@@ -1,4 +1,6 @@
-﻿using Authentication.web.Services;
+﻿using Authentication.web.Dialogs;
+using Authentication.web.Services;
+using Authentication.web.Shared;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using QuizApp.Entities.Conception_Entities.DTO.Quiz_DTO;
@@ -54,7 +56,28 @@ namespace Authentication.web.Pages
         void SelectedItemsChanged(HashSet<ListQuizDTO> items)
         {
         }
+        protected async Task BindUsertoQuiz()
+        {
 
+            var options = new DialogOptions { CloseOnEscapeKey = true, CloseButton = true, FullWidth = true };
+            var parameters = new DialogParameters();
+            if (QuizSelected.Count>1)
+            {
+                parameters.Add("AlertMessage", "Select only one Item!!!");
+                await dialogService.ShowAsync<AlertBox>("error", parameters,options);
+                return;
+            }
+            else
+            {
+                parameters.Add("QuizId", QuizSelected.FirstOrDefault().Id);
+                var dialogresult = await dialogService.ShowAsync<BindUserToQuizDlg>("", parameters, options);
+                var result = await dialogresult.Result;
 
+            }
+            
         }
+
+    }
+
+        
 }

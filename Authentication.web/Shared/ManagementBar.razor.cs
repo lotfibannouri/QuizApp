@@ -17,6 +17,10 @@ namespace Authentication.web.Shared
 
         [Parameter]
         public EventCallback OnAssignRoleToUserEventClicked { get; set; }
+
+        [Parameter]
+        public EventCallback OnBindUserToQuiz { get; set; }
+
         private async Task InvokAddUser()=> await OnAddEventClicked.InvokeAsync();
 
         private async Task InvokDeleteUser()=> await OnDeleteEventClicked.InvokeAsync();
@@ -25,7 +29,10 @@ namespace Authentication.web.Shared
         private async Task InvokEditUser() => await OnEditEventClicked.InvokeAsync();
 
         private async Task InvokAssignRoletoUser() => await OnAssignRoleToUserEventClicked.InvokeAsync();
-  
+
+        private async Task InvokeBindUsertoQuiz() => await OnBindUserToQuiz.InvokeAsync();
+
+
         public enum Type
         {
             USER,
