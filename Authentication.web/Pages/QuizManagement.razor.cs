@@ -70,13 +70,19 @@ namespace Authentication.web.Pages
                 await dialogService.ShowAsync<AlertBox>("error", parameters,options);
                 return;
             }
-            else
+            else if(QuizSelected.Count == 1)
             {
                 parameters.Add("QuizId", QuizSelected.FirstOrDefault().Id);
                 var dialogresult = await dialogService.ShowAsync<BindUserToQuizDlg>("", parameters, options);
                 var result = await dialogresult.Result;
-
             }
+            else
+            {
+                parameters.Add("AlertMessage", "You need To Select a Quiz!!!");
+                await dialogService.ShowAsync<AlertBox>("error", parameters, options);
+                return;
+            }
+        
 
         }
 
