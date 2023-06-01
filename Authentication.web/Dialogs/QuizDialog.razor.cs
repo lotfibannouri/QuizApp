@@ -7,11 +7,40 @@ namespace Authentication.web.Dialogs
 {
     public partial class QuizDialog
     {
-        public string txtsnakError = "<div>Problème Serveur</div>";
+        public string txtsnakError ;
         CreationQuizDTO model = new CreationQuizDTO();
         [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+        private bool Validate()
+        {
+            if (model.titre == null) 
+            {
+                 txtsnakError = "<div>titre obligatoire</div>";
+                SnackbarService.Add(txtsnakError);
+            }
+            if(model.description == null)
+            {
+                txtsnakError = "<div>descrition obligatoire</div>";
+                SnackbarService.Add(txtsnakError);
+            }
+            if (model.niv_deficulte==0)
+            {
+                txtsnakError = "<div>niveau de difficulté obligatoire</div>";
+                SnackbarService.Add(txtsnakError);
+            }
+            if (model.nbr_questions==0)
+            {
+                txtsnakError = "<div>nbr_questions obligatoire</div>";
+                SnackbarService.Add(txtsnakError);
+            }
+
+            return false;
+
+        }
         public async Task OnValidSubmit()
         {
+            if (!Validate()) return;
+
             var Response = await quizService.CreateQuiz(model);
             if(Response.status)
             {
