@@ -11,7 +11,7 @@ namespace QuizApp.Entities.Conception_Entities
     {
 
         public Guid quizid { get; set; }
-        public Quiz quiz { get; set; }
+        public Quiz? quiz { get; set; }
         public Guid userid { get; set; }      
 
 

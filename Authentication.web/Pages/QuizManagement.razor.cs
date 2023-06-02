@@ -1,8 +1,9 @@
 ﻿using Authentication.web.Dialogs;
-﻿using Authentication.web.Model;
+using Authentication.web.Model;
 using Authentication.web.Services;
 using Authentication.web.Shared;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Options;
 using MudBlazor;
 using QuizApp.Entities.Conception_Entities.DTO.Quiz_DTO;
 
@@ -64,13 +65,13 @@ namespace Authentication.web.Pages
 
             var options = new DialogOptions { CloseOnEscapeKey = true, CloseButton = true, FullWidth = true };
             var parameters = new DialogParameters();
-            if (QuizSelected.Count>1)
+            if (QuizSelected.Count > 1)
             {
                 parameters.Add("AlertMessage", "Select only one Item!!!");
-                await dialogService.ShowAsync<AlertBox>("error", parameters,options);
+                await dialogService.ShowAsync<AlertBox>("error", parameters, options);
                 return;
             }
-            else if(QuizSelected.Count == 1)
+            else if (QuizSelected.Count == 1)
             {
                 parameters.Add("QuizId", QuizSelected.FirstOrDefault().Id);
                 var dialogresult = await dialogService.ShowAsync<BindUserToQuizDlg>("", parameters, options);
@@ -82,7 +83,7 @@ namespace Authentication.web.Pages
                 await dialogService.ShowAsync<AlertBox>("error", parameters, options);
                 return;
             }
-        
+
 
         }
 
@@ -97,6 +98,14 @@ namespace Authentication.web.Pages
 
         private async Task DeleteQuiz()
         {
+            if (QuizSelected.Count == 0)
+            {
+                var options = new DialogOptions { CloseOnEscapeKey = true, CloseButton = true, FullWidth = true };
+                var parameters = new DialogParameters();
+                parameters.Add("AlertMessage", "You need To Select a Quiz!!!");
+                await dialogService.ShowAsync<AlertBox>("error", parameters, options);
+                return;
+            }
             foreach (var item in QuizSelected)
             {
                 Response response = await _quizService.DeleteQuiz(item.Id);

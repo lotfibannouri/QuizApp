@@ -24,7 +24,7 @@ namespace ConceptionQuiz_Api.Controllers
         #region QuizMethods
             
         [HttpPost("AddQuiz")]
-        public async Task<Response> CreateQuiz([FromBody] CreationQuizDTO quiz)
+        public async Task<Response> CreateQuiz([FromBody] Quiz quiz)
         {
             try
             {
@@ -97,11 +97,11 @@ namespace ConceptionQuiz_Api.Controllers
         //}
 
         [HttpPost("DeleteQuiz")]
-        public async Task<Response> DeleteQuiz(string idQuiz)
+        public async Task<Response> DeleteQuiz(string id)
         {
             try 
             {
-                var result = await _quizRepository.DeleteQuiz(idQuiz);
+                var result = await _quizRepository.DeleteQuiz(id);
                 return result;
             } 
              catch (Exception ex)
@@ -132,7 +132,7 @@ namespace ConceptionQuiz_Api.Controllers
         }
 
         [HttpPost("BindQuiz")]
-        public async Task<Response> BindQuiz([FromBody] QuizUserDTO quizUser)
+        public async Task<Response> BindQuiz([FromBody] QuizUser quizUser)
         {
             try
             {

@@ -33,7 +33,8 @@ namespace Authentication.web.Dialogs
                 txtsnakError = "<div>nbr_questions obligatoire</div>";
                 SnackbarService.Add(txtsnakError);
             }
-
+            if(SnackbarService.ShownSnackbars.Count()==0)
+                 return true;
             return false;
 
         }

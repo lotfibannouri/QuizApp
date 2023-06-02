@@ -25,9 +25,8 @@ namespace ConceptionQuiz_Api.Repository
         }
         #endregion
         #region QuizMethods
-        public async Task<Response> CreateQuiz(CreationQuizDTO value)
+        public async Task<Response> CreateQuiz(Quiz quiz)
         {
-            Quiz quiz = _mapper.Map<CreationQuizDTO,Quiz>(value);
             await _dbContext.quiz.AddAsync(quiz);   
             int rowsAffected = await _dbContext.SaveChangesAsync();
             if(rowsAffected > 0)
@@ -41,9 +40,9 @@ namespace ConceptionQuiz_Api.Repository
 
         }
 
-        public async Task<Response> DeleteQuiz(string id)
+        public async Task<Response> DeleteQuiz(string idquiz)
         {
-            Quiz? quiz = await GetQuizById(id);
+            Quiz quiz = await GetQuizById(idquiz);
             _dbContext.quiz.Remove(quiz);
             int rowsAffected = await _dbContext.SaveChangesAsync();
 
@@ -58,7 +57,7 @@ namespace ConceptionQuiz_Api.Repository
 
         public async Task<Quiz> GetQuizById(string id)
         {
-            return await _dbContext.quiz.FindAsync(id);
+            return await _dbContext.quiz.FindAsync(new Guid(id));
         }
 
         public Task<Quiz> GetQuizByName(string name)
@@ -98,10 +97,10 @@ namespace ConceptionQuiz_Api.Repository
 
         }
 
-        public async Task<Response> BindQuiz(QuizUserDTO quizUser)
+        public async Task<Response> BindQuiz(QuizUser quizUser)
         {
-            QuizUser quiz = _mapper.Map<QuizUserDTO, QuizUser>(quizUser);
-            _dbContext.QuizUser.Add(quiz);
+            
+            _dbContext.QuizUser.Add(quizUser);
             int rowsAffected = await _dbContext.SaveChangesAsync();
            
             if (rowsAffected > 0)

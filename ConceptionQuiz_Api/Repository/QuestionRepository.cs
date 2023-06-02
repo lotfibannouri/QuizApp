@@ -20,9 +20,8 @@ namespace ConceptionQuiz_Api.Repository
             _dbContext = dbContext;
             _mapper = mapper;
         }
-        public async Task<Response> CreateQuestion(CreationQ_PropDTO value)
+        public async Task<Response> CreateQuestion(Question question)
         {
-            Question question = _mapper.Map<CreationQ_PropDTO, Question>(value);
             await _dbContext.questions.AddAsync(question);
             int rowsAffected = await _dbContext.SaveChangesAsync();
             if (rowsAffected > 0)
@@ -32,7 +31,6 @@ namespace ConceptionQuiz_Api.Repository
             }
             else
                 return new Response(false, "création de Question a été échoué...");
-
 
         }
 

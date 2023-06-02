@@ -7,14 +7,14 @@ namespace ConceptionQuiz_Api.Repository
 {
     public interface IQuizRepository
     {
-        Task<Response> CreateQuiz(CreationQuizDTO quiz);
+        Task<Response> CreateQuiz(Quiz quiz);
         Task<Response> DeleteQuiz(string id);
         Task<bool> UpdateQuiz(string id, Quiz quiz);
         Task<List<ListQuizDTO>> ListQuiz();
         Task<Quiz> GetQuizById(string id);
         Task<Quiz> GetQuizByName(string name);
         Task<bool> AddToQuiz(string idQuiz, string idQuestion);
-        Task<Response> BindQuiz(QuizUserDTO QuizUser);
+        Task<Response> BindQuiz(QuizUser QuizUser);
 
 
 

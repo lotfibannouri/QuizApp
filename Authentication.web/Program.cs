@@ -1,10 +1,11 @@
 using Authentication.web;
 using Authentication.web.AuthProviders;
+using Authentication.web.AutoMapper_Handler;
 using Authentication.web.Services;
+using AutoMapper;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using MudBlazor;
 using MudBlazor.Services;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -15,6 +16,11 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 builder.Services.AddScoped<AuthenticationStateProvider, AuthProvider>();
 builder.Services.AddAuthorizationCore();
 builder.Services.AddLocalStorageServices();
+
+var automapper = new MapperConfiguration(item => item.AddProfile(new AutoMapperHandler()));
+IMapper mapper = automapper.CreateMapper();
+builder.Services.AddSingleton(mapper);
+
 builder.Services.AddHttpClient <ICompteService, CompteService>(client =>
 {
 #if (DEBUG)

@@ -15,7 +15,7 @@ namespace Authentication.web.utility
             };
             var json = JsonSerializer.Serialize(obj, jsonSerializerOptions);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-            HttpResponseMessage httpResponseMessage = await client.PostAsync("/api/Question/AddQuestion",content);
+            HttpResponseMessage httpResponseMessage = await client.PostAsync(Api,content);
             return httpResponseMessage;
         }
     }

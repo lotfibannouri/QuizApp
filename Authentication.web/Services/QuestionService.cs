@@ -1,6 +1,11 @@
 ﻿using Authentication.web.Model;
+using AutoMapper;
+using Microsoft.AspNetCore.Components;
+using QuizApp.Entities.Conception_Entities;
 using QuizApp.Entities.Conception_Entities.DTO.QuestionDTO;
 using System.Net.Http.Json;
+using static MudBlazor.Colors;
+using Authentication.web.utility;
 
 namespace Authentication.web.Services
 {
@@ -9,12 +14,16 @@ namespace Authentication.web.Services
 
         private readonly HttpClient _httpClient;
 
-        public QuestionService(HttpClient httpClient)
+        private readonly IMapper _mapper;
+        public QuestionService(HttpClient httpClient, IMapper mapper)
         {
          _httpClient = httpClient;
+            _mapper = mapper;
         }
-        public async Task<Response> CreateQuestion(CreationQ_PropDTO question)
+        public async Task<Response> CreateQuestion(CreationQ_PropDTO value)
         {
+            Question question = _mapper.Map<CreationQ_PropDTO, Question>(value);
+            question.quiz = new List<Quiz>();
             HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync("/api/Question/AddQuestion", question);
             Response response = await httpResponseMessage.Content.ReadFromJsonAsync<Response>();
             return response;
