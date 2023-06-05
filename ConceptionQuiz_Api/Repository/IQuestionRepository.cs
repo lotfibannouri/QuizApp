@@ -10,9 +10,10 @@ namespace ConceptionQuiz_Api.Repository
         Task<Response> CreateQuestion(Question Question);
         Task<Response> DeleteQuestion(string id);
         Task<Response> UpdateQuestion(string id, Question Question);
-        Task<List<ListQuizDTO>> ListQuestion();
+        Task<List<Question>> ListQuestion();
         Task<Question> GetQuestionById(string id);
         Task<Question> GetQuestionByName(string name);
+        Task<List<ListQuestionDTO>> GetQuestionsByQuizId(string quizId);
 
     }
 }

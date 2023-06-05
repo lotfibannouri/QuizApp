@@ -4,7 +4,7 @@
 @page "/QuizManagement"
 @inject ISnackbar SnackbarService;
 
-<ManagementBar TypeBar="ManagementBar.Type.QUIZ" OnAddEventClicked="AddQuiz" OnDeleteEventClicked="DeleteQuiz" OnBindUserToQuiz="BindUsertoQuiz"></ManagementBar>
+<ManagementBar TypeBar="ManagementBar.Type.QUIZ" OnAddEventClicked="AddQuiz" OnDeleteEventClicked="DeleteQuiz" OnBindUserToQuiz="@(()=>BindEntitytoQuiz(utility.Entity.USER))" OnBindQuestionToQuiz="@(()=>BindEntitytoQuiz(utility.Entity.QUESTION))"></ManagementBar>
 
 <MudDataGrid T="ListQuizDTO" MultiSelection="true" Items="@Quiz" SortMode="SortMode.Multiple" Filterable="true" QuickFilter="@_quickFilter"
              Hideable="true" RowClick="@RowClicked" SelectedItemsChanged="@SelectedItemsChanged" SelectedItems="@QuizSelected">

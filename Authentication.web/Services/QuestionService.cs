@@ -28,5 +28,24 @@ namespace Authentication.web.Services
             Response response = await httpResponseMessage.Content.ReadFromJsonAsync<Response>();
             return response;
         }
+
+        public async Task<List<ListQuestionDTO>> GetQuestions()
+        {
+            HttpResponseMessage httpResponseMessage = await _httpClient.GetAsync("/api/Question/ListQuestion");
+            List<Question> response = await httpResponseMessage.Content.ReadFromJsonAsync<List<Question>>();
+            List<ListQuestionDTO> questions = new List<ListQuestionDTO>();
+            foreach(var question in response)
+                questions.Add( _mapper.Map<Question, ListQuestionDTO>(question));
+
+            return questions;
+
+        }
+
+        public async Task<List<ListQuestionDTO>> GetQuestionsByQuizId(string quizId)
+        {
+            HttpResponseMessage httpResponseMessage = await _httpClient.GetAsync("/api/Question/GetQuestionsByQuizId?QuizId="+quizId);
+            List<ListQuestionDTO> response = await httpResponseMessage.Content.ReadFromJsonAsync<List<ListQuestionDTO>>();
+            return response;
+        }
     }
 }

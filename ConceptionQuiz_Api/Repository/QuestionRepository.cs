@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using QuizApp.Entities.Conception_Entities;
 using QuizApp.Entities.Conception_Entities.DTO.QuestionDTO;
 using QuizApp.Entities.Conception_Entities.DTO.Quiz_DTO;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 
 namespace ConceptionQuiz_Api.Repository
 {
@@ -39,9 +41,9 @@ namespace ConceptionQuiz_Api.Repository
             throw new NotImplementedException();
         }
 
-        public Task<Question> GetQuestionById(string id)
+        public async Task<Question> GetQuestionById(string id)
         {
-            throw new NotImplementedException();
+            return await _dbContext.questions.FindAsync(new Guid(id));
         }
 
         public Task<Question> GetQuestionByName(string name)
@@ -49,14 +51,46 @@ namespace ConceptionQuiz_Api.Repository
             throw new NotImplementedException();
         }
 
-        public Task<List<ListQuizDTO>> ListQuestion()
+        public async Task<List<Question>>? ListQuestion()
         {
-            throw new NotImplementedException();
+
+            JsonSerializerOptions options = new JsonSerializerOptions
+            {
+                ReferenceHandler = ReferenceHandler.IgnoreCycles
+            };
+
+            return await _dbContext.questions
+                .ToListAsync();
         }
 
         public Task<Response> UpdateQuestion(string id, Question Question)
         {
             throw new NotImplementedException();
+        }
+
+
+        public async Task<List<ListQuestionDTO>> GetQuestionsByQuizId(string quizId)
+        {
+            Quiz quiz = await _dbContext.quiz
+         .Include(q => q.questions)
+         .FirstOrDefaultAsync(q => q.Id == new Guid(quizId));
+
+            if (quiz != null)
+            {
+                List<Question> questions = quiz.questions.ToList();
+                List<ListQuestionDTO> questionsDTO = new List<ListQuestionDTO>();
+                foreach (var question in questions)
+                { var map = _mapper.Map<Question, ListQuestionDTO>(question); // je suis obligé d'utilisé le mapping dans le backend pour éviter
+                                                                              // la boucle infine des objets (l'entité question posséde une liste de quiz
+                                                                              //et l'entité quiz posséde aussi une liste de questions ).
+                    questionsDTO.Add(map);
+
+
+                }
+                return questionsDTO;
+            }
+
+            return new List<ListQuestionDTO>();
         }
     }
 }

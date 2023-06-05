@@ -2,6 +2,7 @@
 using Authentication.web.Model;
 using Authentication.web.Services;
 using Authentication.web.Shared;
+using Authentication.web.utility;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Options;
 using MudBlazor;
@@ -60,11 +61,13 @@ namespace Authentication.web.Pages
         void SelectedItemsChanged(HashSet<ListQuizDTO> items)
         {
         }
-        protected async Task BindUsertoQuiz()
+        protected async Task BindEntitytoQuiz(Entity entity)
         {
 
             var options = new DialogOptions { CloseOnEscapeKey = true, CloseButton = true, FullWidth = true };
             var parameters = new DialogParameters();
+            
+            
             if (QuizSelected.Count > 1)
             {
                 parameters.Add("AlertMessage", "Select only one Item!!!");
@@ -74,7 +77,8 @@ namespace Authentication.web.Pages
             else if (QuizSelected.Count == 1)
             {
                 parameters.Add("QuizId", QuizSelected.FirstOrDefault().Id);
-                var dialogresult = await dialogService.ShowAsync<BindUserToQuizDlg>("", parameters, options);
+                parameters.Add("bindto", entity);
+                var dialogresult = await dialogService.ShowAsync<BindEntityToQuizDlg>("", parameters, options);
                 var result = await dialogresult.Result;
             }
             else
@@ -86,6 +90,7 @@ namespace Authentication.web.Pages
 
 
         }
+
 
         public async Task AddQuiz()
         {
@@ -126,6 +131,7 @@ namespace Authentication.web.Pages
 
 
             Quiz = await _quizService.ListeQuiz();
+            QuizSelected.Clear();
 
         }
     }

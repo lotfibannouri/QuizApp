@@ -5,6 +5,7 @@ using QuizApp.Entities.Conception_Entities.DTO.QuestionDTO;
 using QuizApp.Entities.Conception_Entities.DTO.Quiz_DTO;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Reflection;
 using static MudBlazor.Colors;
 
 namespace Authentication.web.Services
@@ -19,7 +20,6 @@ namespace Authentication.web.Services
             _mapper = mapper;
         }
 
- 
 
         public async Task<Response> CreateQuiz(CreationQuizDTO model)
         {
@@ -37,10 +37,26 @@ namespace Authentication.web.Services
             return listQuiz.ToList();
    
         }
-        public async Task<Response> BindQuiz(QuizUserDTO quizUser)
+
+
+        public async Task<ListQuizDTO> GetQuizById(string id)
         {
-            QuizUser quiz = _mapper.Map<QuizUserDTO, QuizUser>(quizUser);
-            HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync("/api/Quiz/BindQuiz", quiz);
+            HttpResponseMessage httpResponseMessage = await _httpClient.GetAsync("/api/Quiz/GetQuizById?id="+id);
+            Quiz response= await httpResponseMessage.Content.ReadFromJsonAsync<Quiz>();
+            return _mapper.Map<Quiz, ListQuizDTO>(response);
+
+        }
+        public async Task<Response> BindQuizToUser(QuizUserDTO quizUserDTO)
+        {
+            QuizUser quizUser = _mapper.Map<QuizUserDTO, QuizUser>(quizUserDTO);
+            HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync("/api/Quiz/BindQuiz", quizUser);
+            Response response = await httpResponseMessage.Content.ReadFromJsonAsync<Response>();
+            return response;
+        }
+
+        public async Task<Response> BindQuizToQuestion(string IdQuiz, string IdQuestion)
+        {    
+            HttpResponseMessage httpResponseMessage = await _httpClient.PostAsync("/api/Quiz/BindQuizToQuestion?idQuestion=" + IdQuestion+ "&idQuiz="+IdQuiz,null);
             Response response = await httpResponseMessage.Content.ReadFromJsonAsync<Response>();
             return response;
         }

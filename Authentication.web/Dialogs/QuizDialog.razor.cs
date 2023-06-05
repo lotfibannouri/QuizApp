@@ -46,6 +46,9 @@ namespace Authentication.web.Dialogs
             if(Response.status)
             {
                 MudDialog.Close(DialogResult.Ok(true));
+                SnackbarService.Add
+                       ("Quiz enregistré avec succès", Severity.Success
+                       );
             }
             else
             {

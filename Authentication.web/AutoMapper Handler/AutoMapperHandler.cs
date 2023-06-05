@@ -15,6 +15,8 @@ namespace Authentication.web.AutoMapper_Handler
             CreateMap<Quiz, CreationQuizDTO>();
             CreateMap<ListQuizDTO, Quiz>();
             CreateMap<Quiz, ListQuizDTO>();
+            CreateMap<ListQuestionDTO, Question>();
+            CreateMap<Question, ListQuestionDTO>();
             CreateMap<CreationQ_PropDTO, Question>();
             CreateMap<Question, CreationQ_PropDTO>();
             CreateMap<PropositionDTO, Proposition>().ForMember(dest => dest.textProposition, opt => opt.MapFrom(src => src._textPropositon));

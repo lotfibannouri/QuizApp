@@ -57,7 +57,8 @@ namespace ConceptionQuiz_Api.Repository
 
         public async Task<Quiz> GetQuizById(string id)
         {
-            return await _dbContext.quiz.FindAsync(new Guid(id));
+           return  await _dbContext.quiz.Include(q => q.questions).SingleOrDefaultAsync(q => q.Id == new Guid(id));
+
         }
 
         public Task<Quiz> GetQuizByName(string name)
@@ -67,13 +68,14 @@ namespace ConceptionQuiz_Api.Repository
 
         public async Task<List<ListQuizDTO>>? ListQuiz()
         {            
-            List<Quiz>? data = await _dbContext.quiz.ToListAsync();
+            List<Quiz>? data = await _dbContext.quiz.Include(q => q.questions).ToListAsync();
             List<ListQuizDTO> listQuiz = new List<ListQuizDTO>();
             if(data!= null)
             { 
             foreach (Quiz quiz in data)
                 listQuiz.Add(_mapper.Map<Quiz, ListQuizDTO>(quiz));
             }
+            
             return listQuiz;
         }
 
@@ -85,22 +87,28 @@ namespace ConceptionQuiz_Api.Repository
         #endregion
        
 
-        public async Task<bool> AddToQuiz(string Idquestion, string Idquiz)
+        public async Task<Response> BindQuizToQuestion(string Idquestion, string Idquiz)
         {
             Quiz quizref = await this.GetQuizById(Idquiz);
             Question questionref =await _questionRepository.GetQuestionById(Idquestion);
-           
+            if(quizref.questions.Contains(questionref))
+                return new Response(false, "Cette question existe dèja");
             quizref.questions.Add(questionref);
             _dbContext.quiz.Update(quizref);
             int rowsAffected = await _dbContext.SaveChangesAsync();
-            return (rowsAffected > 0);
+           if(rowsAffected> 0)
+            {
+                return new Response(true, "Question(s) affectée(s) avec succès ");
+            }
+           else
+                return new Response(false, "Echec");
 
         }
 
-        public async Task<Response> BindQuiz(QuizUser quizUser)
+        public async Task<Response> BindQuizToUser(QuizUser quizUser)
         {
             
-            _dbContext.QuizUser.Add(quizUser);
+            await _dbContext.QuizUser.AddAsync(quizUser);
             int rowsAffected = await _dbContext.SaveChangesAsync();
            
             if (rowsAffected > 0)

@@ -13,8 +13,8 @@ namespace ConceptionQuiz_Api.Repository
         Task<List<ListQuizDTO>> ListQuiz();
         Task<Quiz> GetQuizById(string id);
         Task<Quiz> GetQuizByName(string name);
-        Task<bool> AddToQuiz(string idQuiz, string idQuestion);
-        Task<Response> BindQuiz(QuizUser QuizUser);
+        Task<Response> BindQuizToQuestion(string idQuiz, string idQuestion);
+        Task<Response> BindQuizToUser(QuizUser QuizUser);
 
 
 

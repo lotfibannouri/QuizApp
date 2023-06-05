@@ -23,7 +23,9 @@ namespace ConceptionQuiz_Api.utility
             CreateMap<Reponse, CreationReponseDTO>();
             CreateMap<QuizUserDTO, QuizUser>();
             CreateMap<QuizUser, QuizUserDTO>();
-            
+            CreateMap<ListQuestionDTO, Question>();
+            CreateMap<Question, ListQuestionDTO>();
+
         }
     }
 }

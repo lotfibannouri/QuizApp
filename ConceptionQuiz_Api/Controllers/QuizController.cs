@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using QuizApp.Entities.Conception_Entities;
 using QuizApp.Entities.Conception_Entities.DTO.Quiz_DTO;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 
 namespace ConceptionQuiz_Api.Controllers
 {
@@ -22,18 +24,18 @@ namespace ConceptionQuiz_Api.Controllers
         #endregion
 
         #region QuizMethods
-            
+
         [HttpPost("AddQuiz")]
         public async Task<Response> CreateQuiz([FromBody] Quiz quiz)
         {
             try
             {
                 var result = await _quizRepository.CreateQuiz(quiz);
-                return result; 
-               
+                return result;
+
 
             }
-           catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(ex.ToString());
             }
@@ -42,12 +44,13 @@ namespace ConceptionQuiz_Api.Controllers
         [HttpGet("ListQuiz")]
         public async Task<IActionResult> GetQuiz()
         {
-            try { 
-            var result = await _quizRepository.ListQuiz();
-            if (result != null)
-                return Ok(result);
-            else
-                return NotFound("liste des quiz est vide ");
+            try
+            {
+                var result = await _quizRepository.ListQuiz();
+                if (result != null)
+                    return Ok(result);
+                else
+                    return NotFound("liste des quiz est vide ");
             }
             catch (Exception ex)
             {
@@ -99,29 +102,26 @@ namespace ConceptionQuiz_Api.Controllers
         [HttpPost("DeleteQuiz")]
         public async Task<Response> DeleteQuiz(string id)
         {
-            try 
+            try
             {
                 var result = await _quizRepository.DeleteQuiz(id);
                 return result;
-            } 
-             catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw new Exception(ex.ToString());
-            }   
+            }
         }
 
-        [HttpPost("AddToQuiz")]
-        public async Task<IActionResult> AddToQuiz(string idQuiz, string idQuestion)
+        [HttpPost("BindQuizToQuestion")]
+        public async Task<Response> BindQuizToQuestion(string idQuestion, string idQuiz)
         {
             try
             {
-                var result = await _quizRepository.AddToQuiz(idQuiz, idQuestion);
-                if (result)
-                {
-                    return Ok(result);
-                }
+                var result = await _quizRepository.BindQuizToQuestion(idQuestion, idQuiz);
+             
+                return result;
 
-                return BadRequest();
 
             }
             catch (Exception ex)
@@ -131,12 +131,12 @@ namespace ConceptionQuiz_Api.Controllers
 
         }
 
-        [HttpPost("BindQuiz")]
-        public async Task<Response> BindQuiz([FromBody] QuizUser quizUser)
+        [HttpPost("BindQuizToUser")]
+        public async Task<Response> BindQuizToUser([FromBody] QuizUser quizUser)
         {
             try
             {
-                var result = await _quizRepository.BindQuiz(quizUser);
+                var result = await _quizRepository.BindQuizToUser(quizUser);
                 return result;
 
             }
@@ -147,6 +147,20 @@ namespace ConceptionQuiz_Api.Controllers
 
         }
 
-        #endregion
+        [HttpGet("GetQuizById")]
+        public async Task<Quiz> GetQuizById(string id)
+        {
+            try
+            {
+                var result = await _quizRepository.GetQuizById(id);
+                return result;
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.ToString());
+            }
+        }
+        #endregion 
     }
 }

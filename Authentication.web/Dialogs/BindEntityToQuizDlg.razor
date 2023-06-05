@@ -1,0 +1,53 @@
+﻿@using Authentication.web.utility;
+@using QuizApp.Entities.Conception_Entities.DTO.QuestionDTO;
+@inject ISnackbar SnackbarService;
+
+
+
+@if (bindto == Entity.USER)
+{
+<MudDialog>    
+    <DialogContent>
+        <MudContainer Style="height: 700px; overflow-y: scroll">
+            <MudDataGrid T="User" MultiSelection="true" Items="@Users" SortMode="SortMode.Multiple" @ref="@UsersGrid">
+                <Columns>
+                    <SelectColumn T="User" ShowInFooter="false" />
+                    <PropertyColumn Property="x => x.lastName" Title="nom" />
+                    <PropertyColumn Property="x => x.email" Title="Email" />
+                </Columns>
+            </MudDataGrid>       
+        </MudContainer>
+    </DialogContent>
+    <DialogActions>
+        <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" OnClick="Addclicked">Add</MudButton>
+        <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Error" OnClick="removeclicked">Remove</MudButton>
+    </DialogActions>
+    
+    </MudDialog>
+
+}
+else
+{
+    <MudDialog>
+        <DialogContent>
+            <MudContainer Style="height: 700px; overflow-y: scroll">
+                <MudDataGrid T="ListQuestionDTO" MultiSelection="true" Items="@Questions" SortMode="SortMode.Multiple" @ref="@QuestionGrid">
+                    <Columns>
+                        <SelectColumn T="ListQuestionDTO" ShowInFooter="false" />
+                        <PropertyColumn Property="x => x.questionText" Title="titre de question" />
+                        <PropertyColumn Property="x => x.type" Title="type de question" />
+                    </Columns>
+                </MudDataGrid>
+            </MudContainer>
+        </DialogContent>
+        <DialogActions>
+            <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" OnClick="Addclicked">Add</MudButton>
+            <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Error" OnClick="removeclicked">Remove</MudButton>
+        </DialogActions>
+
+    </MudDialog>
+    
+}
+@code{
+
+}
