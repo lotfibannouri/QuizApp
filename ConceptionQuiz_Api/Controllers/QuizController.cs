@@ -6,6 +6,7 @@ using QuizApp.Entities.Conception_Entities;
 using QuizApp.Entities.Conception_Entities.DTO.Quiz_DTO;
 using System.Text.Json.Serialization;
 using System.Text.Json;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace ConceptionQuiz_Api.Controllers
 {
@@ -49,6 +50,30 @@ namespace ConceptionQuiz_Api.Controllers
                 var result = await _quizRepository.ListQuiz();
                 if (result != null)
                     return Ok(result);
+                else
+                    return NotFound("liste des quiz est vide ");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.ToString());
+            }
+
+        }
+        [HttpGet("ListQuizByUser")]
+        public async Task<IActionResult> GetQuiz(string UserId)
+        {
+            try
+            {
+                var binds = await _quizRepository.ListQuizUser();
+
+                if (binds == null)
+                    return NotFound("liste des quiz est vide ");
+
+                if (binds != null)
+                {
+                    var filteredlist = binds.Where(x => x.userid.ToString() == UserId).Select(x => x.quiz).ToList();
+                    return Ok(filteredlist);
+                }      
                 else
                     return NotFound("liste des quiz est vide ");
             }

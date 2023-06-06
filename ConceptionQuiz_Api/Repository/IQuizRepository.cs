@@ -15,7 +15,8 @@ namespace ConceptionQuiz_Api.Repository
         Task<Quiz> GetQuizByName(string name);
         Task<Response> BindQuizToQuestion(string idQuiz, string idQuestion);
         Task<Response> BindQuizToUser(QuizUser QuizUser);
-
+        Task<List<QuizUser>> ListQuizUser();
+        
 
 
     }

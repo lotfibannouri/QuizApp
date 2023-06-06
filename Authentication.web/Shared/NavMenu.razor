@@ -5,7 +5,7 @@
     <MudNavMenu Bordered="true">
         <AuthorizeView Roles=@($"{utility.Roles.User}")>
             <Authorized>
-                <MudNavLink Href="">Dashboard</MudNavLink>
+                <MudNavLink Href="StDashBoard">Dashboard</MudNavLink>
             </Authorized>
         </AuthorizeView>
         <AuthorizeView Roles=@($"{utility.Roles.Admin}")>
@@ -16,13 +16,13 @@
                 </MudNavGroup>
                 <MudNavGroup Title="Quiz" Expanded="true"Icon="@Icons.Material.Outlined.Quiz">
                     <MudNavLink Href="QuizManagement">Gestionnaire de Quiz</MudNavLink>
-                    <MudNavLink Href="QuestionManagement">Gestionnaire de Questions</MudNavLink>
+                    <MudNavLink Href="QuestionManagement">Gestionnaire de Questions</MudNavLink>   
                 </MudNavGroup>
             </Authorized>
         </AuthorizeView>
         <MudNavLink Href="Authentification"> Authentication</MudNavLink>
         <MudNavLink Href="Inscription"> Inscription</MudNavLink>
-
+        
     </MudNavMenu>
 </MudPaper>
 

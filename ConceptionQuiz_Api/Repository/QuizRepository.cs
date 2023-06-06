@@ -78,6 +78,11 @@ namespace ConceptionQuiz_Api.Repository
             
             return listQuiz;
         }
+        public async Task<List<QuizUser>>? ListQuizUser()
+        {
+            List<QuizUser>? data = await _dbContext.QuizUser.ToListAsync();
+            return data;
+        }
 
 
         public Task<bool> UpdateQuiz(string id, Quiz quiz)

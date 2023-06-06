@@ -37,8 +37,13 @@ namespace Authentication.web.Services
             return listQuiz.ToList();
    
         }
+        public async Task<List<ListQuizDTO>> ListeQuizByUser(string UserId)
+        {
+            HttpResponseMessage httpResponseMessage = await _httpClient.GetAsync("/api/Quiz/ListQuizByUser?UserId=" + UserId);
+            IEnumerable<ListQuizDTO>? listQuiz = await httpResponseMessage.Content.ReadFromJsonAsync<IEnumerable<ListQuizDTO>>();
+            return listQuiz.ToList();
 
-
+        }
         public async Task<ListQuizDTO> GetQuizById(string id)
         {
             HttpResponseMessage httpResponseMessage = await _httpClient.GetAsync("/api/Quiz/GetQuizById?id="+id);
@@ -49,7 +54,7 @@ namespace Authentication.web.Services
         public async Task<Response> BindQuizToUser(QuizUserDTO quizUserDTO)
         {
             QuizUser quizUser = _mapper.Map<QuizUserDTO, QuizUser>(quizUserDTO);
-            HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync("/api/Quiz/BindQuiz", quizUser);
+            HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync("/api/Quiz/BindQuizToUser", quizUser);
             Response response = await httpResponseMessage.Content.ReadFromJsonAsync<Response>();
             return response;
         }

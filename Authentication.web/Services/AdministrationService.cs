@@ -54,9 +54,11 @@ namespace Authentication.web.Services
 
         }
 
-        public Task<HttpResponseMessage?> GetUserById(string id)
+        public async Task<User?> GetUserById(string id)
         {
-            throw new NotImplementedException();
+            HttpResponseMessage httpResponseMessage = await _httpClient.DeleteAsync("/api/Administration/userById?id=" + id);
+            User response = await httpResponseMessage.Content.ReadFromJsonAsync<User>();
+            return response;
         }
 
         public Task<HttpResponseMessage?> GetUserByName(string name)

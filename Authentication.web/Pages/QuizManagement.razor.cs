@@ -6,6 +6,7 @@ using Authentication.web.utility;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Options;
 using MudBlazor;
+using QuizApp.Entities.Base_DTO;
 using QuizApp.Entities.Conception_Entities.DTO.Quiz_DTO;
 
 namespace Authentication.web.Pages
@@ -21,6 +22,8 @@ namespace Authentication.web.Pages
         public string txtsnakError = "<div>Problème de suppression</div>";
         [Inject]
         public IQuizService _quizService { get; set; }
+        [Inject]
+        public NavigationManager _navigationManager { get; set; }
         protected override async Task OnInitializedAsync()
         {
 
@@ -133,6 +136,10 @@ namespace Authentication.web.Pages
             Quiz = await _quizService.ListeQuiz();
             QuizSelected.Clear();
 
+        }
+        private void HandleRowDoubleClick(BaseListDTO item)
+        {
+            _navigationManager.NavigateTo($"/QuizVisulizer/{item.Id}"); // Your logic for handling the double-click event
         }
     }
 
