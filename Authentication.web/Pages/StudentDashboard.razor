@@ -1,6 +1,18 @@
 ﻿@page "/StDashBoard"
 <h3>StudentDashboard</h3>
 
+
+<MudDataGrid Items="@_quizList" Filterable="false" SortMode="@SortMode.None" Groupable="false">
+    <Columns>
+        <PropertyColumn  Title="Title" Property="x => x.titre" />
+        <TemplateColumn CellClass="d-flex justify-end">
+            <CellTemplate>
+                <MudButton Size="@Size.Small" Variant="@Variant.Filled" Color="@Color.Primary" OnClick="@(() => ExecuteQuiz(context.Item))">Start test</MudButton>
+            </CellTemplate>
+        </TemplateColumn>
+    </Columns>
+</MudDataGrid>
+
 @code {
 
 }
