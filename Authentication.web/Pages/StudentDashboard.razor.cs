@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using QuizApp.Entities.Conception_Entities;
+using QuizApp.Entities.Conception_Entities.DTO.Quiz_DTO;
 using System.Security.Claims;
 
 namespace Authentication.web.Pages
@@ -15,6 +16,9 @@ namespace Authentication.web.Pages
         public IAdministrationService _administrationService { get; set; }
         [Inject]
         public IQuizService _quizService { get; set; }
+        [Inject]
+        public NavigationManager _navigationManager { get; set; }
+        public List<ListQuizDTO> _quizList { get; set; } = new List<ListQuizDTO>();
         protected override async Task OnInitializedAsync()
         {
             var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
@@ -23,17 +27,22 @@ namespace Authentication.web.Pages
             if(Idclaim != null)
             {
                var user =  _administrationService.GetUserById(Idclaim.Value);
+               _quizList = await _quizService.ListeQuizByUser(Idclaim.Value);
+            }
+            foreach (var item in _quizList)
+            {
+                Console.WriteLine(item.titre);
             }
 
-            var x = await _quizService.ListeQuizByUser(Idclaim.Value);
-           
-            
-            
-
-            // i need to get the list of quiizs that are affected to this User
-            //Console.WriteLine(authState.User.Claims.ToList()[i]);
+        }
+        private void ExecuteQuiz(ListQuizDTO employee)
+        {
+            _navigationManager.NavigateTo($"/QuizVisulizer/{employee.Id}");
+            // Handle the button click for the specific employee
+            // You can access the employee object and perform any logic as needed
         }
 
 
     }
+
 }

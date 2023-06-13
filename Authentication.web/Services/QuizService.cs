@@ -40,8 +40,11 @@ namespace Authentication.web.Services
         public async Task<List<ListQuizDTO>> ListeQuizByUser(string UserId)
         {
             HttpResponseMessage httpResponseMessage = await _httpClient.GetAsync("/api/Quiz/ListQuizByUser?UserId=" + UserId);
-            IEnumerable<ListQuizDTO>? listQuiz = await httpResponseMessage.Content.ReadFromJsonAsync<IEnumerable<ListQuizDTO>>();
-            return listQuiz.ToList();
+
+           // IEnumerable<ListQuizDTO>? listQuiz = await httpResponseMessage.Content.ReadFromJsonAsync<IEnumerable<ListQuizDTO>>();
+            List<Quiz> response = await httpResponseMessage.Content.ReadFromJsonAsync<List<Quiz>>();
+            return _mapper.Map<List<Quiz>, List<ListQuizDTO>>(response);
+            
 
         }
         public async Task<ListQuizDTO> GetQuizById(string id)
