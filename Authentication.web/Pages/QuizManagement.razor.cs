@@ -137,6 +137,11 @@ namespace Authentication.web.Pages
             QuizSelected.Clear();
 
         }
+        private void DetailedQuiz(string IdQuiz)
+        {
+
+        }
+
         private void HandleRowDoubleClick(BaseListDTO item)
         {
             _navigationManager.NavigateTo($"/QuizVisulizer/{item.Id}"); // Your logic for handling the double-click event
