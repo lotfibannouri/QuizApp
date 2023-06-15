@@ -20,7 +20,7 @@ namespace Authentication.web.Dialogs
             }
             if(model.description == null)
             {
-                txtsnakError = "<div>descrition obligatoire</div>";
+                txtsnakError = "<div>description obligatoire</div>";
                 SnackbarService.Add(txtsnakError);
             }
             if (model.niv_deficulte==0)

@@ -1,5 +1,6 @@
 ﻿@using Authentication.web.Pages
 @using Authentication.web.utility;
+@using Microsoft.AspNetCore.SignalR.Client;
 
 <MudPaper Width="250px" Elevation="0" Class="py-3">
     <MudNavMenu Bordered="true">
@@ -71,12 +72,39 @@
 </div>*@
 
 @code {
+    [Inject]
+    public IDialogService DialogService { get; set; }
     public string SelectedOption { get; set; }
     private bool collapseNavMenu = true;
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
+    string state = "Message box hasn't been opened yet";
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
     }
+    [Inject]
+    public IJSRuntime jsruntime { get; set; }
+
+    private HubConnection _hubConnection { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        _hubConnection = new HubConnectionBuilder()
+            .WithUrl("https://localhost:7284/notificationshub")
+            .Build();
+
+        _hubConnection.On<string, string>("ReceiveMessage", async (user, message) =>
+        {
+            await jsruntime.InvokeAsync<string>("PlayAudio");
+            bool? result = await DialogService.ShowMessageBox("Updates", "A new Quiz have been assigned To you!", yesText: "OK!");
+            state = result == null ? "Canceled" : "Deleted!";
+            // StateHasChanged();
+           
+        });
+        
+
+        await _hubConnection.StartAsync();
+    }
+
 }

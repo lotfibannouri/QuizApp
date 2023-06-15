@@ -9,11 +9,8 @@ namespace Authentication.web.Pages
 {
     public partial class QuestionManagement
 
-    {
-        
-     
+    {  
         public CreationQ_PropDTO model = new CreationQ_PropDTO();
-
 
     }
 }

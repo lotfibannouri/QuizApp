@@ -56,7 +56,7 @@ namespace Authentication.web.Services
 
         public async Task<User?> GetUserById(string id)
         {
-            HttpResponseMessage httpResponseMessage = await _httpClient.DeleteAsync("/api/Administration/userById?id=" + id);
+            HttpResponseMessage httpResponseMessage = await _httpClient.GetAsync("/api/Administration/userById?id=" + id);
             User response = await httpResponseMessage.Content.ReadFromJsonAsync<User>();
             return response;
         }

@@ -4,6 +4,7 @@ using Authentication.web.Services;
 using Authentication.web.Shared;
 using Authentication.web.utility;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Options;
 using MudBlazor;
 using QuizApp.Entities.Base_DTO;
@@ -20,13 +21,18 @@ namespace Authentication.web.Pages
         private List<string> _events = new();
         public string txtsnakSuccess = "<div>suppression réussie</div>";
         public string txtsnakError = "<div>Problème de suppression</div>";
+
+        private HubConnection hubConnection;
+
+
         [Inject]
         public IQuizService _quizService { get; set; }
         [Inject]
         public NavigationManager _navigationManager { get; set; }
         protected override async Task OnInitializedAsync()
         {
-
+            //hubConnection = new HubConnectionBuilder().WithUrl(_navigationManager.ToAbsoluteUri("/notificationHub")).Build();
+            //await hubConnection.StartAsync();
             Quiz = await _quizService.ListeQuiz();
         }
 
@@ -75,6 +81,7 @@ namespace Authentication.web.Pages
             {
                 parameters.Add("AlertMessage", "Select only one Item!!!");
                 await dialogService.ShowAsync<AlertBox>("error", parameters, options);
+                await hubConnection.SendAsync("SendMessage", "parent", "usertest", "aaa", "bbb");
                 return;
             }
             else if (QuizSelected.Count == 1)

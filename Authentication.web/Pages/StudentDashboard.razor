@@ -1,17 +1,37 @@
 ﻿@page "/StDashBoard"
-<h3>StudentDashboard</h3>
 
+<MudContainer MaxWidth="MaxWidth.Large" Style="margin-top: 30px">
+    <MudGrid Justify="Justify.FlexStart">
+        @if(_quizList != null){
+        @foreach (var item in _quizList)
+        {
+            <MudItem xs="3">
+                <MudCard Class="d-flex flex-column justify-content-between" Style="height:300px">
+                    <MudCardHeader>
+                        <CardHeaderAvatar>
+                            <MudAvatar Color="Color.Secondary">I</MudAvatar>
+                        </CardHeaderAvatar>
+                        <CardHeaderContent>
+                            <MudText Typo="Typo.body1">@item.titre</MudText>
+                            <MudText Typo="Typo.body2">@item.duree_quiz minutes</MudText>
+                            <MudText Typo="Typo.body2">@item.nbr_questions questions</MudText>
+                        </CardHeaderContent>
+                    </MudCardHeader>
+                    @*<MudCardMedia Image="images/pilars.jpg" Height="250" />*@
+                    <MudCardContent Style="height:100%;max-height:200px;overflow-y: scroll">
+                        <MudText Typo="Typo.body2">@item.description</MudText>
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudText Typo="Typo.subtitle2">Passer le test</MudText>
+                            <MudIconButton Icon="@Icons.Material.Filled.ArrowCircleRight" Color="Color.Default" OnClick="(()=>ExecuteQuiz(item))" />
+                    </MudCardActions>
+                </MudCard>
+            </MudItem>
+            }
+        }
+    </MudGrid>
+</MudContainer>
 
-<MudDataGrid Items="@_quizList" Filterable="false" SortMode="@SortMode.None" Groupable="false">
-    <Columns>
-        <PropertyColumn  Title="Title" Property="x => x.titre" />
-        <TemplateColumn CellClass="d-flex justify-end">
-            <CellTemplate>
-                <MudButton Size="@Size.Small" Variant="@Variant.Filled" Color="@Color.Primary" OnClick="@(() => ExecuteQuiz(context.Item))">Start test</MudButton>
-            </CellTemplate>
-        </TemplateColumn>
-    </Columns>
-</MudDataGrid>
 
 @code {
 

@@ -28,36 +28,38 @@ namespace Authentication.web.Pages
         public IDialogService DialogService { get; set; }
 
         [Inject]
-
         public IJSRuntime jsruntime { get; set; }
 
         private HubConnection _hubConnection { get; set; }
-        public List<ListQuizDTO> _quizList { get; set; } = new List<ListQuizDTO>();
 
         string state = "Message box hasn't been opened yet";
 
         private readonly string notificationSoundPath = "/beep.mp3";
+
+        public List<ListQuizDTO> _quizList { get; set; }
+        
+        public List<string> listLogos = new List<string> { "fa-brands fa-java", "fa-regular fa-user", "fa-regular fa-c", "fa-regular fa-code" };
+
         protected override async Task OnInitializedAsync()
         {
-            _hubConnection = new HubConnectionBuilder()
-                .WithUrl("https://localhost:7284/notificationshub")
-                .Build();
+            //_hubConnection = new HubConnectionBuilder()
+            //    .WithUrl("https://localhost:7284/notificationshub")
+            //    .Build();
 
+            //_hubConnection.On<string, string>("ReceiveMessage", async (user, message) =>
+            //{
+            //    await jsruntime.InvokeAsync<string>("PlayAudio");
+            //    bool? result = await DialogService.ShowMessageBox("Updates","A new Quiz have been assigned To you!",yesText: "OK!");
+            //    state = result == null ? "Canceled" : "Deleted!";
+            //    // StateHasChanged();
+            //    LoadData();
+            //});
+            await LoadData();
 
-            _hubConnection.On<string, string>("ReceiveMessage", async (user, message) =>
-            {
-                await jsruntime.InvokeAsync<string>("PlayAudio");
-                bool? result = await DialogService.ShowMessageBox("Updates","A new Quiz have been assigned To you!",yesText: "OK!");
-                state = result == null ? "Canceled" : "Deleted!";
-                // StateHasChanged();
-                LoadData();
-            });
-            LoadData();
-
-            await _hubConnection.StartAsync();
+            //await _hubConnection.StartAsync();
         }
 
-        private async void LoadData()
+        private async Task LoadData()
         {
             var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
             var Idclaim = authState.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
@@ -68,10 +70,7 @@ namespace Authentication.web.Pages
                 _quizList = await _quizService.ListeQuizByUser(Idclaim.Value);
             }
         }
-        private async void ReceiveNotification(string message)
-        {
-            
-        }
+       
         private void ExecuteQuiz(ListQuizDTO employee)
         {
             _navigationManager.NavigateTo($"/QuizVisulizer/{employee.Id}");
