@@ -68,10 +68,16 @@ namespace ConceptionQuiz_Api.Controllers
 
                 if (binds == null)
                     return NotFound("liste des quiz est vide ");
-
+                
+                var filteredlist = new List<Quiz>();
                 if (binds != null)
                 {
-                    var filteredlist = binds.Where(x => x.userid.ToString() == UserId).Select(x => x.quiz).ToList();
+                    
+                    foreach(var bind in binds.Where(x => x.userid.ToString() == UserId))
+                    {
+                        var quiz = await GetQuizById(bind.quizid.ToString());
+                        filteredlist.Add(quiz);
+                    }
                     return Ok(filteredlist);
                 }      
                 else

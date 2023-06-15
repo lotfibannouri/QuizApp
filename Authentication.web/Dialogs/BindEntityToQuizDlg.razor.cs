@@ -10,6 +10,7 @@ using QuizApp.Entities.Conception_Entities.DTO.QuestionDTO;
 using QuizApp.Entities.Conception_Entities;
 using AutoMapper;
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.SignalR.Client;
 
 namespace Authentication.web.Dialogs
 {
@@ -41,9 +42,15 @@ namespace Authentication.web.Dialogs
 
         [Parameter]
         public string QuizId { get; set; } = "";
+        private HubConnection hubConnection { get; set; }
         protected override async Task OnInitializedAsync()
         {
-            if(bindto == Entity.USER) { 
+            hubConnection = new HubConnectionBuilder()
+                   .WithUrl("https://localhost:7284/notificationshub")
+                   .Build();
+            await hubConnection.StartAsync();
+
+            if (bindto == Entity.USER) { 
             var users = await adminService.GetUsers();
             Users = users.Where(usr => usr.role.Contains("User") && usr.role.Count == 1);
             }
@@ -93,6 +100,7 @@ namespace Authentication.web.Dialogs
                         }
                     }
 
+                    await hubConnection.SendAsync("SendMessage", "", "");
                 }
             }
             else

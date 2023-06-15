@@ -30,6 +30,13 @@
     </div>
     <script src="_framework/blazor.webassembly.js"></script>
     <script src="_content/MudBlazor/MudBlazor.min.js"></script>
+    <script >
+        window.PlayAudio = () => {
+            document.getElementById("beep").play();
+        }
+    </script>
 </body>
+
+<audio id="beep" src="beeb.mp3" />
 
 </html>

@@ -31,6 +31,9 @@ builder.Services.AddControllersWithViews()
     .AddNewtonsoftJson(options =>
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
 );
+
+builder.Services.AddSignalR();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -40,12 +43,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.MapControllers();
 app.UseHttpsRedirection();
 
+app.UseCors();
 app.UseAuthorization();
 
-app.MapControllers();
 
-app.UseCors();
+app.MapHub<NotificationsHub>("/notificationshub");
 
 app.Run();
