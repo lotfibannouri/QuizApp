@@ -69,6 +69,8 @@ namespace Authentication.web.Pages
         }
         void SelectedItemsChanged(HashSet<ListQuizDTO> items)
         {
+            QuizSelected = items;
+            _events.Insert(0, $"Event = SelectedItemsChanged, data = {System.Text.Json.JsonSerializer.Serialize(items)}");
         }
         protected async Task BindEntitytoQuiz(Entity entity)
         {

@@ -18,9 +18,14 @@
                     <MudRadio Size="Size.Small" Option="@(4)"><p style="font-size:small">Expert</p></MudRadio>
                 </MudRadioGroup>
                 <MudInputLabel>Nombre de  Question</MudInputLabel>
-                <MudNumericField @bind-Value="model.nbr_questions" Label="Entrer la durée de test" Variant="Variant.Outlined" Required="true" />
+                <MudNumericField @bind-Value="model.nbr_questions" Label="Entrer le nombre de questions" Variant="Variant.Outlined" Required="true" />
                 <MudInputLabel>Durée Quiz</MudInputLabel>
                 <MudNumericField @bind-Value="model.duree_quiz" Label="Entrer la durée de test" Variant="Variant.Outlined" Required="true" />
+                <MudSelect T="int" Label="Icon" AnchorOrigin="Origin.BottomCenter" @bind-Value="model.icon">
+                    <MudSelectItem Value=0>Test</MudSelectItem>
+                    <MudSelectItem Value=1>Code</MudSelectItem>
+                    <MudSelectItem Value=2>Formation</MudSelectItem>
+                </MudSelect>
             </EditForm>
         </MudContainer>
 

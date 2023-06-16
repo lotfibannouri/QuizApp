@@ -72,8 +72,8 @@ namespace Authentication.web.Pages
 
         void SelectedItemsChanged(HashSet<User> items)
         {
-            //UsersSelected = items.ToList();
-            //_events.Insert(0, $"Event = SelectedItemsChanged, data = {System.Text.Json.JsonSerializer.Serialize(items)}");
+            UsersSelected = items;
+            _events.Insert(0, $"Event = SelectedItemsChanged, data = {System.Text.Json.JsonSerializer.Serialize(items)}");
         }
 
 

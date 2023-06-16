@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.AspNetCore.SignalR.Client;
 using MudBlazor.Services;
 using Microsoft.AspNetCore.Authorization.Policy;
+using Authentication.web.SignalServices;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -18,27 +19,23 @@ builder.Services.AddMudServices();
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 builder.Services.AddScoped<AuthenticationStateProvider, AuthProvider>();
 
+
 builder.Services.AddAuthorizationCore();
 
 builder.Services.AddLocalStorageServices();
 
 
-//builder.Services.AddSignalRCore();
+
+
 
 
 var automapper = new MapperConfiguration(item => item.AddProfile(new AutoMapperHandler()));
 IMapper mapper = automapper.CreateMapper();
 builder.Services.AddSingleton(mapper);
 
-//builder.Services.AddSingleton(sp =>
-//{
-//    var navigationManager = sp.GetRequiredService<NavigationManager>();
-//    return new HubConnectionBuilder()
-//        .WithUrl(navigationManager.ToAbsoluteUri("/notificationHub"))
-//        .Build();
-//});
+builder.Services.AddSingleton<SignalService>();
 
-builder.Services.AddHttpClient <ICompteService, CompteService>(client =>
+builder.Services.AddHttpClient<ICompteService, CompteService>(client =>
 {
 #if (DEBUG)
     client.BaseAddress = new Uri("https://localhost:7297");
@@ -57,7 +54,7 @@ builder.Services.AddHttpClient<IAdministrationService, AdministrationService>(cl
 
 });
 
-builder.Services.AddHttpClient<IQuizService,QuizService>(client =>
+builder.Services.AddHttpClient<IQuizService, QuizService>(client =>
 {
 #if (DEBUG)
     client.BaseAddress = new Uri("https://localhost:7284");
@@ -76,5 +73,6 @@ builder.Services.AddHttpClient<IQuestionService, QuestionService>(client =>
 #endif
 
 });
+
 
 await builder.Build().RunAsync();

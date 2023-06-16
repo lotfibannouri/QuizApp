@@ -38,25 +38,24 @@ namespace Authentication.web.Pages
 
         public List<ListQuizDTO> _quizList { get; set; }
         
-        public List<string> listLogos = new List<string> { "fa-brands fa-java", "fa-regular fa-user", "fa-regular fa-c", "fa-regular fa-code" };
+        public List<string> listLogos = new List<string> { Icons.Material.Filled.Quiz, Icons.Material.Filled.Code, Icons.Material.Filled.School};
 
         protected override async Task OnInitializedAsync()
         {
-            //_hubConnection = new HubConnectionBuilder()
-            //    .WithUrl("https://localhost:7284/notificationshub")
-            //    .Build();
+            _hubConnection = new HubConnectionBuilder()
+                .WithUrl("https://localhost:7284/notificationshub")
+                .Build();
 
-            //_hubConnection.On<string, string>("ReceiveMessage", async (user, message) =>
-            //{
-            //    await jsruntime.InvokeAsync<string>("PlayAudio");
-            //    bool? result = await DialogService.ShowMessageBox("Updates","A new Quiz have been assigned To you!",yesText: "OK!");
-            //    state = result == null ? "Canceled" : "Deleted!";
-            //    // StateHasChanged();
-            //    LoadData();
-            //});
+            _hubConnection.On<string, string>("ReceiveMessage", async (user, message) =>
+            {
+                await jsruntime.InvokeAsync<string>("PlayAudio");
+                bool? result = await DialogService.ShowMessageBox("Updates", "A new Quiz have been assigned To you!", yesText: "OK!");
+                state = result == null ? "Canceled" : "Deleted!";
+                await LoadData();
+            });
             await LoadData();
 
-            //await _hubConnection.StartAsync();
+            await _hubConnection.StartAsync();
         }
 
         private async Task LoadData()
