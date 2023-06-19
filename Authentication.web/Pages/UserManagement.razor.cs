@@ -89,7 +89,7 @@ namespace Authentication.web.Pages
             var dialogresult = await dialogService.ShowAsync<UserDialog>("Création des Utilisateurs",parameters,options);
             var result = await dialogresult.Result;
             Users = await adminService.GetUsers();
-
+            UsersSelected.Clear();
             //if (!result.Cancelled && bool.TryParse(result.Data.ToString(), out bool resultbool)) IncrementCount();
 
             //var dialogResult = dialogService.Show<UserDialog>("AddUserDialog", options);
@@ -117,6 +117,9 @@ namespace Authentication.web.Pages
             }
 
             Users = await adminService.GetUsers();
+            UsersSelected.Clear();
+
+
 
         }   
 
@@ -145,6 +148,7 @@ namespace Authentication.web.Pages
             var dialogresult = await dialogService.ShowAsync<UserDialog>("Modification des utilisateurs", parameters, options);
             }
             Users = await adminService.GetUsers();
+            UsersSelected.Clear();
         }
 
         private async Task AssignRoleToUser()
@@ -169,6 +173,7 @@ namespace Authentication.web.Pages
             var result = await dialogresult.Result;
             UsersSelected= new HashSet<User>();
             Users = await adminService.GetUsers();
+            UsersSelected.Clear();
             StateHasChanged();
         }
     }

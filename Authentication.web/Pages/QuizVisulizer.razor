@@ -1,6 +1,15 @@
 ﻿@page "/QuizVisulizer/{quizId}"
-<h3>QuizVisulizer</h3>
 
-@code {
-  
-}
+<MudPaper Width="300px" Elevation="0">
+    <MudTreeView T="string" Dense="true" Hover="true">
+        <MudTreeViewItem Value="@(Quiz.titre)">
+            <MudTreeViewItem Value="@("logo.png")" />
+        </MudTreeViewItem>
+        <MudTreeViewItem Value="@("Questions")">
+            @foreach(var question in listQuestionDTOs)
+            {
+                <MudTreeViewItem Value="@(question.questionText)"/>
+            }
+        </MudTreeViewItem>
+    </MudTreeView>
+</MudPaper>

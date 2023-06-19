@@ -9,6 +9,7 @@ using Microsoft.Extensions.Options;
 using MudBlazor;
 using QuizApp.Entities.Base_DTO;
 using QuizApp.Entities.Conception_Entities.DTO.Quiz_DTO;
+using static MudBlazor.CategoryTypes;
 
 namespace Authentication.web.Pages
 {
@@ -99,7 +100,7 @@ namespace Authentication.web.Pages
                 await dialogService.ShowAsync<AlertBox>("error", parameters, options);
                 return;
             }
-
+            QuizSelected.Clear();
 
         }
 
@@ -110,6 +111,7 @@ namespace Authentication.web.Pages
             var dialogresult = await dialogService.ShowAsync<QuizDialog>("Création Quiz", options);
             var result = await dialogresult.Result;
             Quiz = await _quizService.ListeQuiz();
+            QuizSelected.Clear();
 
         }
 
@@ -148,7 +150,7 @@ namespace Authentication.web.Pages
         }
         private void DetailedQuiz(string IdQuiz)
         {
-
+            _navigationManager.NavigateTo($"/QuizVisulizer/{IdQuiz}");
         }
 
         private void HandleRowDoubleClick(BaseListDTO item)
