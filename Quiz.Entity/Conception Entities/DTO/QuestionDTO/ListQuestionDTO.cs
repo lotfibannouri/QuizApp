@@ -11,6 +11,6 @@ namespace QuizApp.Entities.Conception_Entities.DTO.QuestionDTO
     {
         public string questionText { get; set; }
         public string type { get; set; }
-
+        public ICollection<Proposition>? propositions { get; set; }
     }
 }

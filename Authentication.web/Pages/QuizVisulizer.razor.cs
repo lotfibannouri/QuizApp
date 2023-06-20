@@ -14,15 +14,44 @@ namespace Authentication.web.Pages
         public IQuestionService _questionService { get; set; }
         [Inject]
         public IQuizService _quizService { get; set; }
-        public ListQuizDTO Quiz { get; set; }
-        List<ListQuestionDTO> listQuestionDTOs { get; set; }    
+        public ListQuizDTO _quiz { get; set; }
+        public List<ListQuestionDTO> _questions { get; set; }
+        public bool QuestionView { get; set; }
+        public bool QuizView { get; set; }
+        public bool ChoiseView { get; set; }
         protected override async Task OnInitializedAsync()
         {
-           if(!string.IsNullOrEmpty(QuizId))
+            if (!string.IsNullOrEmpty(QuizId))
             {
-                Quiz = await _quizService.GetQuizById(QuizId);
-                listQuestionDTOs = await _questionService.GetQuestionsByQuizId(QuizId);
+                _quiz = await _quizService.GetQuizById(QuizId);
+                _questions = await _questionService.GetQuestionsByQuizId(QuizId);
+            }
+            QuizView = false;
+            QuestionView = true;
+            ChoiseView = true;
 
+        }
+
+
+        private void ActiveView(int value)
+        {
+            switch (value)
+            {
+                case 0:
+                    QuizView = false;
+                    QuestionView= true;
+                    ChoiseView= true;
+                    break;
+                case 1:
+                    QuizView = true;
+                    QuestionView = false;
+                    ChoiseView = true;
+                    break;    
+                case 2:
+                    QuizView = true;
+                    QuestionView = true;
+                    ChoiseView = false;
+                    break;   
             }
         }
     }

@@ -85,6 +85,7 @@ namespace Authentication.web.Pages
                 parameters.Add("AlertMessage", "Select only one Item!!!");
                 await dialogService.ShowAsync<AlertBox>("error", parameters, options);
                 await hubConnection.SendAsync("SendMessage", "parent", "usertest", "aaa", "bbb");
+                QuizSelected.Clear();
                 return;
             }
             else if (QuizSelected.Count == 1)
@@ -98,6 +99,7 @@ namespace Authentication.web.Pages
             {
                 parameters.Add("AlertMessage", "You need To Select a Quiz!!!");
                 await dialogService.ShowAsync<AlertBox>("error", parameters, options);
+                QuizSelected.Clear();
                 return;
             }
             QuizSelected.Clear();
@@ -123,6 +125,7 @@ namespace Authentication.web.Pages
                 var parameters = new DialogParameters();
                 parameters.Add("AlertMessage", "You need To Select a Quiz!!!");
                 await dialogService.ShowAsync<AlertBox>("error", parameters, options);
+                QuizSelected.Clear();
                 return;
             }
             foreach (var item in QuizSelected)

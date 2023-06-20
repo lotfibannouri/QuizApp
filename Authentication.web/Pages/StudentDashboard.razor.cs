@@ -1,4 +1,5 @@
 ﻿using Authentication.web.Services;
+using Authentication.web.Shared;
 using Authentication.web.utility;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -13,7 +14,7 @@ using static MudBlazor.CategoryTypes;
 
 namespace Authentication.web.Pages
 {
-    public partial class StudentDashboard 
+    public partial class StudentDashboard
     {
         [Inject]
         public AuthenticationStateProvider _authenticationStateProvider { get; set; }
@@ -24,7 +25,7 @@ namespace Authentication.web.Pages
         [Inject]
         public NavigationManager _navigationManager { get; set; }
 
-        [Inject] 
+        [Inject]
         public IDialogService DialogService { get; set; }
 
         [Inject]
@@ -37,8 +38,8 @@ namespace Authentication.web.Pages
         private readonly string notificationSoundPath = "/beep.mp3";
 
         public List<ListQuizDTO> _quizList { get; set; }
-        
-        public List<string> listLogos = new List<string> { Icons.Material.Filled.Quiz, Icons.Material.Filled.Code, Icons.Material.Filled.School};
+
+        public List<string> listLogos = new List<string> { Icons.Material.Filled.Quiz, Icons.Material.Filled.Code, Icons.Material.Filled.School };
 
         protected override async Task OnInitializedAsync()
         {
@@ -49,9 +50,13 @@ namespace Authentication.web.Pages
             _hubConnection.On<string, string>("ReceiveMessage", async (user, message) =>
             {
                 await jsruntime.InvokeAsync<string>("PlayAudio");
-                bool? result = await DialogService.ShowMessageBox("Updates", "A new Quiz have been assigned To you!", yesText: "OK!");
-                state = result == null ? "Canceled" : "Deleted!";
+
+                var options = new DialogOptions { CloseOnEscapeKey = true, CloseButton = true, FullWidth = true };
+                var parameters = new DialogParameters();
+                parameters.Add("AlertMessage", "A Quiz have been assigned to you!!!");
+                await DialogService.ShowAsync<AlertBox>("Updates", parameters, options);
                 await LoadData();
+                this.StateHasChanged();
             });
             await LoadData();
 
@@ -68,8 +73,9 @@ namespace Authentication.web.Pages
                 var user = _administrationService.GetUserById(Idclaim.Value);
                 _quizList = await _quizService.ListeQuizByUser(Idclaim.Value);
             }
+
         }
-       
+
         private void ExecuteQuiz(ListQuizDTO employee)
         {
             _navigationManager.NavigateTo($"/QuizVisulizer/{employee.Id}");

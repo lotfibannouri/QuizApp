@@ -13,7 +13,7 @@ namespace ConceptionQuiz_Api.Repository
         Task<List<Question>> ListQuestion();
         Task<Question> GetQuestionById(string id);
         Task<Question> GetQuestionByName(string name);
-        Task<List<ListQuestionDTO>> GetQuestionsByQuizId(string quizId);
+        Task<List<Question>> GetQuestionsByQuizId(string quizId);
 
     }
 }

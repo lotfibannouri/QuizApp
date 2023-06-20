@@ -51,11 +51,27 @@ namespace ConceptionQuiz_Api.Controllers
         }
 
         [HttpGet("GetQuestionsByQuizId")]
-        public async Task<List<ListQuestionDTO>> GetQuestionsByQuizId(string QuizId)
+        public async Task<List<Question>> GetQuestionsByQuizId(string QuizId)
         {
             try
             {
                 var result = await _questionRepository.GetQuestionsByQuizId(QuizId);
+                return result;
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.ToString());
+            }
+        }
+
+
+        [HttpGet("GetQuestionsById")]
+        public async Task<Question> GetQuestionsById(string QuestionId)
+        {
+            try
+            {
+                var result = await _questionRepository.GetQuestionById(QuestionId);
                 return result;
 
             }

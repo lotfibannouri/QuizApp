@@ -43,7 +43,9 @@ namespace ConceptionQuiz_Api.Repository
 
         public async Task<Question> GetQuestionById(string id)
         {
-            return await _dbContext.questions.FindAsync(new Guid(id));
+            return await _dbContext.questions
+                .Include(p=>p.propositions)
+                .SingleOrDefaultAsync(q => q.Id == new Guid(id));
         }
 
         public Task<Question> GetQuestionByName(string name)
@@ -69,28 +71,35 @@ namespace ConceptionQuiz_Api.Repository
         }
 
 
-        public async Task<List<ListQuestionDTO>> GetQuestionsByQuizId(string quizId)
+        public async Task<List<Question>> GetQuestionsByQuizId(string quizId)
         {
             Quiz quiz = await _dbContext.quiz
-         .Include(q => q.questions)
-         .FirstOrDefaultAsync(q => q.Id == new Guid(quizId));
-
+                              .Include(q => q.questions)
+                              .FirstOrDefaultAsync(q => q.Id == new Guid(quizId));
+            List<Question> questions = new List<Question>();
             if (quiz != null)
             {
-                List<Question> questions = quiz.questions.ToList();
-                List<ListQuestionDTO> questionsDTO = new List<ListQuestionDTO>();
-                foreach (var question in questions)
-                { var map = _mapper.Map<Question, ListQuestionDTO>(question); // je suis obligé d'utilisé le mapping dans le backend pour éviter
-                                                                              // la boucle infine des objets (l'entité question posséde une liste de quiz
-                                                                              //et l'entité quiz posséde aussi une liste de questions ).
-                    questionsDTO.Add(map);
-
-
+                var ids = quiz.questions.Select(x => x.Id.ToString());
+                foreach (var item in ids)
+                {
+                    var Question = await this.GetQuestionById(item);
+                    if(Question!= null)  
+                        questions.Add(Question);
                 }
-                return questionsDTO;
+              
+                //List<ListQuestionDTO> questionsDTO = new List<ListQuestionDTO>();
+                //foreach (var question in questions)
+                //{ var map = _mapper.Map<Question, ListQuestionDTO>(question); // je suis obligé d'utilisé le mapping dans le backend pour éviter
+                //                                                              // la boucle infine des objets (l'entité question posséde une liste de quiz
+                //                                                              //et l'entité quiz posséde aussi une liste de questions ).
+                //    questionsDTO.Add(map);
+
+
+                //}
+                return questions;
             }
 
-            return new List<ListQuestionDTO>();
+            return new List<Question>();
         }
     }
 }

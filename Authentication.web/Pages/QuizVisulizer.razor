@@ -1,15 +1,30 @@
 ﻿@page "/QuizVisulizer/{quizId}"
 
-<MudPaper Width="300px" Elevation="0">
-    <MudTreeView T="string" Dense="true" Hover="true">
-        <MudTreeViewItem Value="@(Quiz.titre)">
-            <MudTreeViewItem Value="@("logo.png")" />
-        </MudTreeViewItem>
-        <MudTreeViewItem Value="@("Questions")">
-            @foreach(var question in listQuestionDTOs)
+
+<MudPaper Height="200px" Style="overflow:hidden; position:relative;">
+    <MudDrawerContainer Class="mud-height-full">
+        <MudDrawer Open="true" Fixed="false" Elevation="1" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true">
+            <MudNavMenu>
+                <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Store" OnClick="@(()=>ActiveView(0))">Questionnaire</MudNavLink>
+                <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.LibraryBooks" OnClick="@(()=>ActiveView(1))">Questions</MudNavLink>
+                <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Group" OnClick="@(()=>ActiveView(2))">Choix</MudNavLink>
+            </MudNavMenu>
+        </MudDrawer>
+        @if (_quiz != null && _questions!=null){
+        <div class="d-flex justify-center align-center mud-height-full" style="flex-direction:column; gap:2px">
+
+            <div hidden="@QuizView">@(_quiz.titre)</div>
+            @foreach (var question in _questions)
             {
-                <MudTreeViewItem Value="@(question.questionText)"/>
+                <div hidden="@QuestionView"> @(question.questionText)</div>
+
+                @foreach (var prop in question.propositions.Select((e, i) => new { Value = e, Index = i }))
+                {
+                    <div style="font-size:large;font-family:Arial;font-weight:bold" hidden="@ChoiseView">-@(prop.Value.textProposition)</div>
+                }
+                
             }
-        </MudTreeViewItem>
-    </MudTreeView>
+        </div>
+        }
+    </MudDrawerContainer>
 </MudPaper>
