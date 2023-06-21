@@ -28,8 +28,7 @@ namespace Authentication.web.Pages
             }
             QuizView = false;
             QuestionView = true;
-            ChoiseView = true;
-
+            ChoiseView = true;         
         }
 
 

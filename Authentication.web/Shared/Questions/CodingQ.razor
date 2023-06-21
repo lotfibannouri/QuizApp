@@ -1,5 +1,12 @@
-﻿<h3>CodingQ</h3>
-
+﻿<MudGrid>
+   <MudItem xs="7" sm="10"> 
+    <MudSelect T="string" Label="Icon" AnchorOrigin="Origin.BottomCenter" @bind-Value="Language">
+    <MudSelectItem Value="csharp">c#</MudSelectItem>
+    <MudSelectItem Value="Java">java</MudSelectItem>
+            <MudSelectItem Value="cpp">c++</MudSelectItem>
+    </MudSelect>
+    </MudItem>
+</MudGrid>
 @code {
 
 }

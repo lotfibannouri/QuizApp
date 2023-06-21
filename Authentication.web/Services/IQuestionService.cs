@@ -12,5 +12,6 @@ namespace Authentication.web.Services
         Task<List<ListQuestionDTO>> GetQuestions();
 
         Task<List<ListQuestionDTO>> GetQuestionsByQuizId(string QuizId);
+
     }
 }
