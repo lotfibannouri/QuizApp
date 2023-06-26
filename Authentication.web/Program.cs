@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.AspNetCore.SignalR.Client;
 using MudBlazor.Services;
-using Microsoft.AspNetCore.Authorization.Policy;
 using Authentication.web.SignalServices;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -68,6 +67,16 @@ builder.Services.AddHttpClient<IQuestionService, QuestionService>(client =>
 {
 #if (DEBUG)
     client.BaseAddress = new Uri("https://localhost:7284");
+#else
+	client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
+#endif
+
+});
+
+builder.Services.AddHttpClient<IJdoodleService, JdoodleService>(client =>
+{
+#if (DEBUG)
+    client.BaseAddress = new Uri("https://api.jdoodle.com/");
 #else
 	client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
 #endif

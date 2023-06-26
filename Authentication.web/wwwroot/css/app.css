@@ -99,3 +99,7 @@ a, .btn-link {
     .loading-progress-text:after {
         content: var(--blazor-load-percentage-text, "Loading");
     }
+
+.my-editor-class { /* for a specific editor instance */
+    height:600px;
+}

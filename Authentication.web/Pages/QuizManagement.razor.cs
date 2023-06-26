@@ -87,6 +87,7 @@ namespace Authentication.web.Pages
                 await hubConnection.SendAsync("SendMessage", "parent", "usertest", "aaa", "bbb");
                 QuizSelected.Clear();
                 return;
+
             }
             else if (QuizSelected.Count == 1)
             {

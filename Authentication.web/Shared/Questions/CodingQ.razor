@@ -1,12 +1,12 @@
 ﻿<MudGrid>
    <MudItem xs="7" sm="10"> 
-    <MudSelect T="string" Label="Icon" AnchorOrigin="Origin.BottomCenter" @bind-Value="Language">
-    <MudSelectItem Value="csharp">c#</MudSelectItem>
-    <MudSelectItem Value="Java">java</MudSelectItem>
-            <MudSelectItem Value="cpp">c++</MudSelectItem>
+    <MudSelect T="string" Label="Langage" AnchorOrigin="Origin.BottomCenter" @bind-Value="Language">
+    <MudSelectItem Value=@("csharp")>c#</MudSelectItem>
+    <MudSelectItem Value=@("java")>java</MudSelectItem>
+    <MudSelectItem Value=@("cpp")>c++</MudSelectItem>
     </MudSelect>
     </MudItem>
+    <MudItem xs="7" sm="10">
+        <StandaloneCodeEditor Id="my-editor-instance-id" ConstructionOptions="EditorConstructionOptions" CssClass="my-editor-class" />
+    </MudItem>
 </MudGrid>
-@code {
-
-}

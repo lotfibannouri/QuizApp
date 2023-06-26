@@ -14,8 +14,9 @@
                     <MudSelectItem Value="@("Codage")" />
                 </MudSelect>
             </MudItem>
+          
             <MudItem xs="12" sm="12">
-                    <h3>choix</h3>
+                
                     @if (model.type == "Choix Multiple")
                     {
                         <MudItem xs="12" sm="6">
@@ -29,20 +30,12 @@
                                 <MultiCheckQ ></MultiCheckQ>
                             </MudItem>
                     }
-                 else if (model.type == "Vrai/Faux")
-                    {
-
-                        <MudItem xs="12" sm="6">
-                             <True_FalseQ></True_FalseQ>
-                        </MudItem>
-
-                    }
-                    else if (model.type == "Codage")
+             
+                    else if(model.type == "Codage")
                     {
                         <MudItem xs="12" sm="6">
                             <CodingQ />
                         </MudItem>
-
 
                     }
 
