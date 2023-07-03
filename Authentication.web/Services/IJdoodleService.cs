@@ -2,7 +2,7 @@
 {
     public interface IJdoodleService
     {
-        Task<string> GetOutputCodeQuestion(string code);
+        Task<string> GetOutput(string code, string language, string versionIndex);
 
     }
 }

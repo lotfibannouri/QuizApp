@@ -25,6 +25,7 @@ builder.Services.AddCors(option =>
         );
 }
 );
+builder.Services.AddHttpClient();
 builder.Services.AddTransient<IQuizRepository, QuizRepository>();
 builder.Services.AddTransient<IQuestionRepository, QuestionRepository>();
 builder.Services.AddControllersWithViews()

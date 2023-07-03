@@ -14,13 +14,13 @@ namespace Authentication.web.Services
             _httpClient = httpClient; 
         }
 
-        public async Task<string> GetOutputCodeQuestion(string code)
+        public async Task<string> GetOutput(string code,string language,string versionIndex)
         {
             AttemptCode cq = new AttemptCode();
             cq.script = code;
-            cq.versionIndex = "4";
-            cq.language = "csharp";
-            HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync("https://api.jdoodle.com/", cq);
+            cq.versionIndex = versionIndex;
+            cq.language =language;
+            HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync("/api/Question/GetOutput", cq);
             OutputCode response = await httpResponseMessage.Content.ReadFromJsonAsync<OutputCode>();
 
             return response.output;

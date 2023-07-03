@@ -6,6 +6,7 @@ using QuizApp.Entities.Conception_Entities.DTO.QuestionDTO;
 using QuizApp.Entities.Conception_Entities.DTO.Quiz_DTO;
 using System.Text.Json.Serialization;
 using System.Text.Json;
+using System.Net.Http;
 
 namespace ConceptionQuiz_Api.Repository
 {
@@ -15,12 +16,13 @@ namespace ConceptionQuiz_Api.Repository
 
         private readonly ConceptionQuizDbContext _dbContext;
         private readonly IMapper _mapper;
-
+       
 
         public QuestionRepository(ConceptionQuizDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
             _mapper = mapper;
+            
         }
         public async Task<Response> CreateQuestion(Question question)
         {
@@ -101,5 +103,8 @@ namespace ConceptionQuiz_Api.Repository
 
             return new List<Question>();
         }
+
+
+     
     }
 }

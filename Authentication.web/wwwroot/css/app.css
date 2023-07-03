@@ -101,5 +101,13 @@ a, .btn-link {
     }
 
 .my-editor-class { /* for a specific editor instance */
-    height:600px;
+    height:400px;
+}
+.monaco-editor-container {
+    height: 400px;
+}
+.centered-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

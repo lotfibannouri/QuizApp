@@ -76,7 +76,7 @@ builder.Services.AddHttpClient<IQuestionService, QuestionService>(client =>
 builder.Services.AddHttpClient<IJdoodleService, JdoodleService>(client =>
 {
 #if (DEBUG)
-    client.BaseAddress = new Uri("https://api.jdoodle.com/");
+    client.BaseAddress = new Uri("https://localhost:7284");
 #else
 	client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
 #endif
