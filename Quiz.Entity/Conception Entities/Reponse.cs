@@ -13,6 +13,7 @@ namespace QuizApp.Entities.Conception_Entities
         public Guid QuestionId { get; set; }
         public bool IsRawAnswer { get; set; }
         public bool IsAnswer { get; set; }
+        public string output { get; set; }
         public  Question? Question { get; set; }
     }
 }
