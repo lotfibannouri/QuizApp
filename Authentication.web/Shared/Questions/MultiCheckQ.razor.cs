@@ -9,7 +9,7 @@ namespace Authentication.web.Shared.Questions
     {
 
         [Parameter]
-        public CreationQ_PropDTO data { get; set; }
+        public CreationQuestionDTO data { get; set; }
         public List<PropositionDTO> propositions = new List<PropositionDTO>();
         public bool chkprop { get; set; }
         public bool responsePage { get; set; }

@@ -7,7 +7,7 @@ namespace Authentication.web.Services
 {
     public interface IQuestionService
     {
-        Task<Response> CreateQuestion(CreationQ_PropDTO question);
+        Task<Response> CreateQuestion(CreationQuestionDTO question);
 
         Task<List<ListQuestionDTO>> GetQuestions();
 

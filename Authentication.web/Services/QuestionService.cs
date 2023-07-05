@@ -20,9 +20,9 @@ namespace Authentication.web.Services
          _httpClient = httpClient;
             _mapper = mapper;
         }
-        public async Task<Response> CreateQuestion(CreationQ_PropDTO value)
+        public async Task<Response> CreateQuestion(CreationQuestionDTO value)
         {
-            Question question = _mapper.Map<CreationQ_PropDTO, Question>(value);
+            Question question = _mapper.Map<CreationQuestionDTO, Question>(value);
             question.quiz = new List<Quiz>();
             HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync("/api/Question/AddQuestion", question);
             Response response = await httpResponseMessage.Content.ReadFromJsonAsync<Response>();
