@@ -1,16 +1,17 @@
 ﻿<MudGrid>
 
     <MudItem xs="7" sm="12">
-        <MudSelect T="string" Label="Langage" AnchorOrigin="Origin.BottomCenter" @bind-Value="Language">
+        <MudSelect T="string" Label="Langage" AnchorOrigin="Origin.BottomCenter" @bind-Value="_Language" SelectedValuesChanged="OnChangeLanguage">
     <MudSelectItem Value=@("csharp")>c#</MudSelectItem>
     <MudSelectItem Value=@("java")>java</MudSelectItem>
     <MudSelectItem Value=@("cpp")>c++</MudSelectItem>
     </MudSelect>
     </MudItem>
     <MudItem xs="7" sm="12">     
-        <StandaloneCodeEditor  @ref="MonacoRef" Id="my-editor-instance-id" ConstructionOptions="EditorConstructionOptions" />
+        <StandaloneCodeEditor @ref="MonacoRef" Id="my-editor-instance-id" ConstructionOptions="EditorConstructionOptions" />
     </MudItem>
     <MudItem>
         <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="OnShowOutPut">afficher resultat</MudButton>
+        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Success" Class="ml-auto" OnClick="SaveQuestion">sauvegarder</MudButton>
     </MudItem>
 </MudGrid>

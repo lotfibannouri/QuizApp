@@ -15,8 +15,8 @@ namespace ConceptionQuiz_Api.utility
             CreateMap<Quiz,CreationQuizDTO>();
             CreateMap<ListQuizDTO, Quiz>();
             CreateMap<Quiz,ListQuizDTO>();
-            CreateMap<CreationQ_PropDTO, Question>();
-            CreateMap<Question, CreationQ_PropDTO>();
+            CreateMap<CreationQuestionDTO, Question>();
+            CreateMap<Question, CreationQuestionDTO>();
             CreateMap<PropositionDTO, Proposition>().ForMember(dest => dest.textProposition, opt => opt.MapFrom(src => src._textPropositon));
             CreateMap<Proposition, PropositionDTO>();
             CreateMap<CreationReponseDTO, Reponse>();

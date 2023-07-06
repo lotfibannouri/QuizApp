@@ -5,6 +5,7 @@
     <DialogActions>
         
         <MudButton Color="Color.Primary" OnClick="Ok">Ok</MudButton>
+        <MudButton Color="Color.Secondary" OnClick="Cancel">Cancel</MudButton>
     </DialogActions>
 </MudDialog>
 @code {
@@ -12,4 +13,5 @@
     [Parameter]
     public string AlertMessage { get; set; }
     void Ok() => MudDialog.Close(DialogResult.Ok(true));
+    void Cancel() => MudDialog.Cancel();
 }
