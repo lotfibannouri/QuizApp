@@ -40,8 +40,8 @@ namespace Authentication.web.Shared.Questions
             data.propositions = propositions;
             List<CreationReponseDTO> rep = new List<CreationReponseDTO>();
             foreach(var item in propositions)
-            {if (item._chkProposition)
-                    rep.Add(new CreationReponseDTO() {IsRawAnswer=true,Body=item._textPropositon});
+            {
+                rep.Add(new CreationReponseDTO() {IsRawAnswer=true,Body=item._textPropositon,IsAnswer = item._chkProposition });
             }
             data.reponses = rep;
             var response = Questionservice.CreateQuestion(data);
