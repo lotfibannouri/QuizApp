@@ -1,0 +1,38 @@
+﻿@page "/quiztestvisulizer/{quizId}"
+@using Authentication.web.Shared.Test
+
+<div class="centered-container">
+    <div class="timer">
+        Time Remaining: @remainingTime
+    </div>
+</div>
+
+@if(_questions != null )
+{
+    @foreach (var item in _questions)
+    {
+        if (item.type == "Choix Multiple")
+        {
+            TestMultichk a = new TestMultichk();
+            a._question = item;
+            <TestMultichk @ref=a _question="@item"/>
+            questionPersists.Add(a);
+        }
+
+    }
+}
+
+<MudButton Variant="Variant.Text" OnClick="getScore">Save</MudButton>
+
+<style>
+    .centered-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 8vh; /* Adjust this if necessary */
+    }
+
+    .timer {
+        font-size: 24px;
+    }
+</style>

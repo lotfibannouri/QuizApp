@@ -46,7 +46,7 @@ namespace ConceptionQuiz_Api.Repository
         public async Task<Question> GetQuestionById(string id)
         {
             return await _dbContext.questions
-                .Include(p=>p.propositions)
+                .Include(p=>p.propositions).Include( p => p.reponses)
                 .SingleOrDefaultAsync(q => q.Id == new Guid(id));
         }
 
