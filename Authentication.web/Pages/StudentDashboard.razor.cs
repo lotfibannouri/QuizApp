@@ -78,9 +78,8 @@ namespace Authentication.web.Pages
 
         private void ExecuteQuiz(ListQuizDTO employee)
         {
-            _navigationManager.NavigateTo($"/QuizVisulizer/{employee.Id}");
-            // Handle the button click for the specific employee
-            // You can access the employee object and perform any logic as needed
+            _navigationManager.NavigateTo($"/quiztestvisulizer/{employee.Id}");
+ 
         }
 
 
