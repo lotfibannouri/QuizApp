@@ -2,6 +2,6 @@
 {
     public interface IQuestionPersist
     {
-        public long save();
+        public double save();
     }
 }

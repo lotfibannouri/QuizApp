@@ -9,7 +9,7 @@
 
 @if(_questions != null )
 {
-    @foreach (var item in _questions)
+    @*@foreach (var item in _questions)
     {
         if (item.type == "Choix Multiple")
         {
@@ -19,7 +19,8 @@
             questionPersists.Add(a);
         }
 
-    }
+    }*@
+    @QuestionListRF
 }
 
 <MudButton Variant="Variant.Text" OnClick="getScore">Save</MudButton>

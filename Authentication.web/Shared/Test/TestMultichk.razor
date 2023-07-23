@@ -1,9 +1,9 @@
 ﻿<MudPaper Class="pa-16 ma-2" Elevation="3">
     
-    <MudText Typo="Typo.button"> @_question.questionText : </MudText>
+    <MudText Typo="Typo.button"> @Question.questionText : </MudText>
     @foreach (var item in chkdItems)
         {
-    <MudCheckBox @ref=item.chkboxref @bind-Checked=@item.ischecked  Label=@item.text Color="Color.Primary"></MudCheckBox>
+    <MudCheckBox @ref=item.chkboxref @bind-Checked=@item.ischecked  Label=@item.text Color="@item.color"></MudCheckBox>
         }  
 
 </MudPaper>
