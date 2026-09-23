@@ -1,0 +1,74 @@
+@using QuizApp.Entities.Conception_Entities.DTO.Categorie_DTO
+@inject ICategorieService CategorieService
+<MudDialog>
+    <DialogContent>
+        <MudContainer Style="max-height: 500px; overflow-y: scroll">
+            <MudText>@dialogTitle</MudText>
+            <EditForm Model="@model" OnValidSubmit="OnValidSubmit">
+                <DataAnnotationsValidator />
+                <MudTextField Label="Titre" Variant="Variant.Text" Required="true"
+                              @bind-Value="model.titre" />
+                <MudTextField Label="Description" Variant="Variant.Outlined" Lines="3"
+                              @bind-Value="model.description" />
+                <MudText Color="@Color.Error">@err</MudText>
+            </EditForm>
+        </MudContainer>
+    </DialogContent>
+    <DialogActions>
+        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="OnValidSubmit">Enregistrer</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        if (IsEditPage)
+        {
+            model.titre = CategorieSelected[0].titre;
+            model.description = CategorieSelected[0].description;
+        }
+    }
+
+    [Parameter]
+    public string dialogTitle { get; set; }
+    [Parameter]
+    public bool IsEditPage { get; set; }
+    [Parameter]
+    public List<ListCategorieDTO> CategorieSelected { get; set; }
+
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    public CreationCategorieDTO model = new CreationCategorieDTO();
+    void Submit() => MudDialog.Close(DialogResult.Ok(true));
+    public string err { get; set; }
+
+    private async void OnValidSubmit()
+    {
+        if (!IsEditPage)
+        {
+            var Response = await CategorieService.CreateCategorie(model);
+            if (Response.status)
+            {
+                this.Submit();
+            }
+            else
+            {
+                err = Response.content;
+                StateHasChanged();
+            }
+        }
+        else
+        {
+            var updateModel = new UpdateCategorieDTO { titre = model.titre, description = model.description };
+            var Response = await CategorieService.UpdateCategorie(CategorieSelected[0].Id, updateModel);
+            if (Response.status)
+            {
+                this.Submit();
+            }
+            else
+            {
+                err = Response.content;
+                StateHasChanged();
+            }
+        }
+    }
+}

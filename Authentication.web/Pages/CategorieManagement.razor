@@ -1,0 +1,24 @@
+@page "/CategorieManagement"
+@using QuizApp.Entities.Conception_Entities.DTO.Categorie_DTO
+@inject ICategorieService categorieService
+@inject IDialogService dialogService
+@inject ISnackbar SnackbarService
+
+<ManagementBar TypeBar="ManagementBar.Type.CATEGORIE" OnAddEventClicked="AddCategorie" OnEditEventClicked="EditCategorie" OnDeleteEventClicked="DeleteCategorie" OnDetailedCategorie="DetailedCategorie"></ManagementBar>
+<MudDataGrid T="ListCategorieDTO" MultiSelection="true" Items="@Categories" SortMode="SortMode.Multiple" Filterable="true" QuickFilter="@_quickFilter"
+             Hideable="true" SelectedItemsChanged="@SelectedItemsChanged" SelectedItems="@CategoriesSelected">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Gestionnaire des catégories</MudText>
+        <MudSpacer />
+        <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <Columns>
+        <SelectColumn T="ListCategorieDTO" ShowInFooter="false" />
+        <PropertyColumn Property="x => x.titre" Title="Titre" />
+        <PropertyColumn Property="x => x.description" Title="Description" />
+    </Columns>
+    <PagerContent>
+        <MudDataGridPager T="ListCategorieDTO" />
+    </PagerContent>
+</MudDataGrid>
