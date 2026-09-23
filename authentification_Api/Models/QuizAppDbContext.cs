@@ -17,7 +17,7 @@ namespace authentification_Api.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder opbuilder)
         {
-            opbuilder.UseSqlServer("Data Source=LAPTOP-GR853ENN\\SQL19;Initial Catalog=QuizAuthenticationDB;Integrated Security=True;Encrypt=False");
+            opbuilder.UseSqlServer("Data Source=DESKTOP-H8208OD\\SQLEXPRESS;Initial Catalog=QuizAuthenticationDB;Integrated Security=True;Encrypt=False");
         }
     }
 }
