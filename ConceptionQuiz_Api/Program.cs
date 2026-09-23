@@ -1,8 +1,9 @@
 using AutoMapper;
+using ConceptionQuiz_Api.Metier;
 using ConceptionQuiz_Api.Models;
 using ConceptionQuiz_Api.Repository;
 using ConceptionQuiz_Api.utility;
-
+using QuestPDF.Infrastructure;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -28,13 +29,15 @@ builder.Services.AddCors(option =>
 builder.Services.AddHttpClient();
 builder.Services.AddTransient<IQuizRepository, QuizRepository>();
 builder.Services.AddTransient<IQuestionRepository, QuestionRepository>();
+builder.Services.AddTransient<ICategorieRepository, CategorieRepository>();
+builder.Services.AddScoped<IQuizReport, QuizReport>();
 builder.Services.AddControllersWithViews()
     .AddNewtonsoftJson(options =>
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
 );
 
 builder.Services.AddSignalR();
-
+QuestPDF.Settings.License = LicenseType.Community;
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using QuizApp.Entities.Conception_Entities;
+using QuizApp.Entities.Conception_Entities.DTO.Categorie_DTO;
 using QuizApp.Entities.Conception_Entities.DTO.Proposition_DTO;
 using QuizApp.Entities.Conception_Entities.DTO.QuestionDTO;
 using QuizApp.Entities.Conception_Entities.DTO.Quiz_DTO;
@@ -14,9 +15,16 @@ namespace Authentication.web.AutoMapper_Handler
             CreateMap<CreationQuizDTO, Quiz>();
             CreateMap<Quiz, CreationQuizDTO>();
             CreateMap<ListQuizDTO, Quiz>();
-            CreateMap<Quiz, ListQuizDTO>();
+            CreateMap<Quiz, ListQuizDTO>()
+                .ForMember(dest => dest.categorieTitre, opt => opt.MapFrom(src => src.categorie != null ? src.categorie.titre : null));
+            CreateMap<CreationCategorieDTO, Categorie>();
+            CreateMap<Categorie, CreationCategorieDTO>();
+            CreateMap<ListCategorieDTO, Categorie>();
+            CreateMap<Categorie, ListCategorieDTO>();
+            CreateMap<UpdateCategorieDTO, Categorie>();
             CreateMap<ListQuestionDTO, Question>();
-            CreateMap<Question, ListQuestionDTO>();
+            CreateMap<Question, ListQuestionDTO>()
+                .ForMember(dest => dest.categorieTitre, opt => opt.MapFrom(src => src.categorie != null ? src.categorie.titre : null));
             CreateMap<CreationQuestionDTO, Question>();
             CreateMap<Question, CreationQuestionDTO>();
             CreateMap<PropositionDTO, Proposition>().ForMember(dest => dest.textProposition, opt => opt.MapFrom(src => src._textPropositon));
