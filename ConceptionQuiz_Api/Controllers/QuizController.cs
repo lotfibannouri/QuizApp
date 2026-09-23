@@ -7,6 +7,10 @@ using QuizApp.Entities.Conception_Entities.DTO.Quiz_DTO;
 using System.Text.Json.Serialization;
 using System.Text.Json;
 using Microsoft.AspNetCore.Http.HttpResults;
+using QuizApp.Entities.Conception_Entities.DTO.QuestionDTO;
+using QuizApp.Entities.Conception_Entities.DTO.ReportDTO;
+using ConceptionQuiz_Api.Metier;
+using System.Threading.Tasks;
 
 namespace ConceptionQuiz_Api.Controllers
 {
@@ -16,11 +20,13 @@ namespace ConceptionQuiz_Api.Controllers
     {
         #region properties
         private readonly IQuizRepository _quizRepository;
+        private readonly IQuizReport _quizReport;
         #endregion
         #region Constructor
-        public QuizController(IQuizRepository quizRepository)
+        public QuizController(IQuizRepository quizRepository, IQuizReport quizReport)
         {
             _quizRepository = quizRepository;
+            _quizReport = quizReport;
         }
         #endregion
 
@@ -162,6 +168,25 @@ namespace ConceptionQuiz_Api.Controllers
 
         }
 
+
+        [HttpPost("UnbindQuizFromQuestion")]
+        public async Task<Response> UnbindQuizFromQuestion(string idQuiz, string idQuestion)
+        {
+            try
+            {
+                var result = await _quizRepository.UnbindQuizFromQuestion(idQuiz, idQuestion);
+
+                return result;
+
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.ToString());
+            }
+
+        }
+
         [HttpPost("BindQuizToUser")]
         public async Task<Response> BindQuizToUser([FromBody] QuizUser quizUser)
         {
@@ -192,6 +217,43 @@ namespace ConceptionQuiz_Api.Controllers
                 throw new Exception(ex.ToString());
             }
         }
-        #endregion 
+
+        [HttpPost("GetQuizReport")]
+        public  async Task<IActionResult> GetQuizReport([FromBody] QuizReportRequestDTO request)
+        {
+            try
+            {
+                double score = 0;
+                foreach(var question in request.ListScoreRequest)
+                {
+                    score += await _quizReport.CalculateMultiChoiceScore(question);
+                }
+                var result = await _quizRepository.GetQuizById(request.QuizId);
+                Console.WriteLine("quizid :" + request.QuizId);
+                byte[] pdfBytes = await _quizReport.GenerateQuizReportAsync(request);
+
+                return File(pdfBytes, "application/pdf", "QuizReport.pdf");
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.ToString());
+            }
+        }
+
+        [HttpPost("GetQuizScoreSummary")]
+        public async Task<IActionResult> GetQuizScoreSummary([FromBody] QuizReportRequestDTO request)
+        {
+            try
+            {
+                var summary = await _quizReport.GetQuizScoreSummaryAsync(request);
+                return Ok(summary);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.ToString());
+            }
+        }
+        #endregion
     }
 }

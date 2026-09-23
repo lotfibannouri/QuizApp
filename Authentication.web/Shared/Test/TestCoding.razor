@@ -1,0 +1,36 @@
+<MudPaper Class="pa-3 pl-16 ma-1" Elevation="3">
+    <div style="display: flex; gap: 24px; align-items: flex-start;">
+        <div style="flex: 0 0 40%; max-width: 40%; min-width: 0;">
+            <MudText Typo="Typo.subtitle1" Class="mb-2">@Question.questionText</MudText>
+            <MudTextField T="string" Label="Description" Variant="Variant.Outlined" Lines="20" ReadOnly="true" Value="@(Question.description ?? string.Empty)" />
+        </div>
+        <div style="flex: 1 1 60%; min-width: 0;">
+            <div class="coding-editor-stack" style="height: calc(100vh - 260px);">
+                @if (HasTemplate)
+                {
+                    <div style="flex: 0 0 auto; height: @(PrefixHeightPx)px;">
+                        <StandaloneCodeEditor @ref="PrefixEditorRef" Id="@("tc-prefix-" + Question.Id)" CssClass="coding-flex-editor" ConstructionOptions="PrefixConstructionOptions" />
+                    </div>
+                }
+
+                <div style="flex: 1 1 0; min-height: 80px;">
+                    <StandaloneCodeEditor @ref="MiddleEditorRef" Id="@("tc-middle-" + Question.Id)" CssClass="coding-flex-editor" ConstructionOptions="MiddleConstructionOptions" />
+                </div>
+
+                @if (HasTemplate)
+                {
+                    <div style="flex: 0 0 auto; height: @(SuffixHeightPx)px;">
+                        <StandaloneCodeEditor @ref="SuffixEditorRef" Id="@("tc-suffix-" + Question.Id)" CssClass="coding-flex-editor" ConstructionOptions="SuffixConstructionOptions" />
+                    </div>
+                }
+            </div>
+
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-2" OnClick="OnRun">Exécuter</MudButton>
+
+            @if (output != null)
+            {
+                <MudText Typo="Typo.body2" Class="mt-2">Sortie : @output</MudText>
+            }
+        </div>
+    </div>
+</MudPaper>

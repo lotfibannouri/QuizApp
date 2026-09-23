@@ -1,0 +1,51 @@
+@using QuizApp.Entities.Conception_Entities.DTO.ReportDTO
+
+<MudDialog>
+    <DialogContent>
+        <div style="text-align:center; padding: 8px 16px;">
+            <MudIcon Icon="@(IsPassed ? Icons.Material.Filled.EmojiEvents : Icons.Material.Filled.SentimentDissatisfied)"
+                     Color="@(IsPassed ? Color.Success : Color.Error)"
+                     Style="font-size: 56px;" />
+
+            <MudText Typo="Typo.h5" Class="mt-2">Test terminé</MudText>
+
+            <MudText Typo="Typo.h3" Class="mt-2">@Score.ToString("0.##") / @MaxScore.ToString("0.##")</MudText>
+
+            <MudText Typo="Typo.subtitle1" Class="mt-1">@Percentage.ToString("0.#")%</MudText>
+
+            <div style="display:inline-block; margin-top: 12px; padding: 4px 14px; border-radius: 4px; background-color: @(IsPassed ? "var(--mud-palette-success)" : "var(--mud-palette-error)"); color: white; font-weight: 600;">
+                @Mention
+            </div>
+        </div>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="ViewReport">Visualiser le rapport</MudButton>
+        <MudButton OnClick="Close">Fermer</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    [Parameter]
+    public double Score { get; set; }
+
+    [Parameter]
+    public double MaxScore { get; set; }
+
+    [Parameter]
+    public double Percentage { get; set; }
+
+    [Parameter]
+    public string Mention { get; set; }
+
+    [Parameter]
+    public bool IsPassed { get; set; }
+
+    [Parameter]
+    public EventCallback OnViewReport { get; set; }
+
+    private async Task ViewReport() => await OnViewReport.InvokeAsync();
+
+    private void Close() => MudDialog.Close();
+}

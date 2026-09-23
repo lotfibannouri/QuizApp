@@ -1,29 +1,55 @@
-﻿@page "/quiztestvisulizer/{quizId}"
+@page "/quiztestvisulizer/{quizId}"
 @using Authentication.web.Shared.Test
-
-<div class="centered-container">
-    <div class="timer">
-        Time Remaining: @remainingTime
-    </div>
-</div>
-
-@if(_questions != null )
+@inject IJSRuntime JSRuntime
+@if (!IsTestFinished)
 {
-    @*@foreach (var item in _questions)
+    <div class="centered-container">
+        <div class="timer">
+            Time Remaining: @remainingTime
+        </div>
+    </div>
+
+    @if(_questions != null )
     {
-        if (item.type == "Choix Multiple")
-        {
-            TestMultichk a = new TestMultichk();
-            a._question = item;
-            <TestMultichk @ref=a _question="@item"/>
-            questionPersists.Add(a);
-        }
+        <div class="question-progress">
+            Question @CurrentQuestionNumber / @TotalQuestions
+        </div>
 
-    }*@
-    @QuestionListRF
+        @QuestionListRF
+
+        <div class="wizard-nav">
+            <MudButton Variant="Variant.Text" Disabled="IsFirstQuestion" OnClick="PreviousQuestion">Précédent</MudButton>
+
+            @if (!IsLastQuestion)
+            {
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="NextQuestion">Suivant</MudButton>
+            }
+            else
+            {
+                <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="FinishTest">Terminer</MudButton>
+            }
+        </div>
+    }
 }
-
-<MudButton Variant="Variant.Text" OnClick="getScore">Save</MudButton>
+else
+{
+    <div class="result-container">
+        @if (_scoreSummary == null)
+        {
+            <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+        }
+        else
+        {
+            <MudPaper Class="result-card" Elevation="4">
+                <MudIcon Icon="@Icons.Material.Filled.EmojiEvents" Color="Color.Warning" Class="result-icon" />
+                <MudText Typo="Typo.h4" Class="result-title">Quiz terminé !</MudText>
+                <MudText Typo="Typo.h2" Class="result-score">@_scoreSummary.Score.ToString("0.##") / @_scoreSummary.MaxScore.ToString("0.##")</MudText>
+                <MudText Typo="Typo.body1" Class="result-subtitle">@_scoreSummary.Percentage.ToString("0.#")% — @_scoreSummary.Mention</MudText>
+                <MudButton Class="mt-3" Variant="Variant.Filled" Color="Color.Primary" OnClick="ViewReport">Visualiser le rapport</MudButton>
+            </MudPaper>
+        }
+    </div>
+}
 
 <style>
     .centered-container {
@@ -35,5 +61,66 @@
 
     .timer {
         font-size: 24px;
+    }
+
+    .question-progress {
+        text-align: center;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .wizard-nav {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 1rem;
+    }
+
+    .result-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 80vh;
+    }
+
+    .result-card {
+        padding: 2.5rem 3.5rem;
+        text-align: center;
+        border-radius: 16px;
+        animation: result-pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+
+    .result-icon {
+        font-size: 64px;
+        animation: result-bounce 0.7s ease 0.5s both;
+    }
+
+    .result-title {
+        margin-top: 0.5rem;
+        animation: result-fade 0.5s ease 0.35s both;
+    }
+
+    .result-score {
+        margin-top: 0.5rem;
+        animation: result-fade 0.5s ease 0.55s both;
+    }
+
+    .result-subtitle {
+        animation: result-fade 0.5s ease 0.7s both;
+    }
+
+    @@keyframes result-pop {
+        0% { transform: scale(0.6); opacity: 0; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+
+    @@keyframes result-bounce {
+        0% { transform: translateY(-16px); opacity: 0; }
+        60% { transform: translateY(4px); opacity: 1; }
+        100% { transform: translateY(0); }
+    }
+
+    @@keyframes result-fade {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 </style>

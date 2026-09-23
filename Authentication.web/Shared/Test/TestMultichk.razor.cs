@@ -1,4 +1,5 @@
-﻿using Authentication.web.utility;
+﻿using Authentication.web.Services;
+using Authentication.web.utility;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using QuizApp.Entities.Conception_Entities;
@@ -11,36 +12,35 @@ namespace Authentication.web.Shared.Test
     {
         [Parameter]
         public ListQuestionDTO Question { get; set; }
+
+        [Inject]
+        public IQuestionService _questionService { get; set; }
+
         public List<checkeditem> chkdItems { get; set; } = new List<checkeditem>();
-        public double save()
+
+        public async Task<double> save()
         {
-            double score=0;
-            foreach(var item in chkdItems)
+            foreach (var item in chkdItems)
             {
-                
                 var mapped = Question.reponses.FirstOrDefault(x => x.Body == item.text);
-                if (mapped.IsAnswer != item.ischecked)
-                {
-                    item.color = Color.Error;
-                    score-=0.25;
-                }
-                else
-                {
-                    item.color = Color.Success;
-                    score += 0.25;
-                }
-                    
+                item.color = mapped.IsAnswer == item.ischecked ? Color.Success : Color.Error;
             }
             this.StateHasChanged();
-            return score;
-          
+
+            var request = new ScoreRequestDTO
+            {
+                QuestionId = Question.Id,
+                Answers = chkdItems.Select(item => new AnswerSubmissionDTO { Body = item.text, IsChecked = item.ischecked }).ToList()
+            };
+
+            return await _questionService.CalculateMultiChoiceScore(request);
         }
 
         protected override async Task OnInitializedAsync()
         {
             foreach(var item in Question.reponses)
             {
-                chkdItems.Add(new checkeditem { text=item.Body , ischecked = false, chkboxref = new MudCheckBox<bool>()});
+                chkdItems.Add(new checkeditem { text=item.Body , ischecked = false, chkboxref = new MudCheckBox<bool>() });
             }         
         }
     }

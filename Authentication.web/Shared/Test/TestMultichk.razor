@@ -3,7 +3,7 @@
     <MudText Typo="Typo.button"> @Question.questionText : </MudText>
     @foreach (var item in chkdItems)
         {
-    <MudCheckBox @ref=item.chkboxref @bind-Checked=@item.ischecked  Label=@item.text Color="@item.color"></MudCheckBox>
+    <MudCheckBox @ref=item.chkboxref  @bind-Checked=@item.ischecked  Label=@item.text  Color="@item.color" ></MudCheckBox>
         }  
 
 </MudPaper>
