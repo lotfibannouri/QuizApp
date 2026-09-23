@@ -4,11 +4,11 @@
 @page "/QuizManagement"
 @inject ISnackbar SnackbarService;
 
-<ManagementBar TypeBar="ManagementBar.Type.QUIZ" 
-OnAddEventClicked="AddQuiz" 
-OnDeleteEventClicked="DeleteQuiz" 
+<ManagementBar TypeBar="ManagementBar.Type.QUIZ"
+OnDeleteEventClicked="DeleteQuiz"
 OnBindUserToQuiz="@(()=>BindEntitytoQuiz(utility.Entity.USER))" 
 OnBindQuestionToQuiz="@(()=>BindEntitytoQuiz(utility.Entity.QUESTION))"
+               OnEditEventClicked="@(()=>EditQuiz(QuizSelected.ToList().First().Id))"
                OnDetailedQuiz="@(()=>DetailedQuiz(QuizSelected.ToList().First().Id))">
            
            </ManagementBar>
@@ -24,7 +24,7 @@ OnBindQuestionToQuiz="@(()=>BindEntitytoQuiz(utility.Entity.QUESTION))"
     <Columns>
         <SelectColumn T="ListQuizDTO" ShowInFooter="false" />
         <PropertyColumn Property="x => x.titre" Title="Titre de Quiz" />
-        <PropertyColumn Property="x => x.niv_deficulte" SortBy="@_sortBy" Title="Niveau" />
+        <PropertyColumn Property="x => x.categorieTitre" SortBy="@_sortBy" Title="Catégorie" />
         <PropertyColumn Property="x => x.duree_quiz" Title="Durée de quiz" />
     </Columns>
     <PagerContent>

@@ -1,0 +1,46 @@
+@page "/CreateQuiz"
+@inject IQuizService quizService
+@inject ICategorieService categorieService
+@inject ISnackbar SnackbarService
+
+<div class="container">
+    <MudContainer>
+        <MudText Typo="Typo.h4" Style="font-weight:700;">Ajouter Quiz</MudText>
+        <EditForm Model="@model" OnValidSubmit="OnValidSubmit">
+            <DataAnnotationsValidator />
+            <MudStack Spacing="6" Class="mt-4">
+                <MudStack Spacing="1">
+                    <MudInputLabel>titre Quiz</MudInputLabel>
+                    <MudTextField @bind-Value="model.titre" Label="Titre" Variant="Variant.Text" Required="true"></MudTextField>
+                </MudStack>
+                <MudStack Spacing="1">
+                    <MudInputLabel>Description</MudInputLabel>
+                    <MudTextField T="string" Label="Description" Variant="Variant.Outlined" @bind-Value="model.description" Lines="3" Required="true" />
+                </MudStack>
+                <MudStack Spacing="1">
+                    <MudInputLabel>Catégorie</MudInputLabel>
+                    <MudSelect T="string" Label="Catégorie" Variant="Variant.Text" @bind-Value="model.categorieId" Required="true">
+                        @foreach (var cat in _categories)
+                        {
+                            <MudSelectItem Value="@cat.Id">@cat.titre</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudStack>
+                <MudStack Spacing="1">
+                    <MudInputLabel>Nombre de  Question</MudInputLabel>
+                    <MudNumericField @bind-Value="model.nbr_questions" Label="Entrer le nombre de questions" Variant="Variant.Outlined" Required="true" />
+                </MudStack>
+                <MudStack Spacing="1">
+                    <MudInputLabel>Durée Quiz</MudInputLabel>
+                    <MudNumericField @bind-Value="model.duree_quiz" Label="Entrer la durée de test" Variant="Variant.Outlined" Required="true" />
+                </MudStack>
+                <MudSelect T="int" Label="Icon" AnchorOrigin="Origin.BottomCenter" @bind-Value="model.icon">
+                    <MudSelectItem Value=0>Test</MudSelectItem>
+                    <MudSelectItem Value=1>Code</MudSelectItem>
+                    <MudSelectItem Value=2>Formation</MudSelectItem>
+                </MudSelect>
+                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="OnValidSubmit">Enregistrer</MudButton>
+            </MudStack>
+        </EditForm>
+    </MudContainer>
+</div>

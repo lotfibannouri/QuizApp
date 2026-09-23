@@ -5,7 +5,8 @@ namespace QuizApp.Entities.Conception_Entities.DTO.Quiz_DTO
     public class ListQuizDTO :BaseListDTO
     {
         public string titre { get; set; }
-        public int niv_deficulte { get; set; }
+        public string categorieId { get; set; }
+        public string categorieTitre { get; set; }
         public int duree_quiz { get; set; }
         public string description { get; set; }
         public int nbr_questions { get; set; }

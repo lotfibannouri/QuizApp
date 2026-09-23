@@ -59,6 +59,7 @@ namespace ConceptionQuiz_Api.Repository
         {
             return await _dbContext.quiz.
                  Include(q => q.questions)
+                 .Include(q => q.categorie)
 
                  .SingleOrDefaultAsync(q => q.Id == new Guid(id));
 
@@ -71,7 +72,7 @@ namespace ConceptionQuiz_Api.Repository
 
         public async Task<List<ListQuizDTO>>? ListQuiz()
         {            
-            List<Quiz>? data = await _dbContext.quiz.Include(q => q.questions).ToListAsync();
+            List<Quiz>? data = await _dbContext.quiz.Include(q => q.questions).Include(q => q.categorie).ToListAsync();
             List<ListQuizDTO> listQuiz = new List<ListQuizDTO>();
             if(data!= null)
             { 
@@ -111,6 +112,23 @@ namespace ConceptionQuiz_Api.Repository
            else
                 return new Response(false, "Echec");
 
+        }
+
+        public async Task<Response> UnbindQuizFromQuestion(string idQuiz, string idQuestion)
+        {
+            Quiz quizref = await this.GetQuizById(idQuiz);
+            Question questionref = await _questionRepository.GetQuestionById(idQuestion);
+            if (!quizref.questions.Contains(questionref))
+                return new Response(false, "Cette question n'existe pas");
+            quizref.questions.Remove(questionref);
+            _dbContext.quiz.Update(quizref);
+            int rowsAffected = await _dbContext.SaveChangesAsync();
+            if (rowsAffected > 0)
+            {
+                return new Response(true, "Question(s) Détachée(s) avec succès ");
+            }
+            else
+                return new Response(false, "Echec");
         }
 
         public async Task<Response> BindQuizToUser(QuizUser quizUser)

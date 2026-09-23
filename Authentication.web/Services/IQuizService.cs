@@ -11,6 +11,7 @@ namespace Authentication.web.Services
         Task<List<ListQuizDTO>> ListeQuizByUser(string UserId);
         Task<Response> BindQuizToUser(QuizUserDTO QuizUser);
         Task<Response> BindQuizToQuestion(string IdQuiz, string IdQuestio);
+        Task<Response> UnbindQuizFromQuestion(string IdQuiz, string IdQuestio);
         Task<Response> DeleteQuiz(string id);
         Task<ListQuizDTO> GetQuizById(string id);
 

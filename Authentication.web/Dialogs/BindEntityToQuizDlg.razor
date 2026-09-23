@@ -1,5 +1,4 @@
 ﻿@using Authentication.web.utility;
-@using QuizApp.Entities.Conception_Entities.DTO.QuestionDTO;
 @inject ISnackbar SnackbarService;
 
 
@@ -20,7 +19,6 @@
     </DialogContent>
     <DialogActions>
         <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" OnClick="Addclicked">Add</MudButton>
-        <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Error" OnClick="removeclicked">Remove</MudButton>
     </DialogActions>
     
     </MudDialog>
@@ -30,24 +28,46 @@ else
 {
     <MudDialog>
         <DialogContent>
-            <MudContainer Style="height: 700px; overflow-y: scroll">
-                <MudDataGrid T="ListQuestionDTO" MultiSelection="true" Items="@Questions" SortMode="SortMode.Multiple" @ref="@QuestionGrid">
-                    <Columns>
-                        <SelectColumn T="ListQuestionDTO" ShowInFooter="false" />
-                        <PropertyColumn Property="x => x.questionText" Title="titre de question" />
-                        <PropertyColumn Property="x => x.type" Title="type de question" />
-                    </Columns>
-                </MudDataGrid>
+            <MudContainer Style="max-height: 75vh; overflow-y: auto">
+                <MudTextField @bind-Value="_searchString" Placeholder="Rechercher une question" Immediate="true"
+                              Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" Class="mb-4" />
+                <MudDropContainer T="QuestionItem" Items="_questionItems"
+                                  ItemsSelector="@((item, dropzone) => item._Identifier == dropzone && MatchesSearch(item))"
+                                  ItemDropped="ItemUpdated"
+                                  Class="d-flex flex-row flex-grow-1">
+                    <ChildContent>
+                        <MudDropZone T="QuestionItem" Identifier="Available" Class="rounded-lg border-2 border-light mud-border-lines-default pa-6 ma-4 flex-grow-1" Style="width: 0;">
+                            <MudText Typo="Typo.h6" Class="mb-4">Listes des questions</MudText>
+                        </MudDropZone>
+                        <MudDropZone T="QuestionItem" Identifier="Assigned" Class="rounded-lg border-2 border-light mud-border-lines-default pa-6 ma-4 flex-grow-1" Style="width: 0;">
+                            <MudText Typo="Typo.h6" Class="mb-4">Question de quiz</MudText>
+                        </MudDropZone>
+                    </ChildContent>
+                    <ItemRenderer>
+                        <div class="mud-elevation-25 pa-4 my-4 question-card" @onclick="() => ShowQuestionDetail(context)">
+                            @context.Question.questionText
+                        </div>
+                    </ItemRenderer>
+                </MudDropContainer>
             </MudContainer>
         </DialogContent>
         <DialogActions>
-            <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" OnClick="Addclicked">Add</MudButton>
-            <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Error" OnClick="removeclicked">Remove</MudButton>
+            <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" OnClick="OnValidChanges">Confirmer</MudButton>
         </DialogActions>
 
     </MudDialog>
-    
+
 }
 @code{
 
 }
+
+<style>
+    .question-card {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        cursor: pointer;
+        max-width: 100%;
+    }
+</style>

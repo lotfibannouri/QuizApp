@@ -53,7 +53,7 @@ namespace Authentication.web.Pages
             if (!string.IsNullOrWhiteSpace(x.titre) && x.titre.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
                 return true;
 
-            if (!string.IsNullOrWhiteSpace(x.niv_deficulte.ToString()) && x.niv_deficulte.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            if (!string.IsNullOrWhiteSpace(x.categorieTitre) && x.categorieTitre.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
                 return true;
             if (!string.IsNullOrWhiteSpace(x.duree_quiz.ToString()) && x.duree_quiz.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase))
                 return true;
@@ -76,7 +76,7 @@ namespace Authentication.web.Pages
         protected async Task BindEntitytoQuiz(Entity entity)
         {
 
-            var options = new DialogOptions { CloseOnEscapeKey = true, CloseButton = true, FullWidth = true };
+            var options = new DialogOptions { CloseOnEscapeKey = true, CloseButton = true, FullWidth = true, MaxWidth = MaxWidth.Large };
             var parameters = new DialogParameters();
             
             
@@ -107,17 +107,38 @@ namespace Authentication.web.Pages
 
         }
 
-
-        public async Task AddQuiz()
+        protected async Task EditQuiz(string IdQuiz)
         {
-            var options = new DialogOptions { CloseOnEscapeKey = true, CloseButton = true, FullWidth = true };
-            var dialogresult = await dialogService.ShowAsync<QuizDialog>("Création Quiz", options);
-            var result = await dialogresult.Result;
-            Quiz = await _quizService.ListeQuiz();
+            var options = new DialogOptions { CloseOnEscapeKey = true, CloseButton = true, FullWidth = true, MaxWidth = MaxWidth.Large };
+            var parameters = new DialogParameters();
+
+
+            if (QuizSelected.Count > 1)
+            {
+                parameters.Add("AlertMessage", "Select only one Item!!!");
+                await dialogService.ShowAsync<AlertBox>("error", parameters, options);
+                await hubConnection.SendAsync("SendMessage", "parent", "usertest", "aaa", "bbb");
+                QuizSelected.Clear();
+                return;
+
+            }
+            else if (QuizSelected.Count == 1)
+            {
+                parameters.Add("QuizId", QuizSelected.FirstOrDefault().Id);
+                parameters.Add("bindto", Entity.QUESTION);
+                parameters.Add("IsEditMode", true);
+                var dialogresult = await dialogService.ShowAsync<BindEntityToQuizDlg>("", parameters, options);
+                var result = await dialogresult.Result;
+            }
+            else
+            {
+                parameters.Add("AlertMessage", "You need To Select a Quiz!!!");
+                await dialogService.ShowAsync<AlertBox>("error", parameters, options);
+                QuizSelected.Clear();
+                return;
+            }
             QuizSelected.Clear();
-
         }
-
         private async Task DeleteQuiz()
         {
             if (QuizSelected.Count == 0)

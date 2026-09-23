@@ -1,5 +1,6 @@
-﻿using Authentication.web.Services;
+using Authentication.web.Services;
 using Microsoft.AspNetCore.Components;
+using MudBlazor;
 using QuizApp.Entities.Conception_Entities;
 using QuizApp.Entities.Conception_Entities.DTO.QuestionDTO;
 using QuizApp.Entities.Conception_Entities.DTO.Quiz_DTO;
@@ -14,11 +15,14 @@ namespace Authentication.web.Pages
         public IQuestionService _questionService { get; set; }
         [Inject]
         public IQuizService _quizService { get; set; }
+        [Inject]
+        public NavigationManager _navigationManager { get; set; }
+
         public ListQuizDTO _quiz { get; set; }
         public List<ListQuestionDTO> _questions { get; set; }
-        public bool QuestionView { get; set; }
-        public bool QuizView { get; set; }
-        public bool ChoiseView { get; set; }
+
+        public List<string> listLogos = new() { Icons.Material.Filled.Quiz, Icons.Material.Filled.Code, Icons.Material.Filled.School };
+
         protected override async Task OnInitializedAsync()
         {
             if (!string.IsNullOrEmpty(QuizId))
@@ -26,32 +30,20 @@ namespace Authentication.web.Pages
                 _quiz = await _quizService.GetQuizById(QuizId);
                 _questions = await _questionService.GetQuestionsByQuizId(QuizId);
             }
-            QuizView = false;
-            QuestionView = true;
-            ChoiseView = true;         
         }
 
+        private string QuizIcon => _quiz != null && _quiz.icon >= 0 && _quiz.icon < listLogos.Count
+            ? listLogos[_quiz.icon]
+            : Icons.Material.Filled.Quiz;
 
-        private void ActiveView(int value)
+        private string QuestionTypeIcon(string type) => type switch
         {
-            switch (value)
-            {
-                case 0:
-                    QuizView = false;
-                    QuestionView= true;
-                    ChoiseView= true;
-                    break;
-                case 1:
-                    QuizView = true;
-                    QuestionView = false;
-                    ChoiseView = true;
-                    break;    
-                case 2:
-                    QuizView = true;
-                    QuestionView = true;
-                    ChoiseView = false;
-                    break;   
-            }
-        }
+            "Choix Multiple" => Icons.Material.Filled.CheckBox,
+            "Vrai/Faux" => Icons.Material.Filled.RuleFolder,
+            "Code" => Icons.Material.Filled.Terminal,
+            _ => Icons.Material.Filled.HelpOutline
+        };
+
+        private void GoBack() => _navigationManager.NavigateTo("/QuizManagement");
     }
 }
