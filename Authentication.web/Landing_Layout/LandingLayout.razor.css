@@ -1,0 +1,108 @@
+.landing-wrapper {
+    min-height: 100vh;
+    background-color: #1a1a2e;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Roboto', 'Helvetica Neue', sans-serif;
+}
+
+/* ── Navbar ── */
+.landing-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    height: 72px;
+    background-color: rgba(26, 26, 46, 0.95);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(8px);
+}
+
+.nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+}
+
+.logo-icon {
+    color: #1565c0;
+    font-size: 1.4rem;
+}
+
+.nav-logo span svg {
+    height: 44px;
+    width: auto;
+    display: block;
+}
+
+.logo-text {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+}
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.btn-nav-login {
+    padding: 0.4rem 1.1rem;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+    background: transparent;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.btn-nav-login:hover {
+    border-color: rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.06);
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.btn-nav-register {
+    padding: 0.4rem 1.1rem;
+    border-radius: 6px;
+    border: none;
+    color: #ffffff;
+    background: #1565c0;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+
+.btn-nav-register:hover {
+    background: #1976d2;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+/* ── Main ── */
+.landing-main {
+    flex: 1;
+    padding-top: 72px;
+}
+
+/* ── Footer ── */
+.landing-footer {
+    text-align: center;
+    padding: 1.5rem;
+    color: #a0aec0;
+    font-size: 0.85rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}

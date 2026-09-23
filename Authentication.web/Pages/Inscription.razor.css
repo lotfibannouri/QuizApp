@@ -1,0 +1,141 @@
+/* ── Page wrapper ── */
+.inscription-page {
+    min-height: 100vh;
+    background-color: #1a1a2e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    font-family: 'Roboto', 'Helvetica Neue', sans-serif;
+}
+
+/* ── Card ── */
+.inscription-card {
+    width: 100%;
+    max-width: 480px;
+    background-color: #FFFFFF;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    padding: 2.5rem 2rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+/* ── Logo ── */
+.logo-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    margin-bottom: 1.5rem;
+}
+
+.logo-text {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #1B2A6B;
+    letter-spacing: 0.5px;
+}
+
+/* ── Titles ── */
+.form-title {
+    text-align: center;
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    margin-bottom: 0.4rem !important;
+}
+
+.form-subtitle {
+    text-align: center;
+    color: #a0aec0 !important;
+    margin-bottom: 1.75rem !important;
+}
+
+/* ── Form grid spacing ── */
+.form-grid {
+    margin-bottom: 0.5rem;
+}
+
+/* ── MudTextField dark overrides ── */
+.dark-field .mud-input-label,
+.dark-field .mud-input-label-inputcontrol {
+    color: #a0aec0 !important;
+}
+
+.dark-field .mud-input-outlined-border {
+    border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.dark-field:hover .mud-input-outlined-border,
+.dark-field .mud-input-outlined:hover .mud-input-outlined-border {
+    border-color: rgba(255, 255, 255, 0.45) !important;
+}
+
+.dark-field .mud-input-outlined.mud-input-focused .mud-input-outlined-border,
+.dark-field .mud-input-focused .mud-input-outlined-border {
+    border-color: #1976d2 !important;
+}
+
+.dark-field .mud-input input,
+.dark-field .mud-input textarea {
+    color: #ffffff !important;
+    caret-color: #ffffff;
+}
+
+.dark-field .mud-input-label.mud-input-label-animated.mud-input-label-inputcontrol {
+    color: #a0aec0 !important;
+}
+
+.dark-field .mud-input-label-animated.mud-input-label-focused {
+    color: #64b5f6 !important;
+}
+
+/* ── Validation errors ── */
+.validation-errors {
+    color: #f48fb1;
+    font-size: 0.82rem;
+    min-height: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.validation-errors ul {
+    margin: 0;
+    padding-left: 1.2rem;
+}
+
+/* ── Submit button ── */
+.submit-btn {
+    margin-top: 0.5rem !important;
+    height: 48px !important;
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.3px !important;
+    border-radius: 8px !important;
+}
+
+/* ── Alert link ── */
+.alert-link {
+    color: #81c784;
+    font-weight: 600;
+    margin-left: 0.4rem;
+    text-decoration: underline;
+}
+
+/* ── Login link ── */
+.login-link {
+    text-align: center;
+    margin-top: 1.5rem;
+    color: #a0aec0;
+    font-size: 0.875rem;
+}
+
+.login-link a {
+    color: #64b5f6;
+    font-weight: 600;
+    text-decoration: none;
+    margin-left: 0.3rem;
+}
+
+.login-link a:hover {
+    color: #90caf9;
+    text-decoration: underline;
+}

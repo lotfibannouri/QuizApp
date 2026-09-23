@@ -1,49 +1,100 @@
-﻿@using System.ComponentModel.DataAnnotations
-@using Authentication.web.Services;
+@using System.ComponentModel.DataAnnotations
+@using Authentication.web.Services
+@using Authentication.web.Model
+@using Layout_Auth
 @page "/Inscription"
+@layout AuthLayout
 @inject ICompteService service
-<EditForm Model="@model" OnValidSubmit="OnValidSubmit">
-    <DataAnnotationsValidator />
-    <MudGrid>
-        <MudItem xs="12" sm="7">
-            <MudCard>
-                <MudCardContent>
-                    <MudTextField Label="First name" HelperText="Max. 8 characters"
-                                  @bind-Value="model.nom" For="@(() => model.nom)" />
-                    <MudTextField Label="Last name" HelperText="Max. 8 characters"
-                                  @bind-Value="model.prenom" For="@(() => model.prenom)" />
-                    <MudTextField Label="Email" Class="mt-3"
-                                  @bind-Value="model.login" For="@(() => model.login)" />
-                    <MudTextField Label="Choose your adresse" Variant="Variant.Text"  Lines="2"
-                                  @bind-Value="model.adresse" For="@(() => model.adresse)" />
-                    <MudTextField Label="Password" HelperText="choose password" Class="mt-3"
-                                  @bind-Value="model.password" For="@(() => model.password)" InputType="InputType.Password" />
-                   
-                </MudCardContent>
-                <MudCardActions>
-                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Register</MudButton>
-                </MudCardActions>
-            </MudCard>
-        </MudItem>
-        <MudItem xs="12" sm="5">
-            <MudPaper Class="pa-4 mud-height-full">
-                <MudText Typo="Typo.subtitle2">Validation Summary</MudText>
-                @if (success)
-                {
-                    <MudText Color="Color.Success">Success</MudText>
-                }
-                else
-                {
-                    <MudText Color="@Color.Error">
-                        <ValidationSummary />
-                    </MudText>
-                }
-            </MudPaper>
-        </MudItem>
-        <MudItem xs="12">
-            <MudText Typo="Typo.body2" Align="Align.Center">
-                Fill out the form correctly to see the success message.
-            </MudText>
-        </MudItem>
-    </MudGrid>
-</EditForm>
+
+<div class="inscription-page">
+    <div class="inscription-card">
+
+        <!-- Logo -->
+        <div class="logo-header">
+            <svg width="36" height="39" viewBox="0 0 83 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M38.5939 0.0483463C24.8229 1.19025 13.0238 8.44871 5.87115 20.1786C1.50638 27.3367 -0.620791 36.5692 0.158282 44.9738C1.06405 54.7451 5.19386 63.6369 12.027 70.5283C18.6868 77.2449 26.7382 81.218 36.4353 82.573C38.3991 82.8473 44.628 82.841 46.6469 82.5626C50.8332 81.9852 54.9021 80.8312 58.5331 79.1912L60.5397 78.2848L63.9295 84.1408L67.3193 89.9967L68.0691 90C68.7208 90.0028 69.1984 89.7834 71.722 88.3212C73.3187 87.3961 74.648 86.6205 74.6763 86.5978C74.7043 86.5751 74.5064 86.1938 74.2363 85.7506C73.8117 85.0537 58.6561 59.03 52.6622 48.7055C51.5236 46.7443 50.5076 45.0534 50.4045 44.9481C50.2633 44.804 49.4167 45.2248 46.9915 46.644C45.2175 47.6821 43.6954 48.6021 43.609 48.6883C43.5102 48.787 43.9647 49.7277 44.8327 51.2217C48.1033 56.8503 48.488 57.5504 48.4148 57.7408C48.3064 58.0232 45.4876 58.9199 43.9408 59.164C42.2451 59.4315 39.1496 59.2779 37.4855 58.8436C30.0546 56.9039 24.9073 50.3414 24.8975 42.7945C24.8877 35.1758 29.946 28.6262 37.3934 26.6149C38.5419 26.3048 39.1971 26.2452 41.4996 26.2414C43.8548 26.2376 44.4374 26.2908 45.6507 26.6207C48.5702 27.4143 51.0286 28.8451 53.225 31.029C55.3154 33.1073 56.6163 35.3166 57.551 38.3755C57.9549 39.6977 57.9966 40.0853 58.0031 42.5689C58.0084 44.6313 57.9395 45.5855 57.7233 46.4421L57.4366 47.5787L59.8852 51.7916C61.232 54.1087 62.4095 55.9802 62.502 55.9507C62.821 55.8486 64.5754 52.1498 65.1567 50.3538C66.0366 47.6351 66.3026 45.8844 66.3019 42.8177C66.3012 39.6545 65.9979 37.6975 65.0782 34.9211C62.3816 26.7806 55.683 20.6357 47.2937 18.6066C44.7247 17.9853 41.9273 17.7744 39.4015 18.0117C28.136 19.0697 19.2635 27.0733 17.0551 38.1698C16.5387 40.7653 16.5416 44.7179 17.0618 47.3336C17.8877 51.4864 19.5836 55.1477 22.1533 58.3251C28.7819 66.5213 39.7102 69.6462 49.6543 66.1888C50.5966 65.8612 51.6591 65.4444 52.0158 65.2628C52.3723 65.081 52.7254 64.9944 52.8006 65.0702C53.0019 65.2732 56.2779 70.9237 56.2743 71.0614C56.2691 71.2528 53.8465 72.2673 51.7943 72.9377C45.4308 75.0162 38.3543 75.1046 32.0146 73.1847C22.9382 70.436 15.9463 64.5271 11.6841 56.0031C6.00083 44.6371 7.56047 30.5682 15.6082 20.6022C21.1491 13.7408 28.8994 9.49574 37.8986 8.39314C40.2008 8.11103 45.0546 8.27506 47.3981 8.71407C67.3468 12.4508 79.3469 32.657 73.0195 51.8568C71.7395 55.7411 69.7264 59.3708 66.982 62.7428L66.5586 63.2629L68.664 66.8892C69.822 68.8836 70.8043 70.5527 70.847 70.5983C70.8897 70.6439 71.3355 70.2334 71.8378 69.6861C76.5791 64.5194 79.9483 58.4004 81.6094 51.9397C83.178 45.8383 83.4129 40.1907 82.3478 34.1933C79.233 16.6555 65.2235 3.05628 47.5602 0.425002C45.4662 0.113029 40.387 -0.100259 38.5939 0.0483463Z" fill="url(#insc_grad)" />
+                <defs>
+                    <radialGradient id="insc_grad" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(41.5 45) rotate(90) scale(45 41.5)">
+                        <stop stop-color="#1C7699" />
+                        <stop offset="1" stop-color="#1B2A6B" />
+                    </radialGradient>
+                </defs>
+            </svg>
+            <span class="logo-text">QuizApp</span>
+        </div>
+
+        <MudText Typo="Typo.h5" Class="form-title">Créer votre compte</MudText>
+        <MudText Typo="Typo.body2" Class="form-subtitle">Rejoignez la plateforme et commencez dès maintenant</MudText>
+
+        <EditForm Model="@model" OnValidSubmit="OnValidSubmit">
+            <DataAnnotationsValidator />
+
+            @if (success)
+            {
+                <MudAlert Severity="Severity.Success" Class="mb-4" Style="background-color: rgba(76,175,80,0.15); color: #81c784;">
+                    Compte créé avec succès !
+                    <a href="/Authentification" class="alert-link">Se connecter</a>
+                </MudAlert>
+            }
+
+            <MudGrid Spacing="2" Class="form-grid">
+                <MudItem xs="6">
+                    <MudTextField Label="Nom"
+                                  @bind-Value="model.nom"
+                                  For="@(() => model.nom)"
+                                  Variant="Variant.Outlined"
+                                  Class="dark-field" />
+                </MudItem>
+                <MudItem xs="6">
+                    <MudTextField Label="Prénom"
+                                  @bind-Value="model.prenom"
+                                  For="@(() => model.prenom)"
+                                  Variant="Variant.Outlined"
+                                  Class="dark-field" />
+                </MudItem>
+                <MudItem xs="12">
+                    <MudTextField Label="Email"
+                                  @bind-Value="model.login"
+                                  For="@(() => model.login)"
+                                  Variant="Variant.Outlined"
+                                  InputType="InputType.Email"
+                                  Class="dark-field" />
+                </MudItem>
+                <MudItem xs="12">
+                    <MudTextField Label="Adresse"
+                                  @bind-Value="model.adresse"
+                                  For="@(() => model.adresse)"
+                                  Variant="Variant.Outlined"
+                                  Lines="2"
+                                  Class="dark-field" />
+                </MudItem>
+                <MudItem xs="12">
+                    <MudTextField Label="Mot de passe"
+                                  @bind-Value="model.password"
+                                  For="@(() => model.password)"
+                                  Variant="Variant.Outlined"
+                                  InputType="InputType.Password"
+                                  Class="dark-field" />
+                </MudItem>
+            </MudGrid>
+
+            <div class="validation-errors">
+                <ValidationSummary />
+            </div>
+
+            <MudButton ButtonType="ButtonType.Submit"
+                       Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       FullWidth="true"
+                       Size="Size.Large"
+                       Class="submit-btn">
+                S'inscrire
+            </MudButton>
+        </EditForm>
+
+        <div class="login-link">
+            Déjà un compte ? <a href="/Authentification">Se connecter</a>
+        </div>
+
+    </div>
+</div>

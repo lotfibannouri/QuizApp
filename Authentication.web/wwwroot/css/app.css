@@ -106,6 +106,15 @@ a, .btn-link {
 .monaco-editor-container {
     height: 400px;
 }
+.coding-editor-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.coding-flex-editor {
+    height: 100%;
+    width: 100%;
+}
 .centered-item {
     display: flex;
     justify-content: center;

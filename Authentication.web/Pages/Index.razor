@@ -1,5 +1,505 @@
-﻿@page "/"
+@page "/"
+@layout LandingLayout
 
-<PageTitle>Accueil</PageTitle>
+<PageTitle>QuizApp — Testez vos connaissances</PageTitle>
 
-<h1>Accueil</h1>
+<!-- ── HERO ── -->
+<section class="hero">
+    <div class="hero-content">
+        <div class="hero-badge">Plateforme de quiz interactifs</div>
+        <h1 class="hero-title">
+            Testez et améliorez<br />
+            <span class="hero-title-accent">vos connaissances</span>
+        </h1>
+        <p class="hero-subtitle">
+            Passez des quiz chronométrés, répondez à des questions de code en temps réel
+            et suivez votre progression. La plateforme conçue pour les développeurs et les étudiants.
+        </p>
+        <div class="hero-cta">
+            <a href="/Inscription" class="btn-primary">S'inscrire gratuitement</a>
+            <a href="/Authentification" class="btn-secondary">Se connecter</a>
+        </div>
+    </div>
+    <div class="hero-visual">
+        <div class="code-card">
+            <div class="code-card-header">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+                <span class="code-lang">C#</span>
+            </div>
+            <pre class="code-block"><span class="kw">public</span> <span class="kw">int</span> <span class="fn">FizzBuzz</span>(<span class="kw">int</span> n)
+{
+    <span class="kw">for</span> (<span class="kw">int</span> i = 1; i &lt;= n; i++)
+    {
+        <span class="kw">if</span> (i % 15 == 0)
+            Console.WriteLine(<span class="str">"FizzBuzz"</span>);
+        <span class="kw">else if</span> (i % 3 == 0)
+            Console.WriteLine(<span class="str">"Fizz"</span>);
+        <span class="kw">else</span>
+            Console.WriteLine(i);
+    }
+}</pre>
+            <div class="code-result">
+                <span class="result-label">&#10003; Résultat</span>
+                <span class="result-text">1, 2, Fizz, 4, Buzz...</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── STATS ── -->
+<section class="stats-bar">
+    <div class="stat-item">
+        <span class="stat-number">3</span>
+        <span class="stat-label">Types de questions</span>
+    </div>
+    <div class="stat-sep"></div>
+    <div class="stat-item">
+        <span class="stat-number">3</span>
+        <span class="stat-label">Langages de code</span>
+    </div>
+    <div class="stat-sep"></div>
+    <div class="stat-item">
+        <span class="stat-number">&#8734;</span>
+        <span class="stat-label">Quiz à créer</span>
+    </div>
+    <div class="stat-sep"></div>
+    <div class="stat-item">
+        <span class="stat-number">1</span>
+        <span class="stat-label">Plateforme unifiée</span>
+    </div>
+</section>
+
+<!-- ── FEATURES ── -->
+<section class="features">
+    <h2 class="features-title">Tout ce dont vous avez besoin</h2>
+    <p class="features-subtitle">Une seule plateforme pour créer, gérer et passer vos quiz</p>
+
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">&#9745;</div>
+            <h3 class="feature-title">Questions QCM</h3>
+            <p class="feature-desc">
+                Créez des questions à choix multiples avec plusieurs propositions.
+                Correction automatique à la soumission du quiz.
+            </p>
+        </div>
+
+        <div class="feature-card feature-card-accent">
+            <div class="feature-icon">&#128187;</div>
+            <h3 class="feature-title">Questions de code</h3>
+            <p class="feature-desc">
+                Éditeur Monaco intégré (le même que VS Code). Exécution en temps réel
+                en C#, Java et C++ via l'API JDoodle.
+            </p>
+            <div class="feature-tag">C# &nbsp;|&nbsp; Java &nbsp;|&nbsp; C++</div>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">&#9200;</div>
+            <h3 class="feature-title">Quiz chronométrés</h3>
+            <p class="feature-desc">
+                Timer visible pendant la passation. Soumission automatique
+                à l'expiration du temps. Score calculé instantanément.
+            </p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">&#128100;</div>
+            <h3 class="feature-title">Gestion des utilisateurs</h3>
+            <p class="feature-desc">
+                Rôles Admin et Étudiant. Assignation de quiz par utilisateur.
+                Tableau de bord dédié pour chaque profil.
+            </p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">&#128203;</div>
+            <h3 class="feature-title">Vrai / Faux</h3>
+            <p class="feature-desc">
+                Type de question simple pour tester les fondamentaux.
+                Idéal pour les évaluations rapides et les révisions.
+            </p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">&#128202;</div>
+            <h3 class="feature-title">Tableau de bord Admin</h3>
+            <p class="feature-desc">
+                Interface complète pour créer et gérer quizzes, questions,
+                utilisateurs et rôles depuis un seul endroit.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- ── CTA FINAL ── -->
+<section class="cta-section">
+    <div class="cta-box">
+        <h2 class="cta-title">Prêt à commencer ?</h2>
+        <p class="cta-subtitle">Créez votre compte gratuitement et accédez à tous vos quiz.</p>
+        <a href="/Inscription" class="btn-primary btn-large">S'inscrire maintenant</a>
+    </div>
+</section>
+
+<style>
+    /* ── Hero ── */
+    .hero {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 3rem;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 5rem 2rem 4rem;
+    }
+
+    .hero-content {
+        flex: 1;
+        max-width: 540px;
+    }
+
+    .hero-badge {
+        display: inline-block;
+        padding: 0.3rem 0.9rem;
+        border-radius: 20px;
+        background: rgba(21, 101, 192, 0.2);
+        border: 1px solid rgba(21, 101, 192, 0.5);
+        color: #64b5f6;
+        font-size: 0.8rem;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        margin-bottom: 1.25rem;
+    }
+
+    .hero-title {
+        font-size: 3rem;
+        font-weight: 800;
+        line-height: 1.15;
+        margin: 0 0 1.25rem;
+        color: #ffffff;
+    }
+
+    .hero-title-accent {
+        color: #1976d2;
+    }
+
+    .hero-subtitle {
+        font-size: 1.05rem;
+        color: #a0aec0;
+        line-height: 1.7;
+        margin-bottom: 2rem;
+    }
+
+    .hero-cta {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    /* ── Buttons ── */
+    .btn-primary {
+        display: inline-block;
+        padding: 0.7rem 1.6rem;
+        border-radius: 8px;
+        background: #1565c0;
+        color: #ffffff;
+        font-weight: 600;
+        font-size: 0.95rem;
+        text-decoration: none;
+        transition: background 0.2s, transform 0.1s;
+    }
+
+    .btn-primary:hover {
+        background: #1976d2;
+        color: #ffffff;
+        text-decoration: none;
+        transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+        display: inline-block;
+        padding: 0.7rem 1.6rem;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        color: #ffffff;
+        background: transparent;
+        font-weight: 600;
+        font-size: 0.95rem;
+        text-decoration: none;
+        transition: border-color 0.2s, background 0.2s;
+    }
+
+    .btn-secondary:hover {
+        border-color: rgba(255, 255, 255, 0.6);
+        background: rgba(255, 255, 255, 0.06);
+        color: #ffffff;
+        text-decoration: none;
+    }
+
+    .btn-large {
+        padding: 0.85rem 2.2rem;
+        font-size: 1rem;
+    }
+
+    /* ── Code card (hero visual) ── */
+    .hero-visual {
+        flex: 1;
+        max-width: 440px;
+    }
+
+    .code-card {
+        background: #16213e;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    }
+
+    .code-card-header {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.75rem 1rem;
+        background: rgba(255, 255, 255, 0.04);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+    }
+
+    .dot.red { background: #ff5f57; }
+    .dot.yellow { background: #febc2e; }
+    .dot.green { background: #28c840; }
+
+    .code-lang {
+        margin-left: auto;
+        font-size: 0.75rem;
+        color: #64b5f6;
+        font-weight: 600;
+    }
+
+    .code-block {
+        margin: 0;
+        padding: 1.25rem 1.5rem;
+        font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+        font-size: 0.82rem;
+        line-height: 1.7;
+        color: #e2e8f0;
+        overflow-x: auto;
+    }
+
+    .kw { color: #569cd6; }
+    .fn { color: #dcdcaa; }
+    .str { color: #ce9178; }
+
+    .code-result {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem 1.5rem;
+        background: rgba(21, 101, 192, 0.1);
+        border-top: 1px solid rgba(21, 101, 192, 0.2);
+    }
+
+    .result-label {
+        color: #4caf50;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .result-text {
+        color: #a0aec0;
+        font-size: 0.8rem;
+        font-family: monospace;
+    }
+
+    /* ── Stats ── */
+    .stats-bar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0;
+        background: #16213e;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        padding: 2rem 2rem;
+    }
+
+    .stat-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 0 3rem;
+    }
+
+    .stat-number {
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: #1976d2;
+        line-height: 1;
+    }
+
+    .stat-label {
+        font-size: 0.8rem;
+        color: #a0aec0;
+        margin-top: 0.3rem;
+        white-space: nowrap;
+    }
+
+    .stat-sep {
+        width: 1px;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    /* ── Features ── */
+    .features {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 5rem 2rem;
+        text-align: center;
+    }
+
+    .features-title {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+    }
+
+    .features-subtitle {
+        color: #a0aec0;
+        font-size: 1rem;
+        margin-bottom: 3rem;
+    }
+
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.25rem;
+    }
+
+    .feature-card {
+        background: #16213e;
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        border-radius: 12px;
+        padding: 2rem 1.5rem;
+        text-align: left;
+        transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .feature-card:hover {
+        border-color: rgba(25, 118, 210, 0.5);
+        transform: translateY(-3px);
+    }
+
+    .feature-card-accent {
+        border-color: rgba(21, 101, 192, 0.35);
+        background: linear-gradient(135deg, #16213e 0%, #0f2847 100%);
+    }
+
+    .feature-icon {
+        font-size: 1.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .feature-title {
+        font-size: 1rem;
+        font-weight: 700;
+        margin-bottom: 0.6rem;
+        color: #ffffff;
+    }
+
+    .feature-desc {
+        font-size: 0.875rem;
+        color: #a0aec0;
+        line-height: 1.65;
+        margin: 0;
+    }
+
+    .feature-tag {
+        margin-top: 1rem;
+        display: inline-block;
+        padding: 0.25rem 0.7rem;
+        background: rgba(21, 101, 192, 0.2);
+        border: 1px solid rgba(21, 101, 192, 0.4);
+        border-radius: 4px;
+        color: #64b5f6;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    /* ── CTA Final ── */
+    .cta-section {
+        padding: 4rem 2rem;
+        text-align: center;
+    }
+
+    .cta-box {
+        max-width: 600px;
+        margin: 0 auto;
+        background: #16213e;
+        border: 1px solid rgba(21, 101, 192, 0.3);
+        border-radius: 16px;
+        padding: 3rem 2rem;
+    }
+
+    .cta-title {
+        font-size: 1.75rem;
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+    }
+
+    .cta-subtitle {
+        color: #a0aec0;
+        margin-bottom: 1.75rem;
+        font-size: 0.95rem;
+    }
+
+    /* ── Responsive ── */
+    @@media (max-width: 900px) {
+        .hero {
+            flex-direction: column;
+            padding: 4rem 1.5rem 3rem;
+        }
+
+        .hero-content, .hero-visual {
+            max-width: 100%;
+        }
+
+        .hero-title {
+            font-size: 2.2rem;
+        }
+
+        .features-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .stat-item {
+            padding: 0 1.5rem;
+        }
+    }
+
+    @@media (max-width: 600px) {
+        .features-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .stats-bar {
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .stat-sep {
+            display: none;
+        }
+
+        .hero-title {
+            font-size: 1.8rem;
+        }
+    }
+</style>

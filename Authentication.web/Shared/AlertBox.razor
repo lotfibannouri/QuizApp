@@ -3,15 +3,19 @@
         <MudText>@AlertMessage</MudText>
     </DialogContent>
     <DialogActions>
-        
-        <MudButton Color="Color.Primary" OnClick="Ok">Ok</MudButton>
-        <MudButton Color="Color.Secondary" OnClick="Cancel">Cancel</MudButton>
+        @if (ShowActions)
+        {
+            <MudButton Color="Color.Primary" OnClick="Ok">Ok</MudButton>
+            <MudButton Color="Color.Secondary" OnClick="Cancel">Cancel</MudButton>
+        }
     </DialogActions>
 </MudDialog>
 @code {
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter]
     public string AlertMessage { get; set; }
+    [Parameter]
+    public bool ShowActions { get; set; } = true;
     void Ok() => MudDialog.Close(DialogResult.Ok(true));
     void Cancel() => MudDialog.Cancel();
 }
