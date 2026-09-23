@@ -37,6 +37,30 @@ namespace ConceptionQuiz_Api.Migrations
                     b.ToTable("QuestionQuiz");
                 });
 
+            modelBuilder.Entity("QuizApp.Entities.Conception_Entities.Categorie", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("Modified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("titre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("categories");
+                });
+
             modelBuilder.Entity("QuizApp.Entities.Conception_Entities.Proposition", b =>
                 {
                     b.Property<Guid>("Id")
@@ -75,6 +99,15 @@ namespace ConceptionQuiz_Api.Migrations
                     b.Property<DateTime>("Modified")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid?>("categorieId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("note")
+                        .HasColumnType("int");
+
                     b.Property<string>("questionText")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -84,6 +117,8 @@ namespace ConceptionQuiz_Api.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("categorieId");
 
                     b.ToTable("questions");
                 });
@@ -100,6 +135,9 @@ namespace ConceptionQuiz_Api.Migrations
                     b.Property<DateTime>("Modified")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid?>("categorieId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -107,10 +145,10 @@ namespace ConceptionQuiz_Api.Migrations
                     b.Property<int>("duree_quiz")
                         .HasColumnType("int");
 
-                    b.Property<int>("nbr_questions")
+                    b.Property<int>("icon")
                         .HasColumnType("int");
 
-                    b.Property<int>("niv_deficulte")
+                    b.Property<int>("nbr_questions")
                         .HasColumnType("int");
 
                     b.Property<string>("titre")
@@ -118,6 +156,8 @@ namespace ConceptionQuiz_Api.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("categorieId");
 
                     b.ToTable("quiz");
                 });
@@ -148,14 +188,23 @@ namespace ConceptionQuiz_Api.Migrations
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsAnswer")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsRawAnswer")
                         .HasColumnType("bit");
+
+                    b.Property<string>("Language")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Modified")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid>("QuestionId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("output")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -188,6 +237,24 @@ namespace ConceptionQuiz_Api.Migrations
                         .IsRequired();
 
                     b.Navigation("question");
+                });
+
+            modelBuilder.Entity("QuizApp.Entities.Conception_Entities.Question", b =>
+                {
+                    b.HasOne("QuizApp.Entities.Conception_Entities.Categorie", "categorie")
+                        .WithMany()
+                        .HasForeignKey("categorieId");
+
+                    b.Navigation("categorie");
+                });
+
+            modelBuilder.Entity("QuizApp.Entities.Conception_Entities.Quiz", b =>
+                {
+                    b.HasOne("QuizApp.Entities.Conception_Entities.Categorie", "categorie")
+                        .WithMany()
+                        .HasForeignKey("categorieId");
+
+                    b.Navigation("categorie");
                 });
 
             modelBuilder.Entity("QuizApp.Entities.Conception_Entities.QuizUser", b =>

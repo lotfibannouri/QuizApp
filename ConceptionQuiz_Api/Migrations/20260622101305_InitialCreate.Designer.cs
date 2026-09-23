@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConceptionQuiz_Api.Migrations
 {
     [DbContext(typeof(ConceptionQuizDbContext))]
-    [Migration("20230601091951_tableQuizUseradded")]
-    partial class tableQuizUseradded
+    [Migration("20260622101305_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -110,6 +110,9 @@ namespace ConceptionQuiz_Api.Migrations
                     b.Property<int>("duree_quiz")
                         .HasColumnType("int");
 
+                    b.Property<int>("icon")
+                        .HasColumnType("int");
+
                     b.Property<int>("nbr_questions")
                         .HasColumnType("int");
 
@@ -151,6 +154,9 @@ namespace ConceptionQuiz_Api.Migrations
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsAnswer")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsRawAnswer")
                         .HasColumnType("bit");
 
@@ -159,6 +165,9 @@ namespace ConceptionQuiz_Api.Migrations
 
                     b.Property<Guid>("QuestionId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("output")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
