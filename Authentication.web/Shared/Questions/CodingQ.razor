@@ -1,17 +1,23 @@
 ﻿<MudGrid>
-
-    <MudItem xs="7" sm="12">
+    <MudItem xs="12" md="5">
+        <MudText Typo="Typo.subtitle1" Class="mb-2">Description complète du travail demandé</MudText>
+        <MudTextField T="string" Label="Description" Variant="Variant.Outlined" Lines="20" @bind-Value="data.description" />
+    </MudItem>
+    <MudItem xs="12" md="7">
         <MudSelect T="string" Label="Langage" AnchorOrigin="Origin.BottomCenter" @bind-Value="_Language" SelectedValuesChanged="OnChangeLanguage">
-    <MudSelectItem Value=@("csharp")>c#</MudSelectItem>
-    <MudSelectItem Value=@("java")>java</MudSelectItem>
-    <MudSelectItem Value=@("cpp")>c++</MudSelectItem>
-    </MudSelect>
-    </MudItem>
-    <MudItem xs="7" sm="12">     
+            <MudSelectItem Value=@("csharp")>c#</MudSelectItem>
+            <MudSelectItem Value=@("java")>java</MudSelectItem>
+            <MudSelectItem Value=@("cpp")>c++</MudSelectItem>
+        </MudSelect>
+        <MudText Typo="Typo.caption" Class="mt-2">Astuce : entourez la partie que l'étudiant devra compléter avec des lignes <code>// DEBUT</code> et <code>// FIN</code>. Le reste du code sera affiché figé à l'étudiant.</MudText>
         <StandaloneCodeEditor @ref="MonacoRef" Id="my-editor-instance-id" ConstructionOptions="EditorConstructionOptions" />
-    </MudItem>
-    <MudItem>
-        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="OnShowOutPut">afficher resultat</MudButton>
-        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Success" Class="ml-auto" OnClick="SaveQuestion">sauvegarder</MudButton>
+        <div class="mt-2">
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="OnShowOutPut">afficher resultat</MudButton>
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Success" Class="ml-auto" OnClick="SaveQuestion">sauvegarder</MudButton>
+        </div>
+        @if (output != null)
+        {
+            <MudText Typo="Typo.body2" Class="mt-2">Sortie : @output</MudText>
+        }
     </MudItem>
 </MudGrid>

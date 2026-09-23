@@ -14,6 +14,12 @@ namespace Authentication.web.Shared.Questions
     {
         [Parameter]
         public CreationQuestionDTO data { get; set; }
+        [Parameter]
+        public string? QuestionId { get; set; }
+        [Parameter]
+        public EventCallback OnSaved { get; set; }
+
+        private bool IsEditMode => !string.IsNullOrEmpty(QuestionId);
         [Inject]
         private IJdoodleService jdoodleService { get; set; }
         [Inject]
@@ -22,16 +28,23 @@ namespace Authentication.web.Shared.Questions
         private IDialogService dialogService { get; set; }
         public string _Language { get; set; }
         public string code { get; set; }
+        public string output { get; set; }
         public StandaloneCodeEditor MonacoRef;
         public StandaloneEditorConstructionOptions options { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
+            // En modification, le code et le langage de la question existante doivent Ãªtre
+            // repris : poser Value sur les options de construction suffit Ã  prÃ©-remplir Monaco.
+            var reponse = data?.reponses?.FirstOrDefault();
+
+            _Language = reponse?.Language ?? _Language;
+
             options = new StandaloneEditorConstructionOptions
             {
                 AutomaticLayout = true,
-                Language = "csharp",
-
+                Language = reponse?.Language ?? "csharp",
+                Value = reponse?.Body ?? string.Empty,
             };
         }
 
@@ -44,9 +57,8 @@ namespace Authentication.web.Shared.Questions
         {
             var code = await MonacoRef.GetValue();
 
-            var result = await jdoodleService.GetOutput(code, _Language, "4");
-            Console.WriteLine(result);
-            var model = await MonacoRef.GetModel();
+            output = await jdoodleService.GetOutput(code, _Language, "4");
+            StateHasChanged();
         }
 
         public async void OnChangeLanguage()
@@ -64,7 +76,7 @@ namespace Authentication.web.Shared.Questions
                 dialogresult = await dialogService.ShowAsync<AlertBox>("Erreur", parameters, options);
                 return;
             }
-            parameters.Add("AlertMessage", "ête-vous sûre de bien vouloir sauvegarder cette question!!!");
+            parameters.Add("AlertMessage", "ï¿½te-vous sï¿½re de bien vouloir sauvegarder cette question!!!");
             dialogresult = await dialogService.ShowAsync<AlertBox>("Validation", parameters, options);
             var result = await dialogresult.Result;
             if (result.Cancelled)
@@ -77,8 +89,14 @@ namespace Authentication.web.Shared.Questions
                 return;
             }
             var resultServer = await jdoodleService.GetOutput(code, _Language, "4");
-            data.reponses = new List<CreationReponseDTO>() { new CreationReponseDTO() { Body = code, IsRawAnswer = true, Output = resultServer } };
-            var response = await Questionservice.CreateQuestion(data);
+            data.reponses = new List<CreationReponseDTO>() { new CreationReponseDTO() { Body = code, IsRawAnswer = true, Output = resultServer, Language = _Language } };
+            var response = IsEditMode
+                ? await Questionservice.UpdateQuestion(QuestionId, data)
+                : await Questionservice.CreateQuestion(data);
+            if (response != null && response.status)
+            {
+                await OnSaved.InvokeAsync();
+            }
         }
 
     }

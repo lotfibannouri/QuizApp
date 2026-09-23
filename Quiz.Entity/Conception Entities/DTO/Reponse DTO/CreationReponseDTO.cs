@@ -12,6 +12,7 @@ namespace QuizApp.Entities.Conception_Entities.DTO.Reponse_DTO
         public bool IsRawAnswer { get; set; }
         public bool? IsAnswer { get; set; }
         public string? Output { get; set; }
+        public string? Language { get; set; }
 
     }
 }

@@ -1,48 +1,117 @@
-﻿@page "/QuestionManagement"
+@page "/QuestionManagement"
+@page "/QuestionManagement/{QuestionId}"
 @using Authentication.web.Shared.Questions
+@using QuizApp.Entities.Conception_Entities.DTO.Categorie_DTO
+@inject ICategorieService categorieService
 <div class="container">
-    <EditForm Model="@model">
-        <DataAnnotationsValidator />
-        <MudGrid>
-            <MudItem xs="12" sm="6">
-                <MudTextField T="string" Label="texte de question" Required="true" Lines="3" RequiredError="le texte est obligatoire!" @bind-Value="model.questionText" />
-            </MudItem>
-            <MudItem xs="12" sm="6">
-                <MudSelect T="string" Label="Type de question" AnchorOrigin="Origin.BottomCenter" @bind-Value="model.type">
-                    <MudSelectItem Value="@("Choix Multiple")" />
-                    <MudSelectItem Value="@("Vrai/Faux")" />
-                    <MudSelectItem Value="@("Codage")" />
-                </MudSelect>
-            </MudItem>
-          
-            <MudItem xs="12" sm="12">
-                
+    @if (_loading)
+    {
+        <div style="display:flex; align-items:center; justify-content:center; min-height:75vh;">
+            <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+        </div>
+    }
+    else if (_step == WizardStep.ChooseType)
+    {
+        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:75vh;">
+            <MudText Typo="Typo.h5" Class="mb-6">Choisir le type de question</MudText>
+            <MudGrid Justify="Justify.Center" Style="max-width:1000px;">
+                <MudItem xs="12" sm="6" md="4">
+                    <MudCard Style="@CardStyle("Choix Multiple")" @onclick="@(() => SelectType("Choix Multiple"))">
+                        <MudCardContent Class="d-flex flex-column align-center pa-8">
+                            <MudIcon Icon="@Icons.Material.Filled.FactCheck" Color="Color.Primary" Style="font-size:3.5rem;" />
+                            <MudText Typo="Typo.h6" Class="mt-3">Choix Multiple</MudText>
+                        </MudCardContent>
+                    </MudCard>
+                </MudItem>
+                <MudItem xs="12" sm="6" md="4">
+                    <MudCard Style="@CardStyle("Vrai/Faux")" @onclick="@(() => SelectType("Vrai/Faux"))">
+                        <MudCardContent Class="d-flex flex-column align-center pa-8">
+                            <MudIcon Icon="@Icons.Material.Filled.ThumbsUpDown" Color="Color.Primary" Style="font-size:3.5rem;" />
+                            <MudText Typo="Typo.h6" Class="mt-3">Vrai/Faux</MudText>
+                        </MudCardContent>
+                    </MudCard>
+                </MudItem>
+                <MudItem xs="12" sm="6" md="4">
+                    <MudCard Style="@CardStyle("Codage")" @onclick="@(() => SelectType("Codage"))">
+                        <MudCardContent Class="d-flex flex-column align-center pa-8">
+                            <MudIcon Icon="@Icons.Material.Filled.Code" Color="Color.Primary" Style="font-size:3.5rem;" />
+                            <MudText Typo="Typo.h6" Class="mt-3">Codage</MudText>
+                        </MudCardContent>
+                    </MudCard>
+                </MudItem>
+                <MudItem xs="12" sm="6" md="4">
+                    <MudCard Style="opacity:0.5;cursor:not-allowed;">
+                        <MudCardContent Class="d-flex flex-column align-center pa-8">
+                            <MudIcon Icon="@Icons.Material.Filled.EditNote" Style="font-size:3.5rem;" />
+                            <MudText Typo="Typo.h6" Class="mt-3">Réponse libre</MudText>
+                        </MudCardContent>
+                    </MudCard>
+                </MudItem>
+                <MudItem xs="12" sm="6" md="4">
+                    <MudCard Style="opacity:0.5;cursor:not-allowed;">
+                        <MudCardContent Class="d-flex flex-column align-center pa-8">
+                            <MudIcon Icon="@Icons.Material.Filled.Link" Style="font-size:3.5rem;" />
+                            <MudText Typo="Typo.h6" Class="mt-3">Association</MudText>
+                        </MudCardContent>
+                    </MudCard>
+                </MudItem>
+            </MudGrid>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-6" Disabled="@string.IsNullOrEmpty(model.type)" OnClick="ConfirmType">Suivant</MudButton>
+        </div>
+    }
+    else if (_step == WizardStep.CommonFields)
+    {
+        @if (!IsEditMode)
+        {
+            <MudButton Variant="Variant.Text" StartIcon="@Icons.Material.Filled.ArrowBack" OnClick="EditType" Class="mb-2">Modifier le type</MudButton>
+        }
+        <EditForm Model="@model">
+            <DataAnnotationsValidator />
+            <MudStack Spacing="6" Class="mt-2" Style="max-width:600px;">
+                <MudStack Spacing="1">
+                    <MudInputLabel>Texte de question</MudInputLabel>
+                    <MudTextField T="string" Label="Texte de question" Variant="Variant.Outlined" Lines="3" Required="true" RequiredError="le texte est obligatoire!" @bind-Value="model.questionText" />
+                </MudStack>
+                <MudStack Spacing="1">
+                    <MudInputLabel>Type de question</MudInputLabel>
+                    <MudTextField T="string" Label="Type de question" Variant="Variant.Outlined" Value="@model.type" ReadOnly="true" />
+                </MudStack>
+                <MudStack Spacing="1">
+                    <MudInputLabel>Catégorie</MudInputLabel>
+                    <MudSelect T="string" Label="Catégorie" Variant="Variant.Outlined" @bind-Value="model.categorieId" Required="true">
+                        @foreach (var cat in _categories)
+                        {
+                            <MudSelectItem Value="@cat.Id">@cat.titre</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudStack>
+                <MudStack Spacing="1">
+                    <MudInputLabel>Note de question</MudInputLabel>
+                    <MudNumericField @bind-Value="model.note" Label="Note de question" Variant="Variant.Outlined" Min="0" />
+                </MudStack>
+            </MudStack>
+
+            <MudGrid Class="mt-4">
+                <MudItem xs="12" sm="6">
                     @if (model.type == "Choix Multiple")
                     {
-                        <MudItem xs="12" sm="6">
-                            <MultiCheckQ data="model"/>
-                        </MudItem>
+                        <MultiCheckQ data="model" QuestionId="@QuestionId" OnSaved="HandleSaved" />
                     }
                     else if (model.type == "Vrai/Faux")
                     {
-
-                        <MudItem xs="12" sm="6">      
-                                <MultiCheckQ ></MultiCheckQ>
-                            </MudItem>
+                        <MultiCheckQ data="model" QuestionId="@QuestionId" OnSaved="HandleSaved" />
                     }
-             
-                    else if(model.type == "Codage")
+                    else if (model.type == "Codage")
                     {
-                        <MudItem xs="12" sm="6">
-                            <CodingQ data="model"/>
-                        </MudItem>
-
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!CanAdvanceToCoding)" OnClick="GoToCodingEditor">Suivant</MudButton>
                     }
-
-                
-            </MudItem>
-        </MudGrid>
-    </EditForm>
+                </MudItem>
+            </MudGrid>
+        </EditForm>
+    }
+    else
+    {
+        <MudButton Variant="Variant.Text" StartIcon="@Icons.Material.Filled.ArrowBack" OnClick="BackToCommonFields" Class="mb-2">Retour</MudButton>
+        <CodingQ data="model" QuestionId="@QuestionId" OnSaved="HandleSaved" />
+    }
 </div>
-
-

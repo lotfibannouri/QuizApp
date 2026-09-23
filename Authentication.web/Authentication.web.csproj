@@ -27,8 +27,4 @@
     <ProjectReference Include="..\Quiz.Entity\QuizApp.Entities.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="wwwroot\scripts\" />
-  </ItemGroup>
-
 </Project>
