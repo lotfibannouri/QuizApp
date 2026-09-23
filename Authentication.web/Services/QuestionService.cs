@@ -29,6 +29,22 @@ namespace Authentication.web.Services
             return response;
         }
 
+        public async Task<Response> UpdateQuestion(string id, CreationQuestionDTO value)
+        {
+            Question question = _mapper.Map<CreationQuestionDTO, Question>(value);
+            question.quiz = new List<Quiz>();
+            HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync("/api/Question/UpdateQuestion?id=" + id, question);
+            Response response = await httpResponseMessage.Content.ReadFromJsonAsync<Response>();
+            return response;
+        }
+
+        public async Task<Response> DeleteQuestion(string id)
+        {
+            HttpResponseMessage httpResponseMessage = await _httpClient.PostAsync("/api/Question/DeleteQuestion?id=" + id, null);
+            Response response = await httpResponseMessage.Content.ReadFromJsonAsync<Response>();
+            return response;
+        }
+
         public async Task<List<ListQuestionDTO>> GetQuestions()
         {
             HttpResponseMessage httpResponseMessage = await _httpClient.GetAsync("/api/Question/ListQuestion");
@@ -51,6 +67,13 @@ namespace Authentication.web.Services
 
             return questions;
         }
+        public async Task<double> CalculateMultiChoiceScore(ScoreRequestDTO request)
+        {
+            HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync("/api/Question/CalculateMultiChoiceScore", request);
+            double score = await httpResponseMessage.Content.ReadFromJsonAsync<double>();
+            return score;
+        }
+
         public async Task<ListQuestionDTO> GetQuestionsById(string questionId)
         {
             HttpResponseMessage httpResponseMessage = await _httpClient.GetAsync("/api/Question/GetQuestionsById?QuestionId=" + questionId);

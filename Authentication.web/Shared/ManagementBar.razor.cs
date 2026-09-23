@@ -26,6 +26,9 @@ namespace Authentication.web.Shared
         [Parameter]
         public EventCallback OnDetailedQuiz { get; set; }
 
+        [Parameter]
+        public EventCallback OnDetailedCategorie { get; set; }
+
 
         private async Task InvokAddUser()=> await OnAddEventClicked.InvokeAsync();
 
@@ -37,17 +40,26 @@ namespace Authentication.web.Shared
 
         private async Task InvokeBindUsertoQuiz() => await OnBindUserToQuiz.InvokeAsync();
        
-        private async Task InvokAddQuiz() => await OnAddEventClicked.InvokeAsync();
         private async Task InvokDeleteQuiz() => await OnDeleteEventClicked.InvokeAsync();
-
+        private async Task InvokEditQuiz()=> await OnEditEventClicked.InvokeAsync();
         private async Task InvokQuestionQuiz() => await OnBindQuestionToQuiz.InvokeAsync();
         private async Task InvokDetailQuiz() => await OnDetailedQuiz.InvokeAsync();
+
+        private async Task InvokAddCategorie() => await OnAddEventClicked.InvokeAsync();
+        private async Task InvokEditCategorie() => await OnEditEventClicked.InvokeAsync();
+        private async Task InvokDeleteCategorie() => await OnDeleteEventClicked.InvokeAsync();
+        private async Task InvokDetailCategorie() => await OnDetailedCategorie.InvokeAsync();
+
+        private async Task InvokEditQuestion() => await OnEditEventClicked.InvokeAsync();
+        private async Task InvokDeleteQuestion() => await OnDeleteEventClicked.InvokeAsync();
 
         public enum Type
         {
             USER,
             QUIZ,
-            ROLE
+            ROLE,
+            CATEGORIE,
+            QUESTION
         }
     }
 }

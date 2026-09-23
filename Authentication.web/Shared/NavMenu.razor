@@ -5,24 +5,41 @@
     <MudNavMenu Bordered="true">
         <AuthorizeView Roles=@($"{utility.Roles.User}")>
             <Authorized>
-                <MudNavLink Href="StDashBoard">Dashboard</MudNavLink>
+                <MudNavLink Href="StDashBoard">🏠 Tableau de bord</MudNavLink>
             </Authorized>
         </AuthorizeView>
         <AuthorizeView Roles=@($"{utility.Roles.Admin}")>
             <Authorized>
-                <MudNavGroup Title="utilisateurs" Expanded="true" Icon="@Icons.Material.Outlined.ManageAccounts">
-                    <MudNavLink Href="UserManagement">Gestionnaire d'utilisateurs</MudNavLink>
-                    <MudNavLink Href="">Gestionnaire de Roles</MudNavLink>-
+                <MudNavLink Href="" Disabled="true">🏠 Tableau de bord</MudNavLink>
+
+                <MudNavGroup Title="QUIZ" Expanded="true" Icon="@Icons.Material.Outlined.Quiz">
+                    <MudNavLink Href="QuizManagement">Tous les quiz</MudNavLink>
+                    <MudNavLink Href="CreateQuiz">Créer un quiz</MudNavLink>
+                    <MudNavLink Href="CategorieManagement">Catégories</MudNavLink>
                 </MudNavGroup>
-                <MudNavGroup Title="Quiz" Expanded="true"Icon="@Icons.Material.Outlined.Quiz">
-                    <MudNavLink Href="QuizManagement">Gestionnaire de Quiz</MudNavLink>
-                    <MudNavLink Href="QuestionManagement">Gestionnaire de Questions</MudNavLink>   
+
+                <MudNavGroup Title="QUESTIONS" Expanded="true" Icon="@Icons.Material.Outlined.QuestionAnswer">
+                    <MudNavLink Href="QuestionBank">Banque de questions</MudNavLink>
+                    <MudNavLink Href="QuestionManagement">Créer une question</MudNavLink>
+                    <MudNavLink Href="" Disabled="true">Importer des questions</MudNavLink>
+                </MudNavGroup>
+
+                <MudNavGroup Title="RÉSULTATS" Expanded="true">
+                    <MudNavLink Href="" Disabled="true">Résultats</MudNavLink>
+                    <MudNavLink Href="" Disabled="true">Statistiques</MudNavLink>
+                    <MudNavLink Href="" Disabled="true">Rapports</MudNavLink>
+                </MudNavGroup>
+
+                <MudNavGroup Title="UTILISATEURS" Expanded="true" Icon="@Icons.Material.Outlined.ManageAccounts">
+                    <MudNavLink Href="UserManagement">Utilisateurs</MudNavLink>
+                    <MudNavLink Href="" Disabled="true">Rôles &amp; permissions</MudNavLink>
+                </MudNavGroup>
+
+                <MudNavGroup Title="ADMINISTRATION" Expanded="true">
+                    <MudNavLink Href="" Disabled="true">Paramètres</MudNavLink>
                 </MudNavGroup>
             </Authorized>
         </AuthorizeView>
-        <MudNavLink Href="Authentification"> Authentication</MudNavLink>
-        <MudNavLink Href="Inscription"> Inscription</MudNavLink>
-        
     </MudNavMenu>
 </MudPaper>
 

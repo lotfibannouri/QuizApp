@@ -38,15 +38,32 @@ namespace ConceptionQuiz_Api.Repository
 
         }
 
-        public Task<Response> DeleteQuestion(string id)
+        public async Task<Response> DeleteQuestion(string id)
         {
-            throw new NotImplementedException();
+            // Une question déjà assignée à un quiz ne doit jamais être supprimée :
+            // on charge d'abord ses rattachements pour pouvoir refuser avant toute suppression.
+            Question question = await _dbContext.questions
+                .Include(q => q.quiz)
+                .SingleOrDefaultAsync(q => q.Id == new Guid(id));
+
+            if (question == null)
+                return new Response(false, "question introuvable...");
+
+            if (question.quiz != null && question.quiz.Any())
+                return new Response(false, $"Cette question est utilisée dans {question.quiz.Count} quiz : elle ne peut pas être supprimée. Détachez-la d'abord des quiz concernés.");
+
+            _dbContext.questions.Remove(question);
+            int rowsAffected = await _dbContext.SaveChangesAsync();
+            if (rowsAffected > 0)
+                return new Response(true, "suppression réussie");
+            else
+                return new Response(false, "suppression à été échouée");
         }
 
         public async Task<Question> GetQuestionById(string id)
         {
             return await _dbContext.questions
-                .Include(p=>p.propositions).Include( p => p.reponses)
+                .Include(p=>p.propositions).Include( p => p.reponses).Include(p => p.categorie)
                 .SingleOrDefaultAsync(q => q.Id == new Guid(id));
         }
 
@@ -64,12 +81,68 @@ namespace ConceptionQuiz_Api.Repository
             };
 
             return await _dbContext.questions
+                .Include(p => p.categorie)
                 .ToListAsync();
         }
 
-        public Task<Response> UpdateQuestion(string id, Question Question)
+        public async Task<Response> UpdateQuestion(string id, Question Question)
         {
-            throw new NotImplementedException();
+            Question questionRef = await _dbContext.questions
+                .Include(q => q.propositions)
+                .Include(q => q.reponses)
+                .SingleOrDefaultAsync(q => q.Id == new Guid(id));
+
+            if (questionRef == null)
+                return new Response(false, "question introuvable...");
+
+            questionRef.questionText = Question.questionText;
+            questionRef.description = Question.description;
+            questionRef.type = Question.type;
+            questionRef.note = Question.note;
+            questionRef.categorieId = Question.categorieId;
+
+            // Les enfants sont remplacés en bloc : les entités reçues du client ont des Id vides,
+            // on ne peut pas les rattacher telles quelles sans conflit de tracking EF.
+            if (questionRef.propositions != null && questionRef.propositions.Any())
+                _dbContext.propositions.RemoveRange(questionRef.propositions);
+
+            if (questionRef.reponses != null && questionRef.reponses.Any())
+                _dbContext.reponses.RemoveRange(questionRef.reponses);
+
+            if (Question.propositions != null)
+            {
+                foreach (var proposition in Question.propositions)
+                {
+                    await _dbContext.propositions.AddAsync(new Proposition
+                    {
+                        textProposition = proposition.textProposition,
+                        questionId = questionRef.Id
+                    });
+                }
+            }
+
+            if (Question.reponses != null)
+            {
+                foreach (var reponse in Question.reponses)
+                {
+                    await _dbContext.reponses.AddAsync(new Reponse
+                    {
+                        Body = reponse.Body,
+                        IsRawAnswer = reponse.IsRawAnswer,
+                        IsAnswer = reponse.IsAnswer,
+                        output = reponse.output,
+                        Language = reponse.Language,
+                        QuestionId = questionRef.Id
+                    });
+                }
+            }
+
+            _dbContext.questions.Update(questionRef);
+            int rowsAffected = await _dbContext.SaveChangesAsync();
+            if (rowsAffected > 0)
+                return new Response(true, "modification de question réussie...");
+            else
+                return new Response(false, "modification de question a été échouée...");
         }
 
 

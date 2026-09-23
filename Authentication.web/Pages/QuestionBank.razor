@@ -1,0 +1,26 @@
+@page "/QuestionBank"
+@using QuizApp.Entities.Conception_Entities.DTO.QuestionDTO
+@inject IQuestionService questionService
+@inject IDialogService dialogService
+@inject ISnackbar SnackbarService
+
+<ManagementBar TypeBar="ManagementBar.Type.QUESTION" OnEditEventClicked="EditQuestion" OnDeleteEventClicked="DeleteQuestion"></ManagementBar>
+<MudDataGrid T="ListQuestionDTO" MultiSelection="true" Items="@Questions" SortMode="SortMode.Multiple" Filterable="true" QuickFilter="@_quickFilter"
+             Hideable="true" SelectedItemsChanged="@SelectedItemsChanged" SelectedItems="@QuestionsSelected">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Banque de questions</MudText>
+        <MudSpacer />
+        <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <Columns>
+        <SelectColumn T="ListQuestionDTO" ShowInFooter="false" />
+        <PropertyColumn Property="x => x.questionText" Title="Titre de question" />
+        <PropertyColumn Property="x => x.type" Title="Type de question" />
+        <PropertyColumn Property="x => x.categorieTitre" Title="Catégorie" />
+        <PropertyColumn Property="x => x.note" Title="Note" />
+    </Columns>
+    <PagerContent>
+        <MudDataGridPager T="ListQuestionDTO" />
+    </PagerContent>
+</MudDataGrid>

@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using QuizApp.Entities.Conception_Entities;
 using QuizApp.Entities.Conception_Entities.DTO.QuestionDTO;
 using QuizApp.Entities.Conception_Entities.DTO.Quiz_DTO;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 
@@ -38,6 +39,36 @@ namespace ConceptionQuiz_Api.Controllers
             }
         }
 
+
+
+        [HttpPost("UpdateQuestion")]
+        public async Task<Response> UpdateQuestion(string id, [FromBody] Question question)
+        {
+            try
+            {
+                var result = await _questionRepository.UpdateQuestion(id, question);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.ToString());
+            }
+        }
+
+
+        [HttpPost("DeleteQuestion")]
+        public async Task<Response> DeleteQuestion(string id)
+        {
+            try
+            {
+                var result = await _questionRepository.DeleteQuestion(id);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.ToString());
+            }
+        }
 
 
         [HttpGet("ListQuestion")]
@@ -85,6 +116,31 @@ namespace ConceptionQuiz_Api.Controllers
                 throw new Exception(ex.ToString());
             }
         }
+        [HttpPost("CalculateMultiChoiceScore")]
+        public async Task<double> CalculateMultiChoiceScore([FromBody] ScoreRequestDTO request)
+        {
+            var question = await _questionRepository.GetQuestionById(request.QuestionId);
+            if (question?.reponses == null)
+                return 0;
+
+            bool hasCorrectChecked = question.reponses.Any(mapped =>
+                mapped.IsAnswer && request.Answers.Any(a => a.Body == mapped.Body && a.IsChecked));
+
+            double score = 0;
+            foreach (var mapped in question.reponses)
+            {
+                bool isChecked = request.Answers.Any(a => a.Body == mapped.Body && a.IsChecked);
+                bool isMatch = mapped.IsAnswer == isChecked;
+
+                if (hasCorrectChecked)
+                    score += isMatch ? 0.25 : -0.25;
+                else if (isChecked && !mapped.IsAnswer)
+                    score -= 0.25;
+            }
+
+            return score;
+        }
+
         [HttpPost("GetOutput")]
         public async Task<OutputCode> GetOutput([FromBody] AttemptCode cq)
         {

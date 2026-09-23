@@ -3,19 +3,55 @@
         @switch (TypeBar)
         {
             case Type.USER:
-
-                <MudIconButton Icon="@Icons.Material.Outlined.Add" OnClick="@InvokAddUser" />
-                <MudIconButton Icon="@Icons.Material.Outlined.Edit" OnClick="@InvokEditUser" />
-                <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Inherit" OnClick="@InvokDeleteUser" />
-                <MudIconButton Icon="@Icons.Material.Outlined.ManageAccounts" OnClick="@InvokAssignRoletoUser" />
+                <MudTooltip Text="Ajouter">
+                    <MudIconButton Icon="@Icons.Material.Outlined.Add" OnClick="@InvokAddUser" />
+                </MudTooltip>
+                <MudTooltip Text="Modifier">
+                    <MudIconButton Icon="@Icons.Material.Outlined.Edit" OnClick="@InvokEditUser" />
+                </MudTooltip>
+                <MudTooltip Text="Supprimer">
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Inherit" OnClick="@InvokDeleteUser" />
+                </MudTooltip>
+                <MudTooltip Text="Attribuer rôle">
+                    <MudIconButton Icon="@Icons.Material.Outlined.ManageAccounts" OnClick="@InvokAssignRoletoUser" />
+                </MudTooltip>
                 break;
             case Type.QUIZ:
-                <MudIconButton Icon="@Icons.Material.Outlined.Add" OnClick="@InvokAddQuiz" />
-                <MudIconButton Icon="@Icons.Material.Outlined.QuestionAnswer" OnClick="@InvokQuestionQuiz" />
-                <MudIconButton Icon="@Icons.Material.Outlined.Edit"/>
+                <MudTooltip Text="Rattacher question">
+                    <MudIconButton Icon="@Icons.Material.Outlined.QuestionAnswer" OnClick="@InvokQuestionQuiz" />
+                </MudTooltip>
+                //<MudIconButton Icon="@Icons.Material.Outlined.Edit" OnClick="@InvokEditQuiz"/>
+                <MudTooltip Text="Supprimer">
                 <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Inherit" OnClick="@InvokDeleteQuiz" />
+                </MudTooltip>
+                <MudTooltip Text="Assigné à un utilisateur">
                 <MudIconButton Icon="@Icons.Material.Filled.AssignmentInd" Color="Color.Inherit" OnClick="@InvokeBindUsertoQuiz" />
+                </MudTooltip>
+                <MudTooltip Text="Détailler quiz">
                 <MudIconButton Icon="@Icons.Material.Filled.ListAlt" Color="Color.Inherit" OnClick="@InvokDetailQuiz" />
+                </MudTooltip>
+                break;
+            case Type.CATEGORIE:
+                <MudTooltip Text="Ajouter">
+                    <MudIconButton Icon="@Icons.Material.Outlined.Add" OnClick="@InvokAddCategorie" />
+                </MudTooltip>
+                <MudTooltip Text="Modifier">
+                    <MudIconButton Icon="@Icons.Material.Outlined.Edit" OnClick="@InvokEditCategorie" />
+                </MudTooltip>
+                <MudTooltip Text="Supprimer">
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Inherit" OnClick="@InvokDeleteCategorie" />
+                </MudTooltip>
+                <MudTooltip Text="Afficher description">
+                    <MudIconButton Icon="@Icons.Material.Filled.Visibility" Color="Color.Inherit" OnClick="@InvokDetailCategorie" />
+                </MudTooltip>
+                break;
+            case Type.QUESTION:
+                <MudTooltip Text="Modifier">
+                    <MudIconButton Icon="@Icons.Material.Outlined.Edit" OnClick="@InvokEditQuestion" />
+                </MudTooltip>
+                <MudTooltip Text="Supprimer">
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Inherit" OnClick="@InvokDeleteQuestion" />
+                </MudTooltip>
                 break;
         }
     </MudToolBar>

@@ -9,9 +9,17 @@ namespace Authentication.web.Services
     {
         Task<Response> CreateQuestion(CreationQuestionDTO question);
 
+        Task<Response> UpdateQuestion(string id, CreationQuestionDTO question);
+
+        Task<Response> DeleteQuestion(string id);
+
         Task<List<ListQuestionDTO>> GetQuestions();
 
         Task<List<ListQuestionDTO>> GetQuestionsByQuizId(string QuizId);
+
+        Task<ListQuestionDTO> GetQuestionsById(string questionId);
+
+        Task<double> CalculateMultiChoiceScore(ScoreRequestDTO request);
 
     }
 }
