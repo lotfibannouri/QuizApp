@@ -5,7 +5,7 @@
     <MudNavMenu Bordered="true">
         <AuthorizeView Roles=@($"{utility.Roles.User}")>
             <Authorized>
-                <MudNavLink Href="StDashBoard">🏠 Tableau de bord</MudNavLink>
+                <MudNavLink Href="xldotnetStDashBoard">🏠 Tableau de bord</MudNavLink>
             </Authorized>
         </AuthorizeView>
         <AuthorizeView Roles=@($"{utility.Roles.Admin}")>
@@ -25,9 +25,10 @@
                 </MudNavGroup>
 
                 <MudNavGroup Title="RÉSULTATS" Expanded="true">
-                    <MudNavLink Href="" Disabled="true">Résultats</MudNavLink>
+                    <MudNavLink Href="Resultats">Résultats</MudNavLink>
                     <MudNavLink Href="" Disabled="true">Statistiques</MudNavLink>
                     <MudNavLink Href="" Disabled="true">Rapports</MudNavLink>
+                    <MudNavLink Href="ProctoringReview">Surveillance</MudNavLink>
                 </MudNavGroup>
 
                 <MudNavGroup Title="UTILISATEURS" Expanded="true" Icon="@Icons.Material.Outlined.ManageAccounts">

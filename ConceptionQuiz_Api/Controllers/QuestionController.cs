@@ -1,4 +1,5 @@
-﻿using ConceptionQuiz_Api.Models;
+﻿using ConceptionQuiz_Api.Metier;
+using ConceptionQuiz_Api.Models;
 using ConceptionQuiz_Api.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,19 +19,23 @@ namespace ConceptionQuiz_Api.Controllers
     {
         private readonly IQuestionRepository _questionRepository;
         private readonly HttpClient _httpClient;
-        public QuestionController(IQuestionRepository questionRepository,  IHttpClientFactory httpClientFactory)
+        private readonly IQuizReport _quizReport;
+        private readonly IConfiguration _configuration;
+        public QuestionController(IQuestionRepository questionRepository,  IHttpClientFactory httpClientFactory, IQuizReport quizReport, IConfiguration configuration)
         {
             _questionRepository = questionRepository;
             _httpClient = httpClientFactory.CreateClient();
+            _quizReport = quizReport;
+            _configuration = configuration;
         }
 
 
         [HttpPost("AddQuestion")]
-        public async Task<Response> CreateQuestion([FromBody] Question question)
+        public async Task<Response> CreateQuestion([FromBody] Question question, string? quizId = null)
         {
             try
             {
-                var result = await _questionRepository.CreateQuestion(question);
+                var result = await _questionRepository.CreateQuestion(question, quizId);
                 return result;
             }
             catch (Exception ex)
@@ -116,6 +121,19 @@ namespace ConceptionQuiz_Api.Controllers
                 throw new Exception(ex.ToString());
             }
         }
+        [HttpPost("CalculateTrueFalseScore")]
+        public async Task<double> CalculateTrueFalseScore([FromBody] ScoreRequestDTO request)
+        {
+            try
+            {
+                return await _quizReport.CalculateTrueFalseScore(request);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.ToString());
+            }
+        }
+
         [HttpPost("CalculateMultiChoiceScore")]
         public async Task<double> CalculateMultiChoiceScore([FromBody] ScoreRequestDTO request)
         {
@@ -144,7 +162,16 @@ namespace ConceptionQuiz_Api.Controllers
         [HttpPost("GetOutput")]
         public async Task<OutputCode> GetOutput([FromBody] AttemptCode cq)
         {
-            var json =  JsonConvert.SerializeObject(cq);
+            // Les identifiants JDoodle restent côté serveur (user secrets en local,
+            // paramètres JDoodle__ClientId / JDoodle__ClientSecret sur Azure).
+            var json = JsonConvert.SerializeObject(new
+            {
+                clientId = _configuration["JDoodle:ClientId"],
+                clientSecret = _configuration["JDoodle:ClientSecret"],
+                cq.language,
+                cq.script,
+                cq.versionIndex
+            });
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json"); 
             HttpResponseMessage httpResponseMessage = await _httpClient.PostAsync("https://api.jdoodle.com/v1/execute", stringContent);
             OutputCode response = await httpResponseMessage.Content.ReadFromJsonAsync<OutputCode>();

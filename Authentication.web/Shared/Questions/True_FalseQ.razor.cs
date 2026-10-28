@@ -1,9 +1,80 @@
-﻿namespace Authentication.web.Shared.Questions
+﻿using Authentication.web.utility;
+using Microsoft.AspNetCore.Components;
+using QuizApp.Entities.Conception_Entities.DTO.Proposition_DTO;
+using QuizApp.Entities.Conception_Entities.DTO.QuestionDTO;
+using QuizApp.Entities.Conception_Entities.DTO.Reponse_DTO;
+
+namespace Authentication.web.Shared.Questions
 {
-    public partial class True_FalseQ 
+    public partial class True_FalseQ
     {
-        public bool SelectedOption { get; set; }
-        public string TextValue { get; set; } = "";
+
+        [Parameter]
+        public CreationQuestionDTO data { get; set; }
+
+        [Parameter]
+        public string? QuestionId { get; set; }
+
+        /// <summary>Quiz auquel rattacher la question à sa création (création depuis un quiz).</summary>
+        [Parameter]
+        public string? QuizId { get; set; }
+
+        [Parameter]
+        public EventCallback OnSaved { get; set; }
+
+        public List<PropositionDTO> propositions = new List<PropositionDTO>();
+
+        private bool IsEditMode => !string.IsNullOrEmpty(QuestionId);
+
+        protected override void OnInitialized()
+        {
+            // En modification, la liste locale doit être alimentée depuis la question chargée,
+            // sinon le formulaire s'affiche vide malgré les données déjà présentes dans data.
+            if (data?.propositions != null && data.propositions.Any())
+            {
+                propositions = data.propositions.ToList();
+            }
+        }
+
+        private void OnDeleteProp(PropositionDTO prop)
+        {
+            propositions.Remove(prop);
+        }
+
+        private void OnAddProp()
+        {
+            propositions.Add(new PropositionDTO());
+
+        }
+
+        private bool CanSave =>
+            !string.IsNullOrWhiteSpace(data?.questionText) &&
+            !string.IsNullOrWhiteSpace(data?.categorieId) &&
+            propositions.Count(p => !string.IsNullOrWhiteSpace(p._textPropositon)) >= 2;
+
+        private async Task SaveQuestion()
+        {
+
+            data.propositions = propositions;
+            List<CreationReponseDTO> rep = new List<CreationReponseDTO>();
+            foreach (var item in propositions)
+            {
+                rep.Add(new CreationReponseDTO() { IsRawAnswer = true, Body = item._textPropositon, IsAnswer = item._chkProposition });
+            }
+            data.reponses = rep;
+
+            var response = IsEditMode
+                ? await Questionservice.UpdateQuestion(QuestionId, data)
+                : await Questionservice.CreateQuestion(data, QuizId);
+
+            if (response != null && response.status)
+            {
+                await OnSaved.InvokeAsync();
+            }
+
+        }
 
     }
+
+
 }

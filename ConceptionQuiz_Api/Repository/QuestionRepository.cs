@@ -24,8 +24,24 @@ namespace ConceptionQuiz_Api.Repository
             _mapper = mapper;
             
         }
-        public async Task<Response> CreateQuestion(Question question)
+        public async Task<Response> CreateQuestion(Question question, string? quizId = null)
         {
+            // Création depuis un quiz : le rattachement est enregistré avec la question, en une
+            // seule fois, pour ne jamais laisser une question créée mais non rattachée.
+            if (!string.IsNullOrEmpty(quizId))
+            {
+                var quiz = await _dbContext.quiz.FindAsync(new Guid(quizId));
+                if (quiz == null)
+                    return new Response(false, "quiz introuvable...");
+
+                // Même règle que pour le rattachement : un quiz assigné ne se modifie plus.
+                int assignedCount = await _dbContext.QuizUser.CountAsync(qu => qu.quizid == quiz.Id);
+                if (assignedCount > 0)
+                    return new Response(false, $"Ce quiz est assigné à {assignedCount} utilisateur(s) : détachez-le avant de pouvoir le modifier.");
+
+                question.quiz = new List<Quiz> { quiz };
+            }
+
             await _dbContext.questions.AddAsync(question);
             int rowsAffected = await _dbContext.SaveChangesAsync();
             if (rowsAffected > 0)

@@ -28,5 +28,12 @@ namespace Authentication.web.Services
             HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync("/api/Quiz/GetQuizScoreSummary", ReportRequest);
             return await httpResponseMessage.Content.ReadFromJsonAsync<QuizScoreSummaryDTO>();
         }
+
+        public async Task<QuizScoreSummaryDTO> SubmitResult(QuizReportRequestDTO ReportRequest)
+        {
+            HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync("/api/Resultat/Submit", ReportRequest);
+            httpResponseMessage.EnsureSuccessStatusCode();
+            return await httpResponseMessage.Content.ReadFromJsonAsync<QuizScoreSummaryDTO>();
+        }
     }
 }

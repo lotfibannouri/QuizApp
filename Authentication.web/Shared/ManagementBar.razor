@@ -24,8 +24,14 @@
                 <MudTooltip Text="Supprimer">
                 <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Inherit" OnClick="@InvokDeleteQuiz" />
                 </MudTooltip>
-                <MudTooltip Text="Assigné à un utilisateur">
-                <MudIconButton Icon="@Icons.Material.Filled.AssignmentInd" Color="Color.Inherit" OnClick="@InvokeBindUsertoQuiz" />
+                @if (ShowAssignUser)
+                {
+                    <MudTooltip Text="Assigné à un utilisateur">
+                    <MudIconButton Icon="@Icons.Material.Filled.AssignmentInd" Color="Color.Inherit" OnClick="@InvokeBindUsertoQuiz" />
+                    </MudTooltip>
+                }
+                <MudTooltip Text="Retirer quiz">
+                <MudIconButton Icon="@Icons.Material.Filled.PersonRemove" Color="Color.Inherit" OnClick="@InvokUnassignQuiz" />
                 </MudTooltip>
                 <MudTooltip Text="Détailler quiz">
                 <MudIconButton Icon="@Icons.Material.Filled.ListAlt" Color="Color.Inherit" OnClick="@InvokDetailQuiz" />

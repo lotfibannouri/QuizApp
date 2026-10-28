@@ -42,6 +42,11 @@ namespace ConceptionQuiz_Api.Repository
 
         public async Task<Response> DeleteQuiz(string idquiz)
         {
+            // La suppression effacerait aussi les assignations (cascade sur QuizUser).
+            var assigned = await AssignedRefusal(idquiz);
+            if (assigned != null)
+                return assigned;
+
             Quiz quiz = await GetQuizById(idquiz);
             _dbContext.quiz.Remove(quiz);
             int rowsAffected = await _dbContext.SaveChangesAsync();
@@ -73,14 +78,67 @@ namespace ConceptionQuiz_Api.Repository
         public async Task<List<ListQuizDTO>>? ListQuiz()
         {            
             List<Quiz>? data = await _dbContext.quiz.Include(q => q.questions).Include(q => q.categorie).ToListAsync();
+            // Une seule requête pour le nombre d'utilisateurs de tous les quiz.
+            var assignedCounts = await _dbContext.QuizUser
+                .GroupBy(qu => qu.quizid)
+                .Select(g => new { QuizId = g.Key, Count = g.Count() })
+                .ToDictionaryAsync(x => x.QuizId, x => x.Count);
+
             List<ListQuizDTO> listQuiz = new List<ListQuizDTO>();
             if(data!= null)
-            { 
+            {
             foreach (Quiz quiz in data)
-                listQuiz.Add(_mapper.Map<Quiz, ListQuizDTO>(quiz));
+            {
+                var dto = _mapper.Map<Quiz, ListQuizDTO>(quiz);
+                dto.nbQuestionsRattachees = quiz.questions?.Count ?? 0;
+                dto.nbUtilisateursAssignes = assignedCounts.TryGetValue(quiz.Id, out var count) ? count : 0;
+                listQuiz.Add(dto);
             }
-            
+            }
+
             return listQuiz;
+        }
+
+        public async Task<List<QuizAssignmentDTO>> ListAssignments()
+        {
+            return await _dbContext.QuizUser
+                .Select(qu => new QuizAssignmentDTO
+                {
+                    QuizId = qu.quizid.ToString(),
+                    QuizTitre = qu.quiz.titre,
+                    UserId = qu.userid.ToString(),
+                    NbQuestionsPrevues = qu.quiz.nbr_questions,
+                    NbQuestionsRattachees = qu.quiz.questions.Count
+                })
+                .ToListAsync();
+        }
+
+        public async Task<Response> UnbindQuizFromUser(string idQuiz, string idUser)
+        {
+            var assignment = await _dbContext.QuizUser
+                .SingleOrDefaultAsync(qu => qu.quizid == new Guid(idQuiz) && qu.userid == new Guid(idUser));
+            if (assignment == null)
+                return new Response(false, "Ce quiz n'est pas assigné à cet utilisateur");
+
+            _dbContext.QuizUser.Remove(assignment);
+            int rowsAffected = await _dbContext.SaveChangesAsync();
+            return rowsAffected > 0
+                ? new Response(true, "Quiz détaché de l'utilisateur")
+                : new Response(false, "Echec du détachement");
+        }
+
+        /// <summary>
+        /// Refus commun à toute modification d'un quiz déjà assigné : les étudiants
+        /// concernés passeraient un test différent de celui qui leur a été attribué.
+        /// Renvoie null si le quiz n'est assigné à personne.
+        /// </summary>
+        public async Task<Response?> AssignedRefusal(string idQuiz)
+        {
+            var quizGuid = new Guid(idQuiz);
+            int count = await _dbContext.QuizUser.CountAsync(qu => qu.quizid == quizGuid);
+            return count == 0
+                ? null
+                : new Response(false, $"Ce quiz est assigné à {count} utilisateur(s) : détachez-le avant de pouvoir le modifier.");
         }
         public async Task<List<QuizUser>>? ListQuizUser()
         {
@@ -98,6 +156,10 @@ namespace ConceptionQuiz_Api.Repository
 
         public async Task<Response> BindQuizToQuestion(string Idquestion, string Idquiz)
         {
+            var assigned = await AssignedRefusal(Idquiz);
+            if (assigned != null)
+                return assigned;
+
             Quiz quizref = await this.GetQuizById(Idquiz);
             Question questionref =await _questionRepository.GetQuestionById(Idquestion);
             if(quizref.questions.Contains(questionref))
@@ -116,6 +178,10 @@ namespace ConceptionQuiz_Api.Repository
 
         public async Task<Response> UnbindQuizFromQuestion(string idQuiz, string idQuestion)
         {
+            var assigned = await AssignedRefusal(idQuiz);
+            if (assigned != null)
+                return assigned;
+
             Quiz quizref = await this.GetQuizById(idQuiz);
             Question questionref = await _questionRepository.GetQuestionById(idQuestion);
             if (!quizref.questions.Contains(questionref))
@@ -133,7 +199,21 @@ namespace ConceptionQuiz_Api.Repository
 
         public async Task<Response> BindQuizToUser(QuizUser quizUser)
         {
-            
+            // Seul un quiz complet (questions rattachées = nombre prévu) peut être assigné.
+            var quiz = await _dbContext.quiz
+                .Include(q => q.questions)
+                .SingleOrDefaultAsync(q => q.Id == quizUser.quizid);
+            if (quiz == null)
+                return new Response(false, "quiz introuvable...");
+
+            int rattachees = quiz.questions?.Count ?? 0;
+            if (rattachees != quiz.nbr_questions)
+                return new Response(false, $"Quiz incomplet ({rattachees}/{quiz.nbr_questions} questions) : il ne peut pas être assigné.");
+
+            // Sans ce contrôle, une seconde assignation violerait la clé (quizid, userid).
+            if (await _dbContext.QuizUser.AnyAsync(qu => qu.quizid == quizUser.quizid && qu.userid == quizUser.userid))
+                return new Response(false, "Ce quiz est déjà assigné à cet utilisateur");
+
             await _dbContext.QuizUser.AddAsync(quizUser);
             int rowsAffected = await _dbContext.SaveChangesAsync();
            

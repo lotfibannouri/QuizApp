@@ -7,6 +7,7 @@ using MudBlazor;
 using QuizApp.Entities.Conception_Entities.DTO.Categorie_DTO;
 using QuizApp.Entities.Conception_Entities.DTO.Proposition_DTO;
 using QuizApp.Entities.Conception_Entities.DTO.QuestionDTO;
+using QuizApp.Entities.Conception_Entities.DTO.Quiz_DTO;
 using QuizApp.Entities.Conception_Entities.DTO.Reponse_DTO;
 
 namespace Authentication.web.Pages
@@ -17,19 +18,37 @@ namespace Authentication.web.Pages
         [Parameter]
         public string? QuestionId { get; set; }
 
+        /// <summary>
+        /// Création depuis QuizManagement (/QuestionManagement?quizId=...) : chaque question
+        /// enregistrée est rattachée à ce quiz, et un compteur suit les questions restantes.
+        /// </summary>
+        [Parameter, SupplyParameterFromQuery]
+        public string? QuizId { get; set; }
+
         [Inject]
         public IQuestionService questionService { get; set; }
+
+        [Inject]
+        public IQuizService quizService { get; set; }
+
+        [Inject]
+        public ISnackbar snackbar { get; set; }
 
         [Inject]
         public NavigationManager _navigationManager { get; set; }
 
         public CreationQuestionDTO model = new CreationQuestionDTO();
-        private enum WizardStep { ChooseType, CommonFields, CodingEditor }
+        private enum WizardStep { ChooseType, CommonFields, CodingEditor,Association }
         private WizardStep _step = WizardStep.ChooseType;
         private List<ListCategorieDTO> _categories = new();
         private bool _loading;
 
         private bool IsEditMode => !string.IsNullOrEmpty(QuestionId);
+
+        private bool IsQuizMode => !IsEditMode && !string.IsNullOrEmpty(QuizId);
+        private ListQuizDTO? _quiz;
+        private int _remaining;
+        private bool IsQuizComplete => IsQuizMode && _quiz != null && _remaining == 0;
 
         protected override void OnInitialized()
         {
@@ -39,6 +58,11 @@ namespace Authentication.web.Pages
             if (IsEditMode)
             {
                 _step = WizardStep.CommonFields;
+                _loading = true;
+            }
+            else if (IsQuizMode)
+            {
+                // Le compteur doit être connu avant d'afficher le choix du type.
                 _loading = true;
             }
         }
@@ -52,7 +76,32 @@ namespace Authentication.web.Pages
                 await LoadQuestionForEdit();
                 _loading = false;
             }
+            else if (IsQuizMode)
+            {
+                await LoadQuizProgress();
+                _loading = false;
+            }
         }
+
+        private async Task LoadQuizProgress()
+        {
+            _quiz = await quizService.GetQuizById(QuizId);
+            if (_quiz == null)
+                return;
+
+            var bound = await questionService.GetQuestionsByQuizId(QuizId);
+            _remaining = Math.Max(0, _quiz.nbr_questions - (bound?.Count ?? 0));
+            model = NewModel();
+        }
+
+        // Nouvelle question vide ; en création depuis un quiz, la catégorie du quiz est
+        // pré-remplie (modifiable).
+        private CreationQuestionDTO NewModel() => new CreationQuestionDTO
+        {
+            categorieId = IsQuizMode ? _quiz?.categorieId : null
+        };
+
+        private void BackToQuizzes() => _navigationManager.NavigateTo("/QuizManagement");
 
         private async Task LoadQuestionForEdit()
         {
@@ -113,10 +162,11 @@ namespace Authentication.web.Pages
         private void EditType() => _step = WizardStep.ChooseType;
 
         private void GoToCodingEditor() => _step = WizardStep.CodingEditor;
+        private void GoToAssociation() => _step = WizardStep.Association;
         private void BackToCommonFields() => _step = WizardStep.CommonFields;
 
-        private bool CanAdvanceToCoding =>
-            !string.IsNullOrWhiteSpace(model.questionText) && !string.IsNullOrEmpty(model.categorieId);
+        private bool CanAdvanceToNextStep =>
+            !string.IsNullOrWhiteSpace(model.questionText) && !string.IsNullOrEmpty(model.categorieId) && model.note > 0;
 
         private void HandleSaved()
         {
@@ -126,7 +176,15 @@ namespace Authentication.web.Pages
                 return;
             }
 
-            model = new CreationQuestionDTO();
+            if (IsQuizMode && _quiz != null)
+            {
+                _remaining = Math.Max(0, _remaining - 1);
+                snackbar.Add(_remaining > 0
+                    ? $"Question ajoutée au quiz « {_quiz.titre} » : {_remaining} restante(s)."
+                    : $"Quiz « {_quiz.titre} » complet.", Severity.Success);
+            }
+
+            model = NewModel();
             _step = WizardStep.ChooseType;
         }
 

@@ -14,6 +14,10 @@ namespace Authentication.web.Shared.Questions
         [Parameter]
         public string? QuestionId { get; set; }
 
+        /// <summary>Quiz auquel rattacher la question à sa création (création depuis un quiz).</summary>
+        [Parameter]
+        public string? QuizId { get; set; }
+
         [Parameter]
         public EventCallback OnSaved { get; set; }
 
@@ -60,7 +64,7 @@ namespace Authentication.web.Shared.Questions
 
             var response = IsEditMode
                 ? await Questionservice.UpdateQuestion(QuestionId, data)
-                : await Questionservice.CreateQuestion(data);
+                : await Questionservice.CreateQuestion(data, QuizId);
 
             if (response != null && response.status)
             {

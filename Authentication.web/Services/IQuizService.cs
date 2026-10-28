@@ -6,7 +6,7 @@ namespace Authentication.web.Services
 {
     public interface IQuizService
     {
-        Task<Response> CreateQuiz(CreationQuizDTO quiz);
+        Task<Response> CreateQuiz(CreationQuizDTO quiz, Guid? id = null);
         Task<List<ListQuizDTO>> ListeQuiz();
         Task<List<ListQuizDTO>> ListeQuizByUser(string UserId);
         Task<Response> BindQuizToUser(QuizUserDTO QuizUser);
@@ -14,6 +14,8 @@ namespace Authentication.web.Services
         Task<Response> UnbindQuizFromQuestion(string IdQuiz, string IdQuestio);
         Task<Response> DeleteQuiz(string id);
         Task<ListQuizDTO> GetQuizById(string id);
+        Task<List<QuizAssignmentDTO>> ListAssignments();
+        Task<Response> UnbindQuizFromUser(string IdQuiz, string IdUser);
 
     }
 }

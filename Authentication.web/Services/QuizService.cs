@@ -21,10 +21,14 @@ namespace Authentication.web.Services
         }
 
 
-        public async Task<Response> CreateQuiz(CreationQuizDTO model)
+        public async Task<Response> CreateQuiz(CreationQuizDTO model, Guid? id = null)
         {
 
             Quiz quiz = _mapper.Map<CreationQuizDTO, Quiz>(model);
+            // Id fourni par l'appelant : EF le conserve à l'insertion, ce qui permet de
+            // connaître le quiz créé (l'API ne renvoie qu'un message).
+            if (id.HasValue)
+                quiz.Id = id.Value;
             HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync("/api/Quiz/AddQuiz", quiz);
             Response response = await httpResponseMessage.Content.ReadFromJsonAsync<Response>();
             return response;
@@ -77,6 +81,20 @@ namespace Authentication.web.Services
         public async Task<Response> DeleteQuiz(string id) 
         {
             HttpResponseMessage httpResponseMessage = await _httpClient.PostAsync("/api/Quiz/DeleteQuiz?id="+id,null);
+            Response response = await httpResponseMessage.Content.ReadFromJsonAsync<Response>();
+            return response;
+        }
+
+        public async Task<List<QuizAssignmentDTO>> ListAssignments()
+        {
+            HttpResponseMessage httpResponseMessage = await _httpClient.GetAsync("/api/Quiz/ListAssignments");
+            var assignments = await httpResponseMessage.Content.ReadFromJsonAsync<List<QuizAssignmentDTO>>();
+            return assignments ?? new List<QuizAssignmentDTO>();
+        }
+
+        public async Task<Response> UnbindQuizFromUser(string IdQuiz, string IdUser)
+        {
+            HttpResponseMessage httpResponseMessage = await _httpClient.PostAsync("/api/Quiz/UnbindQuizFromUser?idQuiz=" + IdQuiz + "&idUser=" + IdUser, null);
             Response response = await httpResponseMessage.Content.ReadFromJsonAsync<Response>();
             return response;
         }

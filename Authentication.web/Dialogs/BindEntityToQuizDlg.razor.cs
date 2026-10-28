@@ -34,6 +34,9 @@ namespace Authentication.web.Dialogs
 
         [Inject]
         private IDialogService dialogService { get; set; }
+
+        [Inject]
+        private IConfiguration _configuration { get; set; }
         [CascadingParameter] MudDialogInstance MudDialog { get; set; }
         public MudDataGrid<User> UsersGrid { get; set; }
 
@@ -49,7 +52,7 @@ namespace Authentication.web.Dialogs
         protected override async Task OnInitializedAsync()
         {
             hubConnection = new HubConnectionBuilder()
-                   .WithUrl("https://localhost:7284/notificationshub")
+                   .WithUrl(new Uri(new Uri(_configuration["Api:QuizUrl"]), "/notificationshub"))
                    .Build();
             await hubConnection.StartAsync();
 

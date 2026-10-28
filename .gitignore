@@ -366,3 +366,6 @@ FodyWeavers.xsd
 *.cache
 *.pdb
 .vs/QuizApp/v17/.suo
+
+# Captures de surveillance : images de visages d'étudiants, ne doivent jamais être commitées
+ProctoringCaptures/

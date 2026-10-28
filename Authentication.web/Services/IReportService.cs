@@ -8,6 +8,7 @@ namespace Authentication.web.Services
     {
         Task<byte[]> GetReport(QuizReportRequestDTO RequestRequest);
         Task<QuizScoreSummaryDTO> GetScoreSummary(QuizReportRequestDTO RequestRequest);
+        Task<QuizScoreSummaryDTO> SubmitResult(QuizReportRequestDTO ReportRequest);
     }
 }
  

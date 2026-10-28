@@ -61,6 +61,45 @@ namespace ConceptionQuiz_Api.Migrations
                     b.ToTable("categories");
                 });
 
+            modelBuilder.Entity("QuizApp.Entities.Conception_Entities.ProctoringEvent", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("Modified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("capturedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("details")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("filePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("quizid")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("sessionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("userid")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("proctoringEvents");
+                });
+
             modelBuilder.Entity("QuizApp.Entities.Conception_Entities.Proposition", b =>
                 {
                     b.Property<Guid>("Id")
@@ -213,6 +252,149 @@ namespace ConceptionQuiz_Api.Migrations
                     b.ToTable("reponses");
                 });
 
+            modelBuilder.Entity("QuizApp.Entities.Conception_Entities.Resultat", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("Modified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("categorieId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("dureeAutoriseeMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<int>("dureeSecondes")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("isAutoSubmitted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("isReussi")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("mention")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<int>("nbCorrectes")
+                        .HasColumnType("int");
+
+                    b.Property<int>("nbQuestions")
+                        .HasColumnType("int");
+
+                    b.Property<double>("pourcentage")
+                        .HasColumnType("float");
+
+                    b.Property<string>("quizTitre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("quizid")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<double>("score")
+                        .HasColumnType("float");
+
+                    b.Property<double>("scoreMax")
+                        .HasColumnType("float");
+
+                    b.Property<Guid>("sessionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("startedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("submittedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("tentative")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("userid")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("categorieId");
+
+                    b.HasIndex("sessionId")
+                        .IsUnique();
+
+                    b.HasIndex("quizid", "submittedAt");
+
+                    b.HasIndex("userid", "submittedAt");
+
+                    b.ToTable("resultats");
+                });
+
+            modelBuilder.Entity("QuizApp.Entities.Conception_Entities.ResultatQuestion", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("Modified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("categorieId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("isCorrecte")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("isRepondue")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ordre")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("questionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("questionTexte")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("questionType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("reponseDonnee")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("resultatId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<double>("score")
+                        .HasColumnType("float");
+
+                    b.Property<double>("scoreMax")
+                        .HasColumnType("float");
+
+                    b.Property<string>("sortieObtenue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("questionId");
+
+                    b.HasIndex("resultatId");
+
+                    b.ToTable("resultatsQuestions");
+                });
+
             modelBuilder.Entity("QuestionQuiz", b =>
                 {
                     b.HasOne("QuizApp.Entities.Conception_Entities.Question", null)
@@ -279,11 +461,51 @@ namespace ConceptionQuiz_Api.Migrations
                     b.Navigation("Question");
                 });
 
+            modelBuilder.Entity("QuizApp.Entities.Conception_Entities.Resultat", b =>
+                {
+                    b.HasOne("QuizApp.Entities.Conception_Entities.Categorie", "categorie")
+                        .WithMany()
+                        .HasForeignKey("categorieId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("QuizApp.Entities.Conception_Entities.Quiz", "quiz")
+                        .WithMany()
+                        .HasForeignKey("quizid")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("categorie");
+
+                    b.Navigation("quiz");
+                });
+
+            modelBuilder.Entity("QuizApp.Entities.Conception_Entities.ResultatQuestion", b =>
+                {
+                    b.HasOne("QuizApp.Entities.Conception_Entities.Question", "question")
+                        .WithMany()
+                        .HasForeignKey("questionId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("QuizApp.Entities.Conception_Entities.Resultat", "resultat")
+                        .WithMany("questions")
+                        .HasForeignKey("resultatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("question");
+
+                    b.Navigation("resultat");
+                });
+
             modelBuilder.Entity("QuizApp.Entities.Conception_Entities.Question", b =>
                 {
                     b.Navigation("propositions");
 
                     b.Navigation("reponses");
+                });
+
+            modelBuilder.Entity("QuizApp.Entities.Conception_Entities.Resultat", b =>
+                {
+                    b.Navigation("questions");
                 });
 #pragma warning restore 612, 618
         }

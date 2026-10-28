@@ -39,7 +39,11 @@
                     <MudSelectItem Value=1>Code</MudSelectItem>
                     <MudSelectItem Value=2>Formation</MudSelectItem>
                 </MudSelect>
-                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="OnValidSubmit">Enregistrer</MudButton>
+                <MudStack Row="true" Justify="Justify.FlexEnd" Spacing="2">
+                    <MudButton ButtonType="ButtonType.Button" Variant="Variant.Outlined" Color="Color.Primary"
+                               StartIcon="@Icons.Material.Filled.PostAdd" Disabled="_saving" OnClick="SaveAndAddQuestions">Enregistrer et ajouter des questions</MudButton>
+                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Disabled="_saving" OnClick="OnValidSubmit">Enregistrer</MudButton>
+                </MudStack>
             </MudStack>
         </EditForm>
     </MudContainer>

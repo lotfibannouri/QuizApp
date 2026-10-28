@@ -45,6 +45,33 @@ namespace ConceptionQuiz_Api.Metier
             return score;
         }
 
+        public async Task<double> CalculateTrueFalseScore(ScoreRequestDTO request)
+        {
+            var question = await _questionRepository.GetQuestionById(request.QuestionId);
+            if (question?.reponses == null || !question.reponses.Any())
+                return 0;
+
+            return ScoreTrueFalse(question, request.Answers);
+        }
+
+        /// <summary>
+        /// Chaque affirmation vaut note / nombre d'affirmations : une bonne réponse rapporte ce
+        /// coefficient, une mauvaise ne rapporte rien. IsAnswer donne la réponse attendue
+        /// (vrai/faux) et IsChecked celle de l'étudiant (true = Vrai).
+        /// </summary>
+        private static double ScoreTrueFalse(QuizApp.Entities.Conception_Entities.Question question, List<AnswerSubmissionDTO>? answers)
+        {
+            double coefficient = (double)question.note / question.reponses.Count;
+
+            return question.reponses.Count(reponse => reponse.IsAnswer == GetTrueFalseAnswer(reponse.Body, answers))
+                * coefficient;
+        }
+
+        // Le client n'envoie que les affirmations répondues : une affirmation absente de la
+        // requête est sans réponse (null) et ne correspond donc jamais à la réponse attendue.
+        private static bool? GetTrueFalseAnswer(string body, List<AnswerSubmissionDTO>? answers)
+            => answers?.FirstOrDefault(a => a.Body == body)?.IsChecked;
+
         //public async Task<byte[]> GenerateQuizReportAsync(QuizReportRequestDTO request)
         //{
         //    try
@@ -314,7 +341,38 @@ public async Task<byte[]> GenerateQuizReportAsync(QuizReportRequestDTO request)
                                                     .FontColor(Colors.White);
                                             });
 
-                                            foreach (var prop in item.Propositions)
+                                            if (item.IsTrueFalseQuestion)
+                                            {
+                                                foreach (var statement in item.Propositions)
+                                                {
+                                                    card.Item()
+                                                        .PaddingLeft(32)
+                                                        .Row(statementRow =>
+                                                        {
+                                                            statementRow.Spacing(4);
+
+                                                            statementRow.ConstantItem(40)
+                                                                .Element(box => TrueFalseBox(box, "Vrai", statement.Answer == true, statement.ExpectedTrue));
+
+                                                            statementRow.ConstantItem(40)
+                                                                .Element(box => TrueFalseBox(box, "Faux", statement.Answer == false, !statement.ExpectedTrue));
+
+                                                            statementRow.RelativeItem()
+                                                                .PaddingLeft(6)
+                                                                .AlignMiddle()
+                                                                .Text(text =>
+                                                                {
+                                                                    text.Span(statement.Text)
+                                                                        .FontSize(11)
+                                                                        .FontColor(statement.IsCorrect ? Colors.Green.Darken2 : Colors.Red.Darken2);
+
+                                                                    if (statement.Answer == null)
+                                                                        text.Span("  (sans réponse)").FontSize(9).Italic().FontColor(Colors.Grey.Darken1);
+                                                                });
+                                                        });
+                                                }
+                                            }
+                                            else foreach (var prop in item.Propositions)
                                             {
                                                 string indicatorColor = prop.IsCorrect
                                                     ? Colors.Green.Medium
@@ -437,6 +495,47 @@ public async Task<byte[]> GenerateQuizReportAsync(QuizReportRequestDTO request)
             }
         }
 
+        /// <summary>
+        /// Case « Vrai » ou « Faux » d'une affirmation. Case choisie par l'étudiant : pleine,
+        /// verte si c'est la réponse attendue, rouge sinon. Réponse attendue non choisie :
+        /// bordure verte. Autre case : grise.
+        /// </summary>
+        private static void TrueFalseBox(IContainer container, string label, bool isChosen, bool isExpected)
+        {
+            string borderColor;
+            string background;
+            string textColor;
+
+            if (isChosen)
+            {
+                borderColor = background = isExpected ? Colors.Green.Darken1 : Colors.Red.Darken1;
+                textColor = Colors.White;
+            }
+            else if (isExpected)
+            {
+                borderColor = textColor = Colors.Green.Darken1;
+                background = Colors.White;
+            }
+            else
+            {
+                borderColor = Colors.Grey.Lighten1;
+                background = Colors.White;
+                textColor = Colors.Grey.Medium;
+            }
+
+            container
+                .Height(16)
+                .Border(1)
+                .BorderColor(borderColor)
+                .Background(background)
+                .AlignCenter()
+                .AlignMiddle()
+                .Text(label)
+                .FontSize(8)
+                .Bold()
+                .FontColor(textColor);
+        }
+
         public async Task<QuizScoreSummaryDTO> GetQuizScoreSummaryAsync(QuizReportRequestDTO request)
         {
             var data = await BuildReportDataAsync(request);
@@ -450,7 +549,7 @@ public async Task<byte[]> GenerateQuizReportAsync(QuizReportRequestDTO request)
             };
         }
 
-        private async Task<QuizReportData> BuildReportDataAsync(QuizReportRequestDTO request)
+        public async Task<QuizReportData> BuildReportDataAsync(QuizReportRequestDTO request)
         {
             var quiz = await _quizRepository.GetQuizById(request.QuizId);
 
@@ -473,6 +572,22 @@ public async Task<byte[]> GenerateQuizReportAsync(QuizReportRequestDTO request)
                 if (question.reponses == null || !question.reponses.Any())
                     continue;
 
+                // Informations communes à tous les types, utilisées pour enregistrer le résultat.
+                QuizQuestionReportDTO Describe(QuizQuestionReportDTO item)
+                {
+                    item.QuestionId = question.Id;
+                    item.QuestionType = question.type;
+                    item.CategorieId = question.categorieId;
+                    item.Ordre = reportQuestions.Count + 1;
+                    item.IsAnswered = question.type == "Codage"
+                        ? !string.IsNullOrWhiteSpace(q.SubmittedCode)
+                        : q.Answers != null && q.Answers.Any(a => question.type == "Vrai/Faux" || a.IsChecked);
+                    item.GivenAnswer = question.type == "Codage"
+                        ? q.SubmittedCode
+                        : System.Text.Json.JsonSerializer.Serialize(q.Answers ?? new List<AnswerSubmissionDTO>());
+                    return item;
+                }
+
                 if (question.type == "Codage")
                 {
                     try
@@ -484,7 +599,7 @@ public async Task<byte[]> GenerateQuizReportAsync(QuizReportRequestDTO request)
 
                         total += codeScore;
 
-                        reportQuestions.Add(new QuizQuestionReportDTO
+                        reportQuestions.Add(Describe(new QuizQuestionReportDTO
                         {
                             QuestionText = question.questionText ?? "",
                             Score = codeScore,
@@ -493,20 +608,52 @@ public async Task<byte[]> GenerateQuizReportAsync(QuizReportRequestDTO request)
                             SubmittedCode = q.SubmittedCode,
                             ExpectedOutput = reponse?.output,
                             ActualOutput = actualOutput
-                        });
+                        }));
                     }
                     catch
                     {
                         // Une question Code défaillante ne doit pas casser le score des autres questions.
-                        reportQuestions.Add(new QuizQuestionReportDTO
+                        reportQuestions.Add(Describe(new QuizQuestionReportDTO
                         {
                             QuestionText = question.questionText ?? "",
                             Score = 0,
                             MaxScore = question.note,
                             IsCodeQuestion = true,
                             SubmittedCode = q.SubmittedCode
-                        });
+                        }));
                     }
+
+                    continue;
+                }
+
+                if (question.type == "Vrai/Faux")
+                {
+                    double trueFalseScore = ScoreTrueFalse(question, q.Answers);
+                    total += trueFalseScore;
+
+                    var statementRows = question.reponses
+                        .Select(reponse =>
+                        {
+                            bool? answer = GetTrueFalseAnswer(reponse.Body, q.Answers);
+
+                            return new PropositionReportDTO
+                            {
+                                Text = reponse.Body ?? "",
+                                IsCorrect = reponse.IsAnswer == answer,
+                                Answer = answer,
+                                ExpectedTrue = reponse.IsAnswer
+                            };
+                        })
+                        .ToList();
+
+                    reportQuestions.Add(Describe(new QuizQuestionReportDTO
+                    {
+                        QuestionText = question.questionText ?? "",
+                        Score = trueFalseScore,
+                        MaxScore = question.note,
+                        IsTrueFalseQuestion = true,
+                        Propositions = statementRows
+                    }));
 
                     continue;
                 }
@@ -566,13 +713,13 @@ public async Task<byte[]> GenerateQuizReportAsync(QuizReportRequestDTO request)
                     })
                     .ToList();
 
-                reportQuestions.Add(new QuizQuestionReportDTO
+                reportQuestions.Add(Describe(new QuizQuestionReportDTO
                 {
                     QuestionText = question.questionText ?? "",
                     Score = score,
                     MaxScore = question.note,
                     Propositions = propositionRows
-                });
+                }));
             }
 
             double maxTotal = reportQuestions.Sum(r => r.MaxScore);
@@ -608,7 +755,7 @@ public async Task<byte[]> GenerateQuizReportAsync(QuizReportRequestDTO request)
             };
         }
 
-        private class QuizReportData
+        public class QuizReportData
         {
             public QuizApp.Entities.Conception_Entities.Quiz Quiz { get; set; }
 
@@ -637,11 +784,26 @@ public async Task<byte[]> GenerateQuizReportAsync(QuizReportRequestDTO request)
 
             public bool IsCodeQuestion { get; set; }
 
+            public bool IsTrueFalseQuestion { get; set; }
+
             public string? SubmittedCode { get; set; }
 
             public string? ExpectedOutput { get; set; }
 
             public string? ActualOutput { get; set; }
+
+            // Renseignés par BuildReportDataAsync pour l'enregistrement du résultat.
+            public Guid QuestionId { get; set; }
+
+            public string QuestionType { get; set; } = string.Empty;
+
+            public Guid? CategorieId { get; set; }
+
+            public int Ordre { get; set; }
+
+            public bool IsAnswered { get; set; }
+
+            public string? GivenAnswer { get; set; }
         }
 
         public class PropositionReportDTO
@@ -651,6 +813,12 @@ public async Task<byte[]> GenerateQuizReportAsync(QuizReportRequestDTO request)
             public bool IsCorrect { get; set; }
 
             public bool IsSelected { get; set; }
+
+            // Questions Vrai/Faux uniquement : réponse de l'étudiant (null = sans réponse)
+            // et réponse attendue.
+            public bool? Answer { get; set; }
+
+            public bool ExpectedTrue { get; set; }
         }
 
     }

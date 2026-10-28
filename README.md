@@ -173,34 +173,40 @@ cd Authentication.web && dotnet run        # Frontend Blazor
 
 ## Configuration
 
-### `authentification_Api/appsettings.json`
+La configuration est lue par couches, chacune écrasant la précédente :
 
-```json
-{
-  "ConnectionStrings": {
-    "DefaultConnection": "Data Source=.\\SQLEXPRESS;Initial Catalog=QuizAuthenticationDB;Integrated Security=True;Encrypt=False"
-  },
-  "JWT": {
-    "ValidIssuer": "https://localhost:7297",
-    "ValidAudience": "User",
-    "Secret": "VOTRE_CLE_SECRETE"
-  }
-}
+| Couche | Contenu | Versionnée |
+|---|---|---|
+| `appsettings.json` | Structure des clés, valeurs vides, **aucun secret** | Oui |
+| `appsettings.Development.json` | Valeurs locales : connexion SQL locale, adresses `localhost`, CORS local | Oui |
+| User secrets (`dotnet user-secrets`) | Secrets en local : `JWT:Secret`, `JDoodle:ClientId`, `JDoodle:ClientSecret` | Non (`%APPDATA%`) |
+| Paramètres d'application Azure | Toutes les valeurs de production (`JWT__Secret`, `ConnectionStrings__DefaultConnection`…) | Non |
+
+### Clés par API
+
+| API | Clé | Rôle |
+|---|---|---|
+| Les deux | `ConnectionStrings:DefaultConnection` | Connexion SQL Server |
+| Les deux | `Cors:AllowedOrigins` | Adresses du site autorisées à appeler l'API |
+| Authentification | `JWT:Secret` | Clé de signature, 32 caractères minimum (secret) |
+| Authentification | `JWT:ValidIssuer`, `JWT:ValidAudience` | Émetteur et audience des jetons |
+| Quiz | `JDoodle:ClientId`, `JDoodle:ClientSecret` | Identifiants JDoodle (secrets, jamais envoyés au navigateur) |
+| Quiz | `Proctoring:CapturesRoot`, `Proctoring:RetentionDays` | Dossier et durée de conservation des captures |
+
+### Secrets en local (une fois par poste)
+
+```bash
+cd authentification_Api
+dotnet user-secrets set "JWT:Secret" "<clé aléatoire d'au moins 32 caractères>"
+
+cd ../ConceptionQuiz_Api
+dotnet user-secrets set "JDoodle:ClientId" "<client id>"
+dotnet user-secrets set "JDoodle:ClientSecret" "<client secret>"
 ```
 
-### `ConceptionQuiz_Api/appsettings.json`
+### Site Blazor : `Authentication.web/wwwroot/appsettings*.json`
 
-```json
-{
-  "ConnectionStrings": {
-    "DefaultConnection": "Data Source=.\\SQLEXPRESS;Initial Catalog=QuizConceptionDB;Integrated Security=True;Encrypt=False"
-  },
-  "JDoodle": {
-    "clientId": "VOTRE_CLIENT_ID",
-    "clientSecret": "VOTRE_CLIENT_SECRET"
-  }
-}
-```
+Adresses des deux API (`Api:AuthUrl`, `Api:QuizUrl`). Ce fichier est **téléchargé par le navigateur** : il ne doit contenir aucun secret.
 
 ---
 

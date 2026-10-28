@@ -1,0 +1,30 @@
+
+@inject IJSRuntime JS
+
+        <div @ref="_conteneur">
+        <MudTextField @ref="_textField" T="string" Label="Programmatic control" Lines="3" Variant="Variant.Outlined"/>
+        </div>
+        <MudStack Row="true" Wrap="Wrap.Wrap" Class="mt-2">
+       <MudButton OnClick="HighlightedText" Color="Color.Primary">Focus</MudButton>
+        </MudStack>
+        @code
+{
+    private ElementReference _conteneur;
+    private MudTextField<string> _textField;
+    private SelectionInfo? _selection;
+    private IJSObjectReference? _module;
+    private async Task HighlightedText()
+    {
+        _module ??= await JS.InvokeAsync<IJSObjectReference>("import", "./scripts/associationInterop.js");
+        //_selection = await _module.InvokeAsync<SelectionInfo?>("getSelectionRange", _conteneur);
+        await _module.InvokeVoidAsync("insertText", _conteneur);
+    }
+    private class SelectionInfo
+    {
+        public int Start { get; set; }
+        public int End { get; set; }
+        public string Text { get; set; } = string.Empty;
+    }
+
+
+        }

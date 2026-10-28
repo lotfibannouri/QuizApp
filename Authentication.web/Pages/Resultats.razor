@@ -1,0 +1,175 @@
+@page "/Resultats"
+@using QuizApp.Entities.Conception_Entities.DTO.ResultatDTO
+@inject IResultatService resultatService
+@inject IAdministrationService adminService
+@inject ISnackbar SnackbarService
+
+@if (_loading)
+{
+    <div style="display:flex; align-items:center; justify-content:center; min-height:60vh;">
+        <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+    </div>
+}
+else if (_detail == null)
+{
+    <MudPaper Class="pa-4 mb-4" Elevation="2">
+        <MudStack Row="true" AlignItems="AlignItems.Center" Style="flex-wrap:wrap;">
+            <MudText Typo="Typo.h6">Résultats des candidats</MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="_searchString" Placeholder="Candidat, email ou quiz" Adornment="Adornment.Start" Immediate="true"
+                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Style="max-width:320px;" />
+        </MudStack>
+    </MudPaper>
+
+    @if (!FilteredCandidats.Any())
+    {
+        <MudAlert Severity="Severity.Info">Aucun résultat à afficher.</MudAlert>
+    }
+    else
+    {
+        <MudExpansionPanels MultiExpansion="true">
+            @foreach (var candidat in FilteredCandidats)
+            {
+                <MudExpansionPanel>
+                    <TitleContent>
+                        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="3" Style="flex-wrap:wrap; width:100%;">
+                            <MudIcon Icon="@Icons.Material.Filled.Person" Color="Color.Primary" />
+                            <div>
+                                <MudText Typo="Typo.subtitle1" Style="font-weight:600;">@candidat.Nom</MudText>
+                                @if (!string.IsNullOrEmpty(candidat.Email))
+                                {
+                                    <MudText Typo="Typo.caption">@candidat.Email</MudText>
+                                }
+                            </div>
+                            <MudSpacer />
+                            <MudChip Size="Size.Small" Variant="Variant.Outlined">@candidat.Passages.Count passage(s)</MudChip>
+                            <MudChip Size="Size.Small" Variant="Variant.Outlined" Color="Color.Success">@candidat.NbReussis réussi(s)</MudChip>
+                            <MudChip Size="Size.Small" Variant="Variant.Outlined" Color="Color.Primary">Moyenne @candidat.MoyennePourcentage.ToString("0.#") %</MudChip>
+                            <MudChip Size="Size.Small" Variant="Variant.Outlined" Color="Color.Info">Meilleur @candidat.MeilleurPourcentage.ToString("0.#") %</MudChip>
+                        </MudStack>
+                    </TitleContent>
+                    <ChildContent>
+                        <MudSimpleTable Dense="true" Hover="true" Style="overflow-x:auto;">
+                            <thead>
+                                <tr>
+                                    <th>Quiz</th>
+                                    <th>Tentative</th>
+                                    <th>Date</th>
+                                    <th>Durée</th>
+                                    <th>Score</th>
+                                    <th>%</th>
+                                    <th>Mention</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var passage in candidat.Passages)
+                                {
+                                    <tr>
+                                        <td>@passage.QuizTitre</td>
+                                        <td>@passage.Tentative</td>
+                                        <td>@passage.SubmittedAt.ToString("dd/MM/yyyy HH:mm")</td>
+                                        <td>
+                                            @FormatDuree(passage.DureeSecondes)
+                                            @if (passage.IsAutoSubmitted)
+                                            {
+                                                <MudTooltip Text="Soumis automatiquement à la fin du temps">
+                                                    <MudIcon Icon="@Icons.Material.Filled.TimerOff" Size="Size.Small" Color="Color.Warning" Style="vertical-align:middle;" />
+                                                </MudTooltip>
+                                            }
+                                        </td>
+                                        <td>@passage.Score.ToString("0.##") / @passage.ScoreMax.ToString("0.##")</td>
+                                        <td>@passage.Pourcentage.ToString("0.#") %</td>
+                                        <td><MudChip Size="Size.Small" Color="@MentionColor(passage.Mention)">@passage.Mention</MudChip></td>
+                                        <td>
+                                            <MudButton Size="Size.Small" Variant="Variant.Outlined" Color="Color.Primary"
+                                                       StartIcon="@Icons.Material.Filled.ListAlt" OnClick="@(() => OpenDetail(candidat, passage))">Détails</MudButton>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </MudSimpleTable>
+                    </ChildContent>
+                </MudExpansionPanel>
+            }
+        </MudExpansionPanels>
+    }
+}
+else
+{
+    var resultat = _detail.Resultat;
+
+    <MudButton Variant="Variant.Text" StartIcon="@Icons.Material.Filled.ArrowBack" OnClick="CloseDetail" Class="mb-2">Retour aux résultats</MudButton>
+
+    <MudPaper Class="pa-4 mb-4" Elevation="2">
+        <MudStack Row="true" AlignItems="AlignItems.Center" Style="flex-wrap:wrap;">
+            <div>
+                <MudText Typo="Typo.h6">@_detailCandidat — @resultat.QuizTitre</MudText>
+                <MudText Typo="Typo.body2">
+                    Tentative @resultat.Tentative, le @resultat.SubmittedAt.ToString("dd/MM/yyyy HH:mm") — durée @FormatDuree(resultat.DureeSecondes)
+                    @(resultat.IsAutoSubmitted ? "(soumis à la fin du temps)" : "")
+                </MudText>
+            </div>
+            <MudSpacer />
+            <MudText Typo="Typo.h5" Style="font-weight:700;">@resultat.Score.ToString("0.##") / @resultat.ScoreMax.ToString("0.##")</MudText>
+            <MudChip Color="@MentionColor(resultat.Mention)">@resultat.Pourcentage.ToString("0.#") % — @resultat.Mention</MudChip>
+        </MudStack>
+        <MudText Typo="Typo.caption">@resultat.NbCorrectes / @resultat.NbQuestions question(s) entièrement juste(s)</MudText>
+    </MudPaper>
+
+    @foreach (var question in _detail.Questions)
+    {
+        var borderColor = question.IsCorrecte ? "var(--mud-palette-success)"
+            : question.Score > 0 ? "var(--mud-palette-warning)" : "var(--mud-palette-error)";
+
+        <MudPaper Class="pa-4 mb-3" Elevation="1" Style="@($"border-left:4px solid {borderColor};")">
+            <MudStack Row="true" AlignItems="AlignItems.Center" Style="flex-wrap:wrap;">
+                <MudText Typo="Typo.subtitle1" Style="font-weight:600;">@question.Ordre. @question.QuestionTexte</MudText>
+                <MudSpacer />
+                <MudChip Size="Size.Small" Variant="Variant.Outlined">@question.QuestionType</MudChip>
+                @if (!question.IsRepondue)
+                {
+                    <MudChip Size="Size.Small" Color="Color.Default">Sans réponse</MudChip>
+                }
+                <MudChip Size="Size.Small" Color="@(question.IsCorrecte ? Color.Success : question.Score > 0 ? Color.Warning : Color.Error)">
+                    @question.Score.ToString("0.##") / @question.ScoreMax.ToString("0.##")
+                </MudChip>
+            </MudStack>
+
+            @if (question.QuestionType == "Codage")
+            {
+                <MudText Typo="Typo.caption" Class="mt-2">Code soumis</MudText>
+                <pre style="background:var(--mud-palette-background-grey); padding:8px; border-radius:4px; overflow-x:auto; margin:0;">@(string.IsNullOrWhiteSpace(question.ReponseDonnee) ? "(aucun code)" : question.ReponseDonnee)</pre>
+                <MudText Typo="Typo.caption" Class="mt-2">Sortie obtenue</MudText>
+                <pre style="background:var(--mud-palette-background-grey); padding:8px; border-radius:4px; overflow-x:auto; margin:0;">@(string.IsNullOrWhiteSpace(question.SortieObtenue) ? "(aucune sortie)" : question.SortieObtenue)</pre>
+            }
+            else if (question.QuestionType == "Vrai/Faux")
+            {
+                var answers = ParseAnswers(question.ReponseDonnee);
+                @if (answers.Any())
+                {
+                    <MudList Dense="true" Class="mt-1">
+                        @foreach (var answer in answers)
+                        {
+                            <MudListItem Icon="@Icons.Material.Filled.ChevronRight">@answer.Body : <strong>@(answer.IsChecked ? "Vrai" : "Faux")</strong></MudListItem>
+                        }
+                    </MudList>
+                }
+            }
+            else
+            {
+                var checkedAnswers = ParseAnswers(question.ReponseDonnee).Where(a => a.IsChecked).ToList();
+                @if (checkedAnswers.Any())
+                {
+                    <MudText Typo="Typo.caption" Class="mt-2">Réponses cochées</MudText>
+                    <MudList Dense="true">
+                        @foreach (var answer in checkedAnswers)
+                        {
+                            <MudListItem Icon="@Icons.Material.Filled.CheckBox">@answer.Body</MudListItem>
+                        }
+                    </MudList>
+                }
+            }
+        </MudPaper>
+    }
+}

@@ -187,6 +187,32 @@ namespace ConceptionQuiz_Api.Controllers
 
         }
 
+        [HttpGet("ListAssignments")]
+        public async Task<List<QuizAssignmentDTO>> ListAssignments()
+        {
+            try
+            {
+                return await _quizRepository.ListAssignments();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.ToString());
+            }
+        }
+
+        [HttpPost("UnbindQuizFromUser")]
+        public async Task<Response> UnbindQuizFromUser(string idQuiz, string idUser)
+        {
+            try
+            {
+                return await _quizRepository.UnbindQuizFromUser(idQuiz, idUser);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.ToString());
+            }
+        }
+
         [HttpPost("BindQuizToUser")]
         public async Task<Response> BindQuizToUser([FromBody] QuizUser quizUser)
         {
@@ -223,13 +249,7 @@ namespace ConceptionQuiz_Api.Controllers
         {
             try
             {
-                double score = 0;
-                foreach(var question in request.ListScoreRequest)
-                {
-                    score += await _quizReport.CalculateMultiChoiceScore(question);
-                }
-                var result = await _quizRepository.GetQuizById(request.QuizId);
-                Console.WriteLine("quizid :" + request.QuizId);
+                // Le score (tous types de questions) est calculé dans GenerateQuizReportAsync.
                 byte[] pdfBytes = await _quizReport.GenerateQuizReportAsync(request);
 
                 return File(pdfBytes, "application/pdf", "QuizReport.pdf");

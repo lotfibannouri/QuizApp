@@ -20,11 +20,15 @@ namespace Authentication.web.Services
          _httpClient = httpClient;
             _mapper = mapper;
         }
-        public async Task<Response> CreateQuestion(CreationQuestionDTO value)
+        public async Task<Response> CreateQuestion(CreationQuestionDTO value, string? quizId = null)
         {
             Question question = _mapper.Map<CreationQuestionDTO, Question>(value);
             question.quiz = new List<Quiz>();
-            HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync("/api/Question/AddQuestion", question);
+            // Avec un quizId, l'API rattache la question à ce quiz dans le même enregistrement.
+            var url = string.IsNullOrEmpty(quizId)
+                ? "/api/Question/AddQuestion"
+                : "/api/Question/AddQuestion?quizId=" + quizId;
+            HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync(url, question);
             Response response = await httpResponseMessage.Content.ReadFromJsonAsync<Response>();
             return response;
         }
@@ -70,6 +74,13 @@ namespace Authentication.web.Services
         public async Task<double> CalculateMultiChoiceScore(ScoreRequestDTO request)
         {
             HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync("/api/Question/CalculateMultiChoiceScore", request);
+            double score = await httpResponseMessage.Content.ReadFromJsonAsync<double>();
+            return score;
+        }
+
+        public async Task<double> CalculateTrueFalseScore(ScoreRequestDTO request)
+        {
+            HttpResponseMessage httpResponseMessage = await _httpClient.PostAsJsonAsync("/api/Question/CalculateTrueFalseScore", request);
             double score = await httpResponseMessage.Content.ReadFromJsonAsync<double>();
             return score;
         }

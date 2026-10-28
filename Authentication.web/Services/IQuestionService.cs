@@ -7,7 +7,7 @@ namespace Authentication.web.Services
 {
     public interface IQuestionService
     {
-        Task<Response> CreateQuestion(CreationQuestionDTO question);
+        Task<Response> CreateQuestion(CreationQuestionDTO question, string? quizId = null);
 
         Task<Response> UpdateQuestion(string id, CreationQuestionDTO question);
 
@@ -20,6 +20,7 @@ namespace Authentication.web.Services
         Task<ListQuestionDTO> GetQuestionsById(string questionId);
 
         Task<double> CalculateMultiChoiceScore(ScoreRequestDTO request);
+        Task<double> CalculateTrueFalseScore(ScoreRequestDTO request);
 
     }
 }

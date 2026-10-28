@@ -16,6 +16,9 @@ namespace Authentication.web.Shared.Questions
         public CreationQuestionDTO data { get; set; }
         [Parameter]
         public string? QuestionId { get; set; }
+        /// <summary>Quiz auquel rattacher la question à sa création (création depuis un quiz).</summary>
+        [Parameter]
+        public string? QuizId { get; set; }
         [Parameter]
         public EventCallback OnSaved { get; set; }
 
@@ -71,7 +74,7 @@ namespace Authentication.web.Shared.Questions
             var options = new DialogOptions { CloseOnEscapeKey = true, CloseButton = true, FullWidth = true };
             var parameters = new DialogParameters();
             IDialogReference dialogresult;
-            if (_Language.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(_Language))
             { parameters.Add("AlertMessage", "Vous devez choisir un Language!!!");
                 dialogresult = await dialogService.ShowAsync<AlertBox>("Erreur", parameters, options);
                 return;
@@ -82,7 +85,7 @@ namespace Authentication.web.Shared.Questions
             if (result.Cancelled)
                 return;
             var code = await MonacoRef.GetValue();
-            if(code.IsNullOrEmpty())
+            if(string.IsNullOrEmpty(code))
             {
                 parameters.Add("AlertMessage", "vous devez saisir un code");
                 dialogresult = await dialogService.ShowAsync<AlertBox>("Erreur", parameters, options);
@@ -92,7 +95,7 @@ namespace Authentication.web.Shared.Questions
             data.reponses = new List<CreationReponseDTO>() { new CreationReponseDTO() { Body = code, IsRawAnswer = true, Output = resultServer, Language = _Language } };
             var response = IsEditMode
                 ? await Questionservice.UpdateQuestion(QuestionId, data)
-                : await Questionservice.CreateQuestion(data);
+                : await Questionservice.CreateQuestion(data, QuizId);
             if (response != null && response.status)
             {
                 await OnSaved.InvokeAsync();

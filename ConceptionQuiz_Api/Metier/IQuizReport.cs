@@ -7,8 +7,10 @@ namespace ConceptionQuiz_Api.Metier
     public interface IQuizReport
     {
         Task<double> CalculateMultiChoiceScore(ScoreRequestDTO request);
+        Task<double> CalculateTrueFalseScore(ScoreRequestDTO request);
         Task<byte[]> GenerateQuizReportAsync(QuizReportRequestDTO request);
         Task<QuizScoreSummaryDTO> GetQuizScoreSummaryAsync(QuizReportRequestDTO request);
+        Task<QuizReport.QuizReportData> BuildReportDataAsync(QuizReportRequestDTO request);
 
     }
 }

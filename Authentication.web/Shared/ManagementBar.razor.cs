@@ -25,9 +25,15 @@ namespace Authentication.web.Shared
         public EventCallback OnBindQuestionToQuiz { get; set; }
         [Parameter]
         public EventCallback OnDetailedQuiz { get; set; }
-
         [Parameter]
         public EventCallback OnDetailedCategorie { get; set; }
+
+        [Parameter]
+        public EventCallback OnUnassignQuiz { get; set; }
+
+        /// <summary>QUIZ : masque « Assigné à un utilisateur » (quiz sélectionné incomplet).</summary>
+        [Parameter]
+        public bool ShowAssignUser { get; set; } = true;
 
 
         private async Task InvokAddUser()=> await OnAddEventClicked.InvokeAsync();
@@ -44,7 +50,7 @@ namespace Authentication.web.Shared
         private async Task InvokEditQuiz()=> await OnEditEventClicked.InvokeAsync();
         private async Task InvokQuestionQuiz() => await OnBindQuestionToQuiz.InvokeAsync();
         private async Task InvokDetailQuiz() => await OnDetailedQuiz.InvokeAsync();
-
+        private async Task InvokUnassignQuiz() => await OnUnassignQuiz.InvokeAsync();
         private async Task InvokAddCategorie() => await OnAddEventClicked.InvokeAsync();
         private async Task InvokEditCategorie() => await OnEditEventClicked.InvokeAsync();
         private async Task InvokDeleteCategorie() => await OnDeleteEventClicked.InvokeAsync();

@@ -1,0 +1,74 @@
+@page "/ProctoringReview"
+@using QuizApp.Entities.Conception_Entities.DTO.Proctoring_DTO
+@inject IProctoringService proctoringService
+@inject IAdministrationService adminService
+@inject IDialogService dialogService
+@inject ISnackbar SnackbarService
+
+@if (_selected == null)
+{
+    <MudDataGrid T="ProctoringSessionDTO" Items="@Sessions" SortMode="SortMode.Multiple" Filterable="true" QuickFilter="@_quickFilter"
+                 Hideable="true" RowClick="@OpenSession">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Surveillance des passages</MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
+                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <Columns>
+            <PropertyColumn Property="x => x.UserName" Title="Étudiant" />
+            <PropertyColumn Property="x => x.QuizTitre" Title="Quiz" />
+            <PropertyColumn Property="x => x.StartedAt" Title="Début" />
+            <PropertyColumn Property="x => x.SnapshotCount" Title="Photos" />
+            <PropertyColumn Property="x => x.IncidentCount" Title="Incidents" />
+        </Columns>
+        <PagerContent>
+            <MudDataGridPager T="ProctoringSessionDTO" />
+        </PagerContent>
+    </MudDataGrid>
+}
+else
+{
+    <MudButton Variant="Variant.Text" StartIcon="@Icons.Material.Filled.ArrowBack" OnClick="CloseSession" Class="mb-2">Retour aux sessions</MudButton>
+
+    <MudPaper Class="pa-4 mb-4" Elevation="2">
+        <MudText Typo="Typo.h6">@_selected.UserName — @_selected.QuizTitre</MudText>
+        <MudText Typo="Typo.body2">Débuté le @_selected.StartedAt — @_selected.SnapshotCount photo(s), @_selected.IncidentCount incident(s)</MudText>
+        <MudButton Class="mt-2" Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.DeleteForever" OnClick="PurgeSession">
+            Supprimer les captures de cette session
+        </MudButton>
+    </MudPaper>
+
+    @if (_incidents.Any())
+    {
+        <MudPaper Class="pa-4 mb-4" Elevation="2">
+            <MudText Typo="Typo.subtitle1" Class="mb-2">Incidents</MudText>
+            @foreach (var incident in _incidents)
+            {
+                <MudAlert Severity="Severity.Warning" Dense="true" Class="mb-1">
+                    @incident.CapturedAt.ToString("HH:mm:ss") — @incident.Type @(string.IsNullOrEmpty(incident.Details) ? "" : $"({incident.Details})")
+                </MudAlert>
+            }
+        </MudPaper>
+    }
+
+    <MudPaper Class="pa-4" Elevation="2">
+        <MudText Typo="Typo.subtitle1" Class="mb-2">Photos</MudText>
+        @if (!_snapshots.Any())
+        {
+            <MudText Typo="Typo.body2">Aucune photo pour cette session.</MudText>
+        }
+        else
+        {
+            <div style="display:flex; flex-wrap:wrap; gap:12px;">
+                @foreach (var snapshot in _snapshots)
+                {
+                    <div style="text-align:center;">
+                        <img src="@proctoringService.GetImageUrl(snapshot.Id)" style="width:200px; border-radius:6px; display:block;" />
+                        <MudText Typo="Typo.caption">@snapshot.CapturedAt.ToString("HH:mm:ss")</MudText>
+                    </div>
+                }
+            </div>
+        }
+    </MudPaper>
+}

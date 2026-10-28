@@ -10,10 +10,25 @@
             <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
         </div>
     }
+    else if (IsQuizComplete)
+    {
+        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:75vh;">
+            <MudAlert Severity="Severity.Success" Variant="Variant.Outlined" Class="mb-6">
+                Quiz complet : les @_quiz.nbr_questions questions de « @_quiz.titre » sont créées.
+            </MudAlert>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.ArrowBack" OnClick="BackToQuizzes">Retour aux quiz</MudButton>
+        </div>
+    }
     else if (_step == WizardStep.ChooseType)
     {
         <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:75vh;">
-            <MudText Typo="Typo.h5" Class="mb-6">Choisir le type de question</MudText>
+            <MudText Typo="Typo.h5" Class="@(IsQuizMode && _quiz != null ? "mb-2" : "mb-6")">Choisir le type de question</MudText>
+            @if (IsQuizMode && _quiz != null)
+            {
+                <MudChip Color="Color.Primary" Variant="Variant.Outlined" Icon="@Icons.Material.Filled.Quiz" Class="mb-6">
+                    Quiz « @_quiz.titre » — @_remaining question(s) restante(s) sur @_quiz.nbr_questions
+                </MudChip>
+            }
             <MudGrid Justify="Justify.Center" Style="max-width:1000px;">
                 <MudItem xs="12" sm="6" md="4">
                     <MudCard Style="@CardStyle("Choix Multiple")" @onclick="@(() => SelectType("Choix Multiple"))">
@@ -48,9 +63,9 @@
                     </MudCard>
                 </MudItem>
                 <MudItem xs="12" sm="6" md="4">
-                    <MudCard Style="opacity:0.5;cursor:not-allowed;">
+                    <MudCard Style="@CardStyle("Association")" @onclick="@(() => SelectType("Association"))">
                         <MudCardContent Class="d-flex flex-column align-center pa-8">
-                            <MudIcon Icon="@Icons.Material.Filled.Link" Style="font-size:3.5rem;" />
+                            <MudIcon Icon="@Icons.Material.Filled.Link" Color="Color.Primary" Style="font-size:3.5rem;" />
                             <MudText Typo="Typo.h6" Class="mt-3">Association</MudText>
                         </MudCardContent>
                     </MudCard>
@@ -95,23 +110,32 @@
                 <MudItem xs="12" sm="6">
                     @if (model.type == "Choix Multiple")
                     {
-                        <MultiCheckQ data="model" QuestionId="@QuestionId" OnSaved="HandleSaved" />
+                        <MultiCheckQ data="model" QuestionId="@QuestionId" QuizId="@QuizId" OnSaved="HandleSaved" />
                     }
                     else if (model.type == "Vrai/Faux")
                     {
-                        <MultiCheckQ data="model" QuestionId="@QuestionId" OnSaved="HandleSaved" />
+                        <True_FalseQ data="model" QuestionId="@QuestionId" QuizId="@QuizId" OnSaved="HandleSaved" />
                     }
                     else if (model.type == "Codage")
                     {
-                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!CanAdvanceToCoding)" OnClick="GoToCodingEditor">Suivant</MudButton>
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!CanAdvanceToNextStep)" OnClick="GoToCodingEditor">Suivant</MudButton>
+                    }
+                    else if (model.type == "Association")
+                    {
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!CanAdvanceToNextStep)" OnClick="GoToAssociation">Suivant</MudButton>
                     }
                 </MudItem>
             </MudGrid>
         </EditForm>
     }
-    else
+    else if (_step == WizardStep.CodingEditor)
     {
         <MudButton Variant="Variant.Text" StartIcon="@Icons.Material.Filled.ArrowBack" OnClick="BackToCommonFields" Class="mb-2">Retour</MudButton>
-        <CodingQ data="model" QuestionId="@QuestionId" OnSaved="HandleSaved" />
+        <CodingQ data="model" QuestionId="@QuestionId" QuizId="@QuizId" OnSaved="HandleSaved" />
+    }
+    else if(_step == WizardStep.Association)
+    {
+        <MudButton Variant="Variant.Text" StartIcon="@Icons.Material.Filled.ArrowBack" OnClick="BackToCommonFields" Class="mb-2">Retour</MudButton>
+        <AssociationQ></AssociationQ>
     }
 </div>

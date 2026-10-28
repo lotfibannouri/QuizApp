@@ -1,0 +1,14 @@
+﻿<MudPaper Class="pa-3 pl-16 ma-1" Elevation="3">
+
+    <MudText Typo="Typo.button"> @Question.questionText : </MudText>
+    @foreach (var item in chkdItems)
+    {
+       
+            <MudRadioGroup T="bool?" @bind-SelectedOption="@item.ischecked" style="display: flex; flex-direction: row;">
+                <MudRadio Size="Size.Small" T="bool?" Option="@((bool?)true)"  Disabled="false"><p style="font-size:small;margin-right:3px">Vrai</p></MudRadio>
+                <MudRadio Size="Size.Small" T="bool?" Option="@((bool?)false)" Disabled="false"><p style="font-size:small;margin-right:3px">Faux</p></MudRadio>
+            </MudRadioGroup>
+            <MudTextField T="string"  Label=@item.text Variant="Variant.Text" Disabled=true/>
+    }
+
+</MudPaper>

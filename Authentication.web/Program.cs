@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.AspNetCore.SignalR.Client;
 using MudBlazor.Services;
-using Authentication.web.SignalServices;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -32,74 +31,34 @@ var automapper = new MapperConfiguration(item => item.AddProfile(new AutoMapperH
 IMapper mapper = automapper.CreateMapper();
 builder.Services.AddSingleton(mapper);
 
-builder.Services.AddSingleton<SignalService>();
-
-builder.Services.AddHttpClient<ICompteService, CompteService>(client =>
+// Adresses des deux API, lues dans wwwroot/appsettings.json (production) et
+// wwwroot/appsettings.Development.json (local). Ce fichier est public : jamais de secret ici.
+static Uri ApiUrl(IConfiguration configuration, string key)
 {
-#if (DEBUG)
-    client.BaseAddress = new Uri("https://localhost:7297");
-#else
-	client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
-#endif
+    var url = configuration[key];
+    if (string.IsNullOrWhiteSpace(url))
+        throw new InvalidOperationException($"Adresse d'API manquante : « {key} » dans wwwroot/appsettings.json.");
+    return new Uri(url);
+}
 
-});
-builder.Services.AddHttpClient<IAdministrationService, AdministrationService>(client =>
-{
-#if (DEBUG)
-    client.BaseAddress = new Uri("https://localhost:7297");
-#else
-	client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
-#endif
+var authApiUrl = ApiUrl(builder.Configuration, "Api:AuthUrl");
+var quizApiUrl = ApiUrl(builder.Configuration, "Api:QuizUrl");
 
-});
+void AddAuthApiClient<TClient, TImplementation>() where TClient : class where TImplementation : class, TClient
+    => builder.Services.AddHttpClient<TClient, TImplementation>(client => client.BaseAddress = authApiUrl);
 
-builder.Services.AddHttpClient<IQuizService, QuizService>(client =>
-{
-#if (DEBUG)
-    client.BaseAddress = new Uri("https://localhost:7284");
-#else
-	client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
-#endif
+void AddQuizApiClient<TClient, TImplementation>() where TClient : class where TImplementation : class, TClient
+    => builder.Services.AddHttpClient<TClient, TImplementation>(client => client.BaseAddress = quizApiUrl);
 
-});
+AddAuthApiClient<ICompteService, CompteService>();
+AddAuthApiClient<IAdministrationService, AdministrationService>();
 
-builder.Services.AddHttpClient<ICategorieService, CategorieService>(client =>
-{
-#if (DEBUG)
-    client.BaseAddress = new Uri("https://localhost:7284");
-#else
-	client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
-#endif
-
-});
-
-builder.Services.AddHttpClient<IQuestionService, QuestionService>(client =>
-{
-#if (DEBUG)
-    client.BaseAddress = new Uri("https://localhost:7284");
-#else
-	client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
-#endif
-
-});
-
-builder.Services.AddHttpClient<IJdoodleService, JdoodleService>(client =>
-{
-#if (DEBUG)
-    client.BaseAddress = new Uri("https://localhost:7284");
-#else
-	client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
-#endif
-
-});
-builder.Services.AddHttpClient<IReportService, ReportService>(client =>
-{
-#if (DEBUG)
-    client.BaseAddress = new Uri("https://localhost:7284");
-#else
-	client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
-#endif
-
-});
+AddQuizApiClient<IQuizService, QuizService>();
+AddQuizApiClient<ICategorieService, CategorieService>();
+AddQuizApiClient<IQuestionService, QuestionService>();
+AddQuizApiClient<IJdoodleService, JdoodleService>();
+AddQuizApiClient<IReportService, ReportService>();
+AddQuizApiClient<IProctoringService, ProctoringService>();
+AddQuizApiClient<IResultatService, ResultatService>();
 
 await builder.Build().RunAsync();

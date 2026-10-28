@@ -17,6 +17,9 @@ namespace ConceptionQuiz_Api.Repository
         Task<Response> BindQuizToUser(QuizUser QuizUser);
         Task<Response> UnbindQuizFromQuestion(string idQuiz, string idQuestion);
         Task<List<QuizUser>> ListQuizUser();
+        Task<List<QuizAssignmentDTO>> ListAssignments();
+        Task<Response> UnbindQuizFromUser(string idQuiz, string idUser);
+        Task<Response?> AssignedRefusal(string idQuiz);
         
 
 

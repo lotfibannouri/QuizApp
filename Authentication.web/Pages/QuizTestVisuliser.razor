@@ -1,8 +1,62 @@
 @page "/quiztestvisulizer/{quizId}"
 @using Authentication.web.Shared.Test
 @inject IJSRuntime JSRuntime
-@if (!IsTestFinished)
+@if (!_started)
 {
+    <div class="consent-container">
+        <MudPaper Class="consent-card" Elevation="4">
+            <MudIcon Icon="@Icons.Material.Filled.Videocam" Color="Color.Primary" Style="font-size:3rem;" />
+            <MudText Typo="Typo.h5" Class="mt-2">Épreuve surveillée par webcam</MudText>
+
+            <MudText Typo="Typo.body2" Class="mt-3">
+                Pendant toute la durée de l'épreuve, une photo de votre webcam sera prise
+                automatiquement toutes les @(SnapshotIntervalSeconds) secondes, et vos sorties de l'onglet du
+                quiz seront enregistrées. Ces éléments servent uniquement à vérifier le bon
+                déroulement du test, sont consultables par l'administrateur et sont supprimés
+                après la validation des résultats. L'accès à la caméra est obligatoire pour composer.
+            </MudText>
+
+            <video id="proctoring-preview" class="consent-preview" muted playsinline></video>
+
+            @if (!string.IsNullOrEmpty(_cameraError))
+            {
+                <MudAlert Severity="Severity.Error" Class="mt-2">@_cameraError</MudAlert>
+            }
+
+            <div class="mt-3">
+                <MudButton Variant="Variant.Text" OnClick="GoBack">Retour</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!_cameraReady)" OnClick="StartTest">Commencer le test</MudButton>
+            </div>
+        </MudPaper>
+    </div>
+}
+else if (!IsTestFinished)
+{
+    @if (!_faceVisible)
+    {
+        <MudAlert Severity="Severity.Warning" Class="out-of-frame-banner" Dense="true">
+            Vous n'êtes plus dans le champ de la caméra. Revenez devant l'écran :
+            au-delà de @FaceMissingThresholdSeconds secondes, un incident est enregistré
+            et consultable par l'administrateur.
+            @if (_secondsOutOfFrame > 0)
+            {
+                <text>(@_secondsOutOfFrame s)</text>
+            }
+        </MudAlert>
+    }
+
+    <div class="proctoring-badge">
+        <video id="proctoring-preview" class="proctoring-thumb" muted playsinline></video>
+        @if (_faceVisible)
+        {
+            <div class="proctoring-rec"><span class="proctoring-dot"></span> Surveillance active</div>
+        }
+        else
+        {
+            <div class="proctoring-rec proctoring-lost"><span class="proctoring-dot"></span> Hors champ</div>
+        }
+    </div>
+
     <div class="centered-container">
         <div class="timer">
             Time Remaining: @remainingTime
@@ -46,12 +100,105 @@ else
                 <MudText Typo="Typo.h2" Class="result-score">@_scoreSummary.Score.ToString("0.##") / @_scoreSummary.MaxScore.ToString("0.##")</MudText>
                 <MudText Typo="Typo.body1" Class="result-subtitle">@_scoreSummary.Percentage.ToString("0.#")% — @_scoreSummary.Mention</MudText>
                 <MudButton Class="mt-3" Variant="Variant.Filled" Color="Color.Primary" OnClick="ViewReport">Visualiser le rapport</MudButton>
+
+                @if (!string.IsNullOrEmpty(_reportError))
+                {
+                    <MudAlert Severity="Severity.Error" Class="mt-2">@_reportError</MudAlert>
+                }
             </MudPaper>
         }
     </div>
 }
 
 <style>
+    .consent-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 80vh;
+    }
+
+    .consent-card {
+        max-width: 560px;
+        padding: 32px;
+        text-align: center;
+    }
+
+    .consent-preview {
+        width: 100%;
+        max-width: 320px;
+        margin-top: 16px;
+        border-radius: 8px;
+        background: #000;
+    }
+
+    .proctoring-badge {
+        position: fixed;
+        bottom: 16px;
+        right: 16px;
+        z-index: 1200;
+        text-align: center;
+    }
+
+    .proctoring-thumb {
+        width: 160px;
+        border-radius: 8px;
+        border: 2px solid var(--mud-palette-primary);
+        background: #000;
+        display: block;
+    }
+
+    .proctoring-rec {
+        margin-top: 4px;
+        font-size: 11px;
+        color: var(--mud-palette-text-secondary);
+    }
+
+    .proctoring-dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #e53935;
+        margin-right: 4px;
+        animation: proctoring-blink 1.4s infinite;
+    }
+
+    /* Etat hors champ : le badge reprend la couleur du bandeau, pour que l'etudiant
+       trouve la meme information la ou il regarde deja son apercu video. */
+    .proctoring-lost {
+        color: var(--mud-palette-warning);
+        font-weight: 600;
+    }
+
+    /* Ancre sous la barre d'application, du cote du menu de deconnexion : l'avertissement
+       se place la ou l'etudiant a deja l'habitude de regarder, sans masquer le questionnaire.
+       La hauteur de la barre vient de MudBlazor (56px en mobile, 64px au-dela), d'ou la
+       variable plutot qu'une valeur en dur. z-index aligne sur le badge de surveillance. */
+    .out-of-frame-banner {
+        position: fixed;
+        top: calc(var(--mud-appbar-height, 64px) + 8px);
+        right: 16px;
+        left: auto;
+        max-width: 420px;
+        z-index: 1200;
+        box-shadow: var(--mud-elevation-6);
+    }
+
+    /* Sous cette largeur, un encadre de 420px deborderait : on laisse l'avertissement
+       occuper la largeur disponible, marges comprises. */
+    @@media (max-width: 480px) {
+        .out-of-frame-banner {
+            left: 16px;
+            max-width: none;
+        }
+    }
+
+    @@keyframes proctoring-blink {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.2; }
+    }
+
     .centered-container {
         display: flex;
         justify-content: center;

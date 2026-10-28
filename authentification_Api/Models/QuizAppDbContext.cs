@@ -13,11 +13,7 @@ namespace authentification_Api.Models
 
         public DbSet<User> users { get; set; }
         public DbSet<Role> roles { get; set; }
-     
 
-        protected override void OnConfiguring(DbContextOptionsBuilder opbuilder)
-        {
-            opbuilder.UseSqlServer("Data Source=DESKTOP-H8208OD\\SQLEXPRESS;Initial Catalog=QuizAuthenticationDB;Integrated Security=True;Encrypt=False");
-        }
+        // La connexion est configurée dans Program.cs à partir de ConnectionStrings:DefaultConnection.
     }
 }

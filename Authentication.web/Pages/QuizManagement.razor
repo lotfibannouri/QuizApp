@@ -7,10 +7,11 @@
 <ManagementBar TypeBar="ManagementBar.Type.QUIZ"
 OnDeleteEventClicked="DeleteQuiz"
 OnBindUserToQuiz="@(()=>BindEntitytoQuiz(utility.Entity.USER))" 
-OnBindQuestionToQuiz="@(()=>BindEntitytoQuiz(utility.Entity.QUESTION))"
-               OnEditEventClicked="@(()=>EditQuiz(QuizSelected.ToList().First().Id))"
-               OnDetailedQuiz="@(()=>DetailedQuiz(QuizSelected.ToList().First().Id))">
-           
+OnBindQuestionToQuiz="@(()=>BindEntitytoQuiz(utility.Entity.QUESTION))"               OnEditEventClicked="@(()=>EditQuiz(QuizSelected.ToList().First().Id))"
+               OnDetailedQuiz="@(()=>DetailedQuiz(QuizSelected.ToList().First().Id))"
+               OnUnassignQuiz="UnassignQuiz"
+               ShowAssignUser="@CanAssignSelection">
+
            </ManagementBar>
 
 <MudDataGrid T="ListQuizDTO" MultiSelection="true" Items="@Quiz" SortMode="SortMode.Multiple" Filterable="true" QuickFilter="@_quickFilter"
@@ -26,6 +27,35 @@ OnBindQuestionToQuiz="@(()=>BindEntitytoQuiz(utility.Entity.QUESTION))"
         <PropertyColumn Property="x => x.titre" Title="Titre de Quiz" />
         <PropertyColumn Property="x => x.categorieTitre" SortBy="@_sortBy" Title="Catégorie" />
         <PropertyColumn Property="x => x.duree_quiz" Title="Durée de quiz" />
+        <TemplateColumn T="ListQuizDTO" Title="Questions" Sortable="false" Filterable="false">
+            <CellTemplate>@context.Item.nbQuestionsRattachees / @context.Item.nbr_questions</CellTemplate>
+        </TemplateColumn>
+        <TemplateColumn T="ListQuizDTO" Title="Statut" Sortable="false" Filterable="false">
+            <CellTemplate>
+                @if (context.Item.isComplet)
+                {
+                    <MudChip Size="Size.Small" Color="Color.Success" Icon="@Icons.Material.Filled.CheckCircle">Actif</MudChip>
+                }
+                else
+                {
+                    <MudTooltip Text="@($"{context.Item.nbQuestionsRattachees} question(s) rattachée(s) sur {context.Item.nbr_questions} prévue(s)")">
+                        <MudChip Size="Size.Small" Color="Color.Warning" Icon="@Icons.Material.Filled.Warning">Incomplet</MudChip>
+                    </MudTooltip>
+                }
+            </CellTemplate>
+        </TemplateColumn>
+        <TemplateColumn T="ListQuizDTO" Title="Assigné à" Sortable="false" Filterable="false">
+            <CellTemplate>
+                @if (context.Item.isAssigne)
+                {
+                    <MudChip Size="Size.Small" Variant="Variant.Outlined" Color="Color.Info" Icon="@Icons.Material.Filled.Lock">@context.Item.nbUtilisateursAssignes utilisateur(s)</MudChip>
+                }
+                else
+                {
+                    <MudText Typo="Typo.caption">—</MudText>
+                }
+            </CellTemplate>
+        </TemplateColumn>
     </Columns>
     <PagerContent>
         <MudDataGridPager T="ListQuizDTO" />

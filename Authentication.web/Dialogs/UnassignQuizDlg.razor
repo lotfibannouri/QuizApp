@@ -1,0 +1,108 @@
+@using QuizApp.Entities.Conception_Entities.DTO.Quiz_DTO
+@inject IQuizService QuizService
+@inject IAdministrationService adminService
+@inject ISnackbar SnackbarService
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">Utilisateurs du quiz « @QuizTitre »</MudText>
+    </TitleContent>
+    <DialogContent>
+        @if (_loading)
+        {
+            <MudProgressLinear Color="Color.Primary" Indeterminate="true" />
+        }
+        else if (!_users.Any())
+        {
+            <MudAlert Severity="Severity.Info">Ce quiz n'est assigné à aucun utilisateur.</MudAlert>
+        }
+        else
+        {
+            <MudSimpleTable Dense="true" Hover="true" Style="overflow-x:auto;">
+                <thead>
+                    <tr>
+                        <th>Utilisateur</th>
+                        <th>Email</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in _users)
+                    {
+                        <tr>
+                            <td>@user.Nom</td>
+                            <td>@user.Email</td>
+                            <td style="text-align:right;">
+                                <MudButton Size="Size.Small" Variant="Variant.Outlined" Color="Color.Error" Disabled="_busy"
+                                           StartIcon="@Icons.Material.Filled.PersonRemove" OnClick="@(() => Detach(user))">Détacher</MudButton>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </MudSimpleTable>
+        }
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Close">Fermer</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    [Parameter] public string QuizId { get; set; } = "";
+    [Parameter] public string QuizTitre { get; set; } = "";
+
+    private List<AssignedUser> _users = new();
+    private bool _loading = true;
+    private bool _busy;
+    private bool _changed;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var assignments = await QuizService.ListAssignments();
+        var users = await adminService.GetUsers();
+        var usersById = users.ToDictionary(u => u.id, u => u, StringComparer.OrdinalIgnoreCase);
+
+        _users = assignments
+            .Where(a => string.Equals(a.QuizId, QuizId, StringComparison.OrdinalIgnoreCase))
+            .Select(a =>
+            {
+                usersById.TryGetValue(a.UserId, out User user);
+                return new AssignedUser
+                {
+                    UserId = a.UserId,
+                    Nom = user != null ? $"{user.firstName} {user.lastName}" : a.UserId,
+                    Email = user?.email
+                };
+            })
+            .OrderBy(u => u.Nom)
+            .ToList();
+
+        _loading = false;
+    }
+
+    private async Task Detach(AssignedUser user)
+    {
+        _busy = true;
+        var response = await QuizService.UnbindQuizFromUser(QuizId, user.UserId);
+        _busy = false;
+
+        SnackbarService.Add(response.content, response.status ? Severity.Success : Severity.Warning);
+        if (response.status)
+        {
+            _users.Remove(user);
+            _changed = true;
+        }
+    }
+
+    // La liste des quiz doit être rechargée si au moins un utilisateur a été détaché.
+    private void Close() => MudDialog.Close(DialogResult.Ok(_changed));
+
+    private class AssignedUser
+    {
+        public string UserId { get; set; }
+        public string Nom { get; set; }
+        public string? Email { get; set; }
+    }
+}

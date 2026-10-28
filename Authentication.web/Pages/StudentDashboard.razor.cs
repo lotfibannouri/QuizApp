@@ -31,6 +31,9 @@ namespace Authentication.web.Pages
         [Inject]
         public IJSRuntime jsruntime { get; set; }
 
+        [Inject]
+        public IConfiguration _configuration { get; set; }
+
         private HubConnection _hubConnection { get; set; }
 
         string state = "Message box hasn't been opened yet";
@@ -44,7 +47,7 @@ namespace Authentication.web.Pages
         protected override async Task OnInitializedAsync()
         {
             _hubConnection = new HubConnectionBuilder()
-                .WithUrl("https://localhost:7284/notificationshub")
+                .WithUrl(new Uri(new Uri(_configuration["Api:QuizUrl"]), "/notificationshub"))
                 .Build();
 
             _hubConnection.On<string, string>("ReceiveMessage", async (user, message) =>

@@ -46,17 +46,33 @@ namespace Authentication.web.Pages
             return false;
 
         }
-        public async Task OnValidSubmit()
+        public async Task OnValidSubmit() => await Save(addQuestions: false);
+
+        // Enregistre le quiz puis ouvre directement le choix du type de question : les
+        // questions créées seront rattachées à ce quiz, avec un compteur des restantes.
+        private async Task SaveAndAddQuestions() => await Save(addQuestions: true);
+
+        private bool _saving;
+
+        private async Task Save(bool addQuestions)
         {
+            // Évite un second envoi (double clic, ou submit et OnClick sur le même bouton).
+            if (_saving) return;
             if (!Validate()) return;
 
-            var Response = await quizService.CreateQuiz(model);
+            _saving = true;
+            var quizId = Guid.NewGuid();
+            var Response = await quizService.CreateQuiz(model, quizId);
+            _saving = false;
+
             if (Response.status)
             {
                 SnackbarService.Add
                        ("Quiz enregistré avec succès", Severity.Success
                        );
-                NavigationManager.NavigateTo("/QuizManagement");
+                NavigationManager.NavigateTo(addQuestions
+                    ? $"/QuestionManagement?quizId={quizId}"
+                    : "/QuizManagement");
             }
             else
             {
