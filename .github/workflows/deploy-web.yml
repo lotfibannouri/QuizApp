@@ -1,0 +1,35 @@
+# Compile le site Blazor WebAssembly et le déploie sur Azure Static Web Apps à chaque push
+# sur main qui le concerne (ou à la demande, onglet Actions > Run workflow).
+name: Déploiement site Blazor
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'Authentication.web/**'
+      - 'Quiz.Entity/**'
+      - '.github/workflows/deploy-web.yml'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      # Compilation WebAssembly faite ici : la Static Web App reçoit des fichiers déjà prêts.
+      - name: Publication
+        run: dotnet publish Authentication.web/Authentication.web.csproj -c Release -o publish
+
+      - name: Déploiement sur Azure Static Web Apps
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_TOKEN }}
+          action: upload
+          app_location: publish/wwwroot
+          skip_app_build: true
+          skip_api_build: true

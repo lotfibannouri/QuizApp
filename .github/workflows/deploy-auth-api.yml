@@ -1,0 +1,32 @@
+# Déploie l'API d'authentification sur Azure App Service à chaque push sur main
+# qui la concerne (ou à la demande, onglet Actions > Run workflow).
+name: Déploiement API authentification
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'authentification_Api/**'
+      - '.github/workflows/deploy-auth-api.yml'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    # Runner Windows et cible win-x86 : le plan gratuit F1 exécute l'application en 32 bits sous IIS.
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Publication
+        run: dotnet publish authentification_Api/authentification_Api.csproj -c Release -r win-x86 --self-contained false -o publish
+
+      - name: Déploiement sur Azure
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: quizapp-lotfi-auth
+          publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE_AUTH }}
+          package: publish
